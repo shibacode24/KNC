@@ -26,7 +26,7 @@ class AccountDepartmentController extends Controller
         $expence_category->expence_category = $request->expence_category;
 
         $expence_category->save();
-        return redirect()->route('expence_master')->with('success', 'expence_category added successfully!');
+        return redirect()->route('expence-master')->with('success', 'expence_category added successfully!');
     }
 
  
@@ -34,7 +34,7 @@ class AccountDepartmentController extends Controller
     public function expence_category_delete($id)
     {
      Expence_Category::find($id)->delete();
-        return redirect()->route('expence_master')->with('success', 'expence_category is Deleted Successfully');
+        return redirect()->route('expence-master')->with('success', 'expence_category is Deleted Successfully');
     }
 
     
@@ -54,7 +54,7 @@ class AccountDepartmentController extends Controller
         $expence_category->save();
 
 
-        return redirect(route('expence_master'))->with('success', 'Successfully Updated !');
+        return redirect(route('expence-master'))->with('success', 'Successfully Updated !');
     }
 
     public function expence_category_head(Request $request)
@@ -65,12 +65,17 @@ class AccountDepartmentController extends Controller
             'expence_head' => 'required|',
 
         ]);
+        for($i=0;$i<count($request->expence_head); $i++){
+            if (isset($request->expence_head[$i])){
         $expence_category = new Expence_Head();
-        $expence_category->expence_category_id = $request->expence_category_id;
-        $expence_category->expence_head = $request->expence_head;
+        $expence_category->expence_category_id = $request->expence_category_id[$i];
+        $expence_category->expence_head = $request->expence_head[$i];
 
         $expence_category->save();
-        return redirect()->route('expence_master')->with('success', 'expence_category added successfully!');
+            }
+        }
+    
+        return redirect()->route('expence-master')->with('success', 'expence_category added successfully!');
     }
     
     public function edit_expence_head($id){
@@ -92,13 +97,13 @@ class AccountDepartmentController extends Controller
         $expence_head->save();
 
 
-        return redirect(route('expence_master'))->with('success', 'Successfully Updated !');
+        return redirect(route('expence-master'))->with('success', 'Successfully Updated !');
     }
 
     public function expence_head_delete($id)
     {
      Expence_Head::find($id)->delete();
-        return redirect()->route('expence_master')->with('success', 'expence head is Deleted Successfully');
+        return redirect()->route('expence-master')->with('success', 'expence head is Deleted Successfully');
     }
 
     public function incomeBilling(Request $request)
