@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('transfer_workplace_material', function (Blueprint $table) {
+            $table->id();
+            $table->string('site_id');
+            $table->string('source_workplace_id');
+            $table->string('target_workplace_id');
+            $table->string('material_id');
+            $table->string('quantity');
+            $table->timestamps();
+        });
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        //
+    }
+};

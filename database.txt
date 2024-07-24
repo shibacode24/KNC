@@ -1,0 +1,3 @@
+db name = knc_db
+db user name = knc_db
+password = knc_db123

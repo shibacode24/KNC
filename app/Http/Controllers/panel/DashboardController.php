@@ -1,0 +1,1562 @@
+<?php
+
+namespace App\Http\Controllers\panel;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Models\City;
+use App\Models\Firm;
+use App\Models\Site;
+use App\Models\User;
+use App\Models\Brand;
+use App\Models\Branch;
+use App\Models\Client;
+use App\Models\Vendor;
+use App\Models\Employee;
+use App\Models\Material;
+use App\Models\UnitType;
+use App\Models\AssignSite;
+use App\Models\Contractor;
+use App\Models\Supervisor;
+use App\Models\Warehouse;
+use App\Models\RawMaterial;
+use App\Models\AccountDetails;
+use App\Models\Status;
+use App\Models\TaskCategory;
+use App\Models\TaskSubCategory;
+use App\Models\Issues;
+use App\Models\WorkingUnitType;
+use App\Models\Approles;
+use App\Models\{PanelRoles, NonConsumableCategory, NonConsumableCategoryMaterial};
+
+
+use Illuminate\Support\Facades\Auth;
+use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
+
+class DashboardController extends Controller
+{
+    public function index(Request $request)
+    {
+        return view('adminpanel.login');
+    }
+
+    public function dashboard(Request $request)
+    {
+        return view('adminpanel.dashboard');
+    }
+
+    public function assign_site(Request $request)
+    {
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        $assign = AssignSite::with('sitename')->get();
+        $role = PanelRoles::all();
+        $user = User::whereNotNull('panel_role')->get();
+        return view('adminpanel.assign_site', compact('site', 'assign', 'supervisor', 'role', 'user'));
+    }
+
+    public function getUsersByRole(Request $request)
+    {
+        $roleId = $request->get('role_id');
+        $users = User::where('panel_role', $roleId)->get();
+        return response()->json($users);
+    }
+
+    public function assignSiteStore(Request $request)
+    {
+        //  dd($request->all());
+        // Validate the incoming request data
+        // $request->validate([
+        //     'site_id' => 'required|',
+        //     'supervisor_id' => 'required|',
+        //     'date' => 'required|',
+        // ]);
+        $assign = new AssignSite();
+        $assign->date = $request->date;
+        $assign->site_assign = $request->site;
+        $assign->role_id = $request->role;
+        $assign->user_id = $request->assign_to;
+        $assign->save();
+        return redirect()->route('assign_site')->with('success', 'Site added successfully!');
+    }
+
+    public function assignSiteDestroy($id)
+    {
+        $task = AssignSite::find($id)->delete();
+        return redirect()->route('assign_site')->with('success', 'Site is Deleted Successfully');
+    }
+
+    public function assignSiteEdit($id){
+        $assignSiteAll = AssignSite::all();
+        $assignSiteEdit = AssignSite::find($id);
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.assign_site_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+    }
+
+    public function assignSiteUpdate(Request $request)
+    {
+        $assignSite = AssignSite::find($request->id);
+        $assignSite->date = $request->date;
+        $assignSite->supervisor = $request->supervisor_id;
+        $assignSite->site_assign = $request->site_id;
+        $assignSite->save();
+
+
+        return redirect(route('assign_site'))->with('success', 'Successfully Updated !');
+    }
+
+
+    //citymaster
+    public function city(Request $request)
+    {
+        $city = City::all();
+        return view('adminpanel.city', compact('city'));
+    }
+    public function citystore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'city' => 'required|',
+
+        ]);
+        $city = new City();
+        $city->city = $request->city;
+
+        $city->save();
+        return redirect()->route('city')->with('success', 'City added successfully!');
+    }
+
+    public function cityDestroy($id)
+    {
+        $task = City::find($id)->delete();
+        return redirect()->route('city')->with('success', 'City is Deleted Successfully');
+    }
+
+
+
+    public function cityEdit($id){
+
+        $cityAll = City::all();
+        $cityEdit = City::find($id);
+        return view('adminpanel.city_edit', compact('cityAll', 'cityEdit'));
+    }
+
+    public function cityUpdate(Request $request)
+    {
+        $city = City::find($request->id);
+        $city->city = $request->city;
+        $city->save();
+
+
+        return redirect(route('city'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+    //firm master
+    public function firm(Request $request)
+    {
+        $firm = Firm::all();
+        $city = City::all();
+        return view('adminpanel.firm', compact('city', 'firm'));
+    }
+
+    public function firmstore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'firm_name' => 'required|string|',
+            'contact_person_name' => 'required|string|',
+            'contact_number' => 'required|string|',
+            'city_id' => 'required|',
+            'city_address' => 'required|string|',
+            'latitude' => 'required|regex:/^-?\d{1,2}(?:\.\d{1,9})?$/',
+            'longitude' => 'required|regex:/^-?\d{1,3}(?:\.\d{1,9})?$/',
+
+
+            'gst' => 'required|string|',
+        ]);
+
+        // Create a new firm instance
+        $firm = new Firm();
+        $firm->firm_name = $request->firm_name;
+        $firm->contact_person_name = $request->contact_person_name;
+        $firm->contact_number = $request->contact_number;
+        $firm->city_id = $request->city_id;
+        $firm->city_address = $request->city_address;
+        $firm->latitude = $request->latitude;
+        $firm->longitude = $request->longitude;
+        $firm->gst = $request->gst;
+
+        // Save the firm to the database
+        $firm->save();
+
+        // Redirect to a specified route or view
+        return redirect()->route('firm')->with('success', 'Firm added successfully!');
+    }
+
+    public function firmDestroy($id)
+    {
+        $task = Firm::find($id)->delete();
+        return redirect()->route('firm')->with('success', 'Firm is Deleted Successfully');
+    }
+
+
+
+    public function firmEdit($id){
+
+        $firmAll = Firm::all();
+        $firmEdit = Firm::find($id);
+        $city = City::all();
+
+        return view('adminpanel.firm_edit', compact('firmAll', 'firmEdit', 'city', ));
+    }
+
+    public function firmUpdate(Request $request)
+    {
+        $firm = Firm::find($request->id);
+        $firm->firm_name = $request->firm_name;
+        $firm->contact_person_name = $request->contact_person_name;
+        $firm->contact_number = $request->contact_number;
+        $firm->city_id = $request->city_id;
+        $firm->city_address = $request->city_address;
+        $firm->latitude = $request->latitude;
+        $firm->longitude = $request->longitude;
+        $firm->gst = $request->gst;
+
+        $firm->save();
+
+
+        return redirect(route('firm'))->with('success', 'Successfully Updated !');
+    }
+
+
+    //branchmaster
+    public function branch(Request $request)
+    {
+        $branch = Branch::all();
+        return view('adminpanel.branch', compact('branch'));
+    }
+    public function branchstore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'branch' => 'required|',
+
+        ]);
+        $branch = new Branch();
+        $branch->branch = $request->branch;
+
+        $branch->save();
+        return redirect()->route('branch')->with('success', 'Branch added successfully!');
+    }
+
+    public function branchDestroy($id)
+    {
+        $task = Branch::find($id)->delete();
+        return redirect()->route('branch')->with('success', 'Branch is Deleted Successfully');
+    }
+
+
+
+    public function branchEdit($id){
+
+        $branchAll = Branch::all();
+        $branchEdit = Branch::find($id);
+        return view('adminpanel.branch_edit', compact('branchAll', 'branchEdit'));
+    }
+
+    public function branchUpdate(Request $request)
+    {
+        $branch = Branch::find($request->id);
+        $branch->branch = $request->branch;
+        $branch->save();
+
+
+        return redirect(route('branch'))->with('success', 'Successfully Updated !');
+    }
+
+
+    //client master
+
+    public function client(Request $request)
+    {
+        $client = Client::all();
+        $city = City::all();
+        return view('adminpanel.client', compact('client', 'city'));
+    }
+    public function clientstore(Request $request)
+    {
+        //dd($request->all());
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'mobile_number' => 'required|',
+            'whatsapp_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required|string',
+            'city_id' => 'required|',
+            'address' => 'required|',
+        ]);
+
+        $client = new Client();
+        $client->name = $request->input('name');
+        $client->email = $request->input('email');
+        $client->mobile_number = $request->input('mobile_number');
+        $client->whatsapp_number = $request->input('whatsapp_number');
+        $client->aadhar_number = $request->input('aadhar_number');
+        $client->pan_number = $request->input('pan_number');
+        $client->city_id = $request->input('city_id');
+        $client->city_address = $request->input('address');
+        $client->save();
+
+        return redirect()->route('client')->with('success', 'Client added successfully!');
+        //dd(1);
+    }
+
+    public function clientDestroy($id)
+    {
+        $task = Client::find($id)->delete();
+        return redirect()->route('client')->with('success', 'Client is Deleted Successfully');
+    }
+
+
+
+
+    public function clientEdit($id){
+
+        $clientAll = Client::all();
+        $clientEdit = Client::find($id);
+        $city = City::all();
+        //$supervisor = supervisor::all();
+        return view('adminpanel.client_edit', compact('clientAll', 'clientEdit', 'city', ));
+    }
+
+    public function clientUpdate(Request $request)
+    {
+        $client = Client::find($request->id);
+        $client->name = $request->input('name');
+        $client->email = $request->input('email');
+        $client->mobile_number = $request->input('mobile_number');
+        $client->whatsapp_number = $request->input('whatsapp_number');
+        $client->aadhar_number = $request->input('aadhar_number');
+        $client->pan_number = $request->input('pan_number');
+        $client->city_id = $request->input('city_id');
+        $client->city_address = $request->input('address');
+        $client->save();
+
+
+        return redirect(route('client'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+    // Site Master
+
+    public function site(Request $request)
+    {
+        $site = Site::all();
+        $firm = Firm::all();
+        $client = Client::all();
+        $city = City::all();
+
+        return view('adminpanel.sites', compact('site', 'firm', 'city', 'client'));
+    }
+    public function siteStore(Request $request)
+    {
+        //  dd($request->all());
+        $validatedData = $request->validate([
+            'firm_id' => 'required',
+            'client_id' => 'required',
+            'site_name' => 'required',
+            'site_personal_or_buisness' => 'required',
+            'mobile_number' => 'required',
+            'city_id' => 'required',
+            'city_address' => 'required',
+            'latitude' => 'required|regex:/^-?\d{1,2}(?:\.\d{1,9})?$/',
+            'longitude' => 'required|regex:/^-?\d{1,3}(?:\.\d{1,9})?$/',
+            'site_description' => 'required',
+            'site_documents' => 'required|',
+            //'buisness_name' => 'nullable|',
+        ]);
+
+        $site = new Site();
+        $site->firm_id = $request->firm_id;
+        $site->client_id = $request->client_id;
+        $site->site_name = $request->site_name;
+        $site->site_personal_or_buisness = $request->site_personal_or_buisness;
+        $site->mobile_number = $request->mobile_number;
+        $site->city_id = $request->city_id;
+        $site->city_address = $request->city_address;
+        $site->latitude = $request->latitude;
+        $site->longitude = $request->longitude;
+        $site->site_description = $request->site_description;
+
+        if ($request->filled('buisness_name')) {
+            $site->buisness_name = $request->buisness_name;
+        }
+
+        // Handle file upload
+        if ($request->hasFile('site_documents')) {
+            $file = $request->file('site_documents');
+            $fileName = $file->getClientOriginalName(); // Get original file name
+            $file->move(public_path('images/site'), $fileName); // Move file to public/images/site directory
+            $site->site_documents = $fileName; // Save file name to the database
+        }
+
+        $site->save();
+        //  dd(1);
+        // Redirect or return a response as needed
+        return redirect()->back()->with('success', 'Site created successfully.');
+    }
+
+
+
+    public function sitesindex(Request $request, $id = null)
+    {
+        if ($request->ajax()) {
+            if ($id) {
+                $sites = Site::with('cityname', 'firm', 'client')->findOrFail($id); // Use findOrFail to handle not found
+            } else {
+                $sites = Site::with('cityname', 'firm', 'client')->get();
+            }
+
+            return response()->json($sites);
+        }
+    }
+
+
+    public function siteDestroy($id)
+    {
+        $task = Site::find($id)->delete();
+        return redirect()->route('site')->with('success', 'Site is Deleted Successfully');
+    }
+
+
+    public function siteEdit($id){
+
+        $siteAll = Site::all();
+        $siteEdit = Site::find($id);
+        $city = City::all();
+
+        return view('adminpanel.site_edit', compact('siteAll', 'siteEdit', 'city'));
+    }
+
+    public function siteUpdate(Request $request)
+    {
+        $site = Site::find($request->id);
+        $site->firm_id = $request->firm_id;
+        $site->client_id = $request->client_id;
+        $site->site_name = $request->site_name;
+        $site->site_personal_or_buisness = $request->site_personal_or_buisness;
+        $site->mobile_number = $request->mobile_number;
+        $site->city_id = $request->city_id;
+        $site->city_address = $request->city_address;
+        $site->latitude = $request->latitude;
+        $site->longitude = $request->longitude;
+        $site->site_description = $request->site_description;
+
+        if ($request->filled('buisness_name')) {
+            $site->buisness_name = $request->buisness_name;
+        }
+
+        // Handle file upload
+        if ($request->hasFile('site_documents')) {
+            $file = $request->file('site_documents');
+            $fileName = $file->getClientOriginalName(); // Get original file name
+            $file->move(public_path('images/site'), $fileName); // Move file to public/images/site directory
+            $site->site_documents = $fileName; // Save file name to the database
+        }
+
+        $site->save();
+
+        return redirect(route('site'))->with('success', 'Successfully Updated !');
+    }
+
+    //unit master
+    public function unit_type(Request $request)
+    {
+        $unit = UnitType::all();
+        return view('adminpanel.unit_type', compact('unit'));
+    }
+    public function unit_typestore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'unit_type' => 'required|',
+
+        ]);
+        $unit_type = new UnitType();
+        $unit_type->unit_type = $request->unit_type;
+
+        $unit_type->save();
+        return redirect()->route('unit_type')->with('success', 'Unit added successfully!');
+    }
+
+    public function unitTypeDestroy($id)
+    {
+        $task = UnitType::find($id)->delete();
+        return redirect()->route('unit_type')->with('success', 'Unit type is Deleted Successfully');
+    }
+
+
+    public function unitTypeEdit($id){
+
+        $unitTypeAll = UnitType::all();
+        $unitTypeEdit = UnitType::find($id);
+
+        return view('adminpanel.unit_type_edit', compact('unitTypeAll', 'unitTypeEdit',));
+    }
+
+    public function unitTypeUpdate(Request $request)
+    {
+        // dd($request->all());
+        $unitTypes = UnitType::find($request->id);
+        $unitTypes->unit_type = $request->unit_type;
+        $unitTypes->save();
+        return redirect(route('unit_type'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+    //material master
+    public function material(Request $request)
+    {
+        $material = Material::all();
+        $unit_type = UnitType::all();
+        return view('adminpanel.material', compact('material', 'unit_type'));
+    }
+
+
+    public function materialstore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'material' => 'required|',
+
+        ]);
+        $material = new Material();
+        $material->material = $request->material;
+        $material->unit_type_id = $request->unit_type;
+
+
+        $material->save();
+        return redirect()->route('material')->with('success', 'Material added successfully!');
+    }
+
+    public function materialDestroy($id)
+    {
+        $task = Material::find($id)->delete();
+        return redirect()->route('material')->with('success', 'Material is Deleted Successfully');
+    }
+
+
+
+    public function materialEdit($id){
+
+        $materialAll = Material::all();
+        $materialEdit = Material::find($id);
+
+        return view('adminpanel.material_edit', compact('materialAll', 'materialEdit',));
+    }
+
+    public function materialUpdate(Request $request)
+    {
+        $material = Material::find($request->id);
+        $material->material = $request->material;
+        $material->save();
+
+
+        return redirect(route('material'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+    //raw material
+    public function raw_material(Request $request)
+    {
+        $unit = UnitType::all();
+        $brand = Brand::all();
+        $raw_material = RawMaterial::all();
+        $material = Material::all();
+        return view('adminpanel.raw_material', compact('unit', 'material', 'raw_material', 'brand'));
+    }
+
+    public function rawmaterialstore(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'raw_material_name' => 'required|string',
+            'unit_id' => 'required',
+            'material_id' => 'required',
+            'brand' =>'required',
+            'minimum_keeping_quantity' => 'required',
+            'maximum_keeping_quantity' => 'required',
+            // 'material_type' =>'required',
+        ]);
+
+        $material = new RawMaterial();
+        $material->raw_material_name = $request->input('raw_material_name');
+        $material->unit = $request->input('unit_id');
+        $material->material_id = $request->input('material_id');
+        $material->brand_id = $request->input('brand');
+        $material->minimum_keeping_quantity = $request->input('minimum_keeping_quantity');
+        $material->maximum_keeping_quantity = $request->input('maximum_keeping_quantity');
+        // $material->material_type = $request->input('material_type');
+        $material->save();
+        if ($material->save()) {
+            return redirect()->route('raw_material')->with('success', 'Raw material added successfully!');
+        } else {
+            return redirect()->back()->with('error', 'Failed to add raw material. Please try again.');
+        }
+        // return redirect()->back()->with('success', 'Material added successfully!');
+    }
+
+    public function rawMaterialDestroy($id)
+    {
+        $task = RawMaterial::find($id)->delete();
+        return redirect()->route('raw_material')->with('success', 'Raw Material is Deleted Successfully');
+    }
+
+    public function rawMaterialEdit($id){
+
+        $assignSiteAll = AssignSite::all();
+        $assignSiteEdit = AssignSite::find($id);
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+    }
+
+    public function rawMaterialUpdate(Request $request)
+    {
+        $assignSite = AssignSite::find($request->id);
+        $assignSite->date = $request->date;
+        $assignSite->supervisor = $request->supervisor_id;
+        $assignSite->site_assign = $request->site_id;
+        $assignSite->save();
+
+
+        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+    }
+
+
+    public function getBrands(Request $request)
+    {
+        $material_id = $request->get('material_id');
+        $brands = Brand::where('material_id', $material_id)->get();
+
+        return response()->json($brands);
+    }
+
+    // brand Master
+
+    public function brand(Request $request)
+    {
+        $brand = Brand::all();
+        $material = Material::all();
+        return view('adminpanel.brand', compact('brand', 'material'));
+    }
+    public function brandstore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'brand' => 'required|',
+            'material_id' => 'required|',
+
+
+        ]);
+        $brand = new Brand();
+        $brand->brand = $request->brand;
+        $brand->material_id = $request->material_id;
+
+        $brand->save();
+        return redirect()->route('brand')->with('success', 'brand added successfully!');
+    }
+
+    public function brandDestroy($id)
+    {
+        $task = Brand::find($id)->delete();
+        return redirect()->route('brand')->with('success', 'Brand is Deleted Successfully');
+    }
+
+
+
+    public function brandEdit($id){
+
+        $assignSiteAll = AssignSite::all();
+        $assignSiteEdit = AssignSite::find($id);
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.brand', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+    }
+
+    public function brandUpdate(Request $request)
+    {
+        $assignSite = AssignSite::find($request->id);
+        $assignSite->date = $request->date;
+        $assignSite->supervisor = $request->supervisor_id;
+        $assignSite->site_assign = $request->site_id;
+        $assignSite->save();
+
+
+        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+    }
+
+
+    // warehouse Master
+    public function warehouse(Request $request)
+    {
+        $city = City::all();
+        $Warehouse = Warehouse::all();
+        return view('adminpanel.warehouse', compact('Warehouse', 'city'));
+    }
+
+    public function warehousestore(Request $request)
+    {
+        $request->validate([
+            'warehouse_name' => 'required|',
+            'incharge_name' => 'required|',
+            'incharge_contact' => 'required|',
+            'latitude' => 'required|regex:/^-?\d{1,2}(?:\.\d{1,9})?$/',
+            'longitude' => 'required|regex:/^-?\d{1,3}(?:\.\d{1,9})?$/',
+            'city_id' => 'required|',
+        ]);
+
+        Warehouse::create([
+            'warehouse_name' => $request->warehouse_name,
+            'incharge_name' => $request->incharge_name,
+            'incharge_contact' => $request->incharge_contact,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'city_id' => $request->city_id,
+        ]);
+
+        return redirect()->route('warehouse')->with('success', 'Warehouse created successfully.');
+    }
+
+    public function warehouseDestroy($id)
+    {
+        $task = Warehouse::find($id)->delete();
+        return redirect()->route('warehouse')->with('success', 'Warehouse is Deleted Successfully');
+    }
+
+
+    public function warehouseEdit($id){
+
+        $warehouseAll = Warehouse::all();
+        $warehouseEdit = Warehouse::find($id);
+        $city = City::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.warehouse_edit', compact('warehouseAll', 'warehouseEdit', 'city', 'supervisor'));
+    }
+
+    public function warehouseUpdate(Request $request)
+    {
+        $warehouse = warehouse::find($request->id);
+        $warehouse->warehouse_name = $request->warehouse_name;
+        $warehouse->incharge_name = $request->incharge_name;
+        $warehouse->incharge_contact = $request->incharge_contact;
+        $warehouse->latitude = $request->latitude;
+        $warehouse->longitude = $request->longitude;
+        $warehouse->city_id = $request->city_id;
+
+        $warehouse->save();
+
+
+        return redirect(route('warehouse'))->with('success', 'Successfully Updated !');
+    }
+
+
+    // Contractor Master
+    public function contractor(Request $request)
+    {
+        $ac = AccountDetails::where('contractor_id', '!=', NULL)->with('contractor', 'contractor.cityname')->get();
+
+        $city = City::all();
+        return view('adminpanel.contractor', compact('city', 'ac'));
+    }
+
+    public function contractorstore(Request $request)
+    {
+        //  dd($request->all());
+        $request->validate([
+            'contractor_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+
+        ]);
+
+        $contractor = new Contractor();
+        $contractor->contractor_name = $request->contractor_name;
+        $contractor->email = $request->email;
+        $contractor->mobile_number = $request->mobile_number;
+        $contractor->aadhar_number = $request->aadhar_number;
+        $contractor->pan_number = $request->pan_number;
+        $contractor->city_address = $request->city_address;
+        $contractor->city_id = $request->city_id;
+
+        $contractor->save();
+
+        foreach ($request->name as $key => $name) {
+            $account_details = new AccountDetails();
+            $account_details->account_holder = $request->name[$key];
+            $account_details->contractor_id = $contractor->id;
+            $account_details->bank_name = $request->bank[$key];
+            $account_details->account_number = $request->ac_n[$key];
+            $account_details->ifsc_code = $request->ifsc[$key];
+            $account_details->save();
+        }
+        // dd(1);
+        return redirect()->back()->with('success', 'Contractor and Account Details Added Successfully');
+    }
+
+    // public function contractorDestroy($id)
+    // {
+    //     $task = Contractor::find($id)->delete();
+    //     return redirect()->route('contractor')->with('success', 'Contractor is Deleted Successfully');
+    // }
+
+    public function contractorDestroy($id)
+    {
+        $contractor = Contractor::find($id);
+
+        if ($contractor) {
+            // Delete the associated account details
+            $contractor->accountDetails()->delete();
+
+            // Delete the contractor
+            $contractor->delete();
+
+            return redirect()->route('contractor')->with('success', 'Contractor and associated Account Details are deleted successfully.');
+        } else {
+            return redirect()->route('contractor')->with('error', 'Contractor not found');
+        }
+    }
+
+
+    public function contractorEdit($id){
+
+        $assignSiteAll = AssignSite::all();
+        $assignSiteEdit = AssignSite::find($id);
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+    }
+
+    public function contractorUpdate(Request $request)
+    {
+        $assignSite = AssignSite::find($request->id);
+        $assignSite->date = $request->date;
+        $assignSite->supervisor = $request->supervisor_id;
+        $assignSite->site_assign = $request->site_id;
+        $assignSite->save();
+
+
+        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+    // Vendor Master
+
+    public function vendor(Request $request)
+    {
+
+        $ac = AccountDetails::where('vendor_id', '!=', NULL)->with('vendorn', 'vendorn.cityname', 'vendorn.brandname', 'vendorn.materialname')->get();
+
+        $Vendor = Vendor::all();
+        $city = City::all();
+
+        $brand = Brand::all();
+        $material = Material::all();
+
+        return view('adminpanel.vendor', compact('brand', 'ac', 'Vendor', 'city', 'material'));
+    }
+    public function vendorstore(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'vendor_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+            'material_id' => 'required',
+
+            'brand_id' => 'required',
+
+
+        ]);
+
+        $Vendors = new Vendor();
+        $Vendors->vendor_name = $request->vendor_name;
+        $Vendors->email = $request->email;
+        $Vendors->mobile_number = $request->mobile_number;
+        $Vendors->aadhar_number = $request->aadhar_number;
+        $Vendors->pan_number = $request->pan_number;
+        $Vendors->city_address = $request->city_id;
+        $Vendors->brand = $request->brand_id;
+
+        $Vendors->materials = $request->material_id;
+
+
+        $Vendors->save();
+
+        foreach ($request->name as $key => $name) {
+            $account_details = new AccountDetails();
+            $account_details->account_holder = $request->name[$key];
+            $account_details->vendor_id = $Vendors->id;
+            $account_details->bank_name = $request->bank[$key];
+            $account_details->account_number = $request->ac_n[$key];
+            $account_details->ifsc_code = $request->ifsc[$key];
+            $account_details->save();
+        }
+        // dd(1);
+        return redirect()->back()->with('success', 'Vendor and Account Details Added Successfully');
+    }
+
+    public function vendorDestroy($id)
+    {
+        $vendor = Vendor::find($id);
+
+        if ($vendor) {
+            // Delete the associated account details
+            $vendor->accountDetails()->delete();
+
+            // Delete the vendor
+            $vendor->delete();
+
+            return redirect()->route('vendor')->with('success', 'Vendor and associated Account Details are deleted successfully.');
+        } else {
+            return redirect()->route('vendor')->with('error', 'Vendor not found');
+        }
+    }
+
+
+    public function vendorEdit($id){
+
+        $assignSiteAll = AssignSite::all();
+        $assignSiteEdit = AssignSite::find($id);
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+    }
+
+    public function vendorUpdate(Request $request)
+    {
+        $assignSite = AssignSite::find($request->id);
+        $assignSite->date = $request->date;
+        $assignSite->supervisor = $request->supervisor_id;
+        $assignSite->site_assign = $request->site_id;
+        $assignSite->save();
+
+
+        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+    }
+
+
+    // SuperVisor Master
+    public function supervisor(Request $request)
+    {
+        $city = City::all();
+        $ac = AccountDetails::where('supervisor_id', '!=', NULL)->with('supervisor')->get();
+        $supervisor = Supervisor::get();
+        return view('adminpanel.supervisor', compact('city', 'ac', 'supervisor'));
+    }
+
+    public function supervisorstore(Request $request)
+    {
+        //  dd($request->all());
+        $request->validate([
+            'supervisor_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+
+        ]);
+
+         // Create a new User instance and set its attributes
+    $user = new User();
+    $user->name = $request->supervisor_name;
+    $user->email = $request->email;
+    $user->password = bcrypt($request->password); // Hash the password
+    $user->role = 'supervisor'; // Set the role to supervisor
+    $user->save();
+
+
+        $supervisor = new Supervisor();
+        $supervisor->supervisor_name = $request->supervisor_name;
+        $supervisor->email = $request->email;
+        $supervisor->mobile_number = $request->mobile_number;
+        $supervisor->aadhar_number = $request->aadhar_number;
+        $supervisor->pan_number = $request->pan_number;
+        $supervisor->city_address = $request->city_address;
+        $supervisor->city_id = $request->city_id;
+        $supervisor->password = $request->password;
+        $supervisor->user_id = $user->id;
+        $supervisor->save();
+
+        foreach ($request->name as $key => $name) {
+            $account_details = new AccountDetails();
+            $account_details->account_holder = $request->name[$key];
+            $account_details->supervisor_id = $supervisor->id;
+            $account_details->bank_name = $request->bank[$key];
+            $account_details->account_number = $request->ac_n[$key];
+            $account_details->ifsc_code = $request->ifsc[$key];
+            $account_details->save();
+        }
+        // dd(1);
+        return redirect()->back()->with('success', 'Supervisor and Account Details Added Successfully');
+    }
+
+
+    public function supervisorDestroy($id)
+    {
+        $supervisor = Supervisor::find($id);
+
+        if ($supervisor) {
+            // Delete the associated account details
+            $supervisor->accountDetails()->delete();
+
+            // Delete the supervisor
+            $supervisor->delete();
+
+            return redirect()->route('supervisor')->with('success', 'Supervisor and associated Account Details are deleted successfully.');
+        } else {
+            return redirect()->route('supervisor')->with('error', 'Supervisor not found');
+        }
+    }
+
+
+    public function supervisorEdit($id){
+        $assignSiteAll = AssignSite::all();
+        $assignSiteEdit = AssignSite::find($id);
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+    }
+
+    public function supervisorUpdate(Request $request)
+    {
+        $assignSite = AssignSite::find($request->id);
+        $assignSite->date = $request->date;
+        $assignSite->supervisor = $request->supervisor_id;
+        $assignSite->site_assign = $request->site_id;
+        $assignSite->save();
+
+
+        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+    }
+
+
+    // Employee Master
+
+    public function employee(Request $request)
+    {
+        $ac = AccountDetails::where('employee_id', '!=', NULL)->with('employee', 'employee.cityname')->get();
+
+        $city = City::all();
+        return view('adminpanel.employee', compact('ac', 'city'));
+    }
+    public function employeestore(Request $request)
+    {
+        //  dd($request->all());
+        $request->validate([
+            'employee_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+
+        ]);
+
+        $employee = new Employee();
+        $employee->employee_name = $request->employee_name;
+        $employee->email = $request->email;
+        $employee->mobile_number = $request->mobile_number;
+        $employee->aadhar_number = $request->aadhar_number;
+        $employee->pan_number = $request->pan_number;
+        $employee->city_address = $request->city_address;
+        $employee->city_id = $request->city_id;
+
+        $employee->save();
+
+        foreach ($request->name as $key => $name) {
+            $account_details = new AccountDetails();
+            $account_details->account_holder = $request->name[$key];
+            $account_details->employee_id = $employee->id;
+            $account_details->bank_name = $request->bank[$key];
+            $account_details->account_number = $request->ac_n[$key];
+            $account_details->ifsc_code = $request->ifsc[$key];
+            $account_details->save();
+        }
+        // dd(1);
+        return redirect()->back()->with('success', 'Employee and Account Details Added Successfully');
+    }
+
+
+    public function employeeDestroy($id)
+    {
+        $employee = Employee::find($id);
+
+        if ($employee) {
+            // Delete the associated account details
+            $employee->accountDetails()->delete();
+
+            // Delete the employee
+            $employee->delete();
+
+            return redirect()->route('employee')->with('success', 'employee and associated Account Details are deleted successfully.');
+        } else {
+            return redirect()->route('employee')->with('error', 'employee not found');
+        }
+    }
+
+
+
+
+    public function employeeEdit($id){
+
+        $assignSiteAll = AssignSite::all();
+        $assignSiteEdit = AssignSite::find($id);
+        $site = Site::all();
+        $supervisor = supervisor::all();
+        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+    }
+
+    public function employeeUpdate(Request $request)
+    {
+        $assignSite = AssignSite::find($request->id);
+        $assignSite->date = $request->date;
+        $assignSite->supervisor = $request->supervisor_id;
+        $assignSite->site_assign = $request->site_id;
+        $assignSite->save();
+
+
+        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+    public function status(){
+        $status = Status::all();
+        return view('adminpanel.status', compact('status'));
+    }
+
+    public function statusStore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'status' => 'required|',
+
+        ]);
+        $status = new Status();
+        $status->status = $request->status;
+
+        $status->save();
+        return redirect()->route('status')->with('success', 'Status added successfully!');
+    }
+
+    public function statusDestroy($id)
+    {
+        $task = Status::find($id)->delete();
+        return redirect()->route('status')->with('success', 'Status is Deleted Successfully');
+    }
+
+
+
+    public function statusEdit($id){
+
+        $statusAll = Status::all();
+        $statusEdit = Status::find($id);
+        return view('adminpanel.status_edit', compact('statusAll', 'statusEdit'));
+    }
+
+    public function statusUpdate(Request $request)
+    {
+        $status = Status::find($request->id);
+        $status->status = $request->status;
+        $status->save();
+
+
+        return redirect(route('status'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+
+    // -----------
+
+
+    public function category(){
+        $category = TaskCategory::all();
+        return view('adminpanel.category', compact('category'));
+    }
+
+    public function categoryStore(Request $request)
+    {
+        // Validate the incoming request data
+        // $request->validate([
+        //     'category_name' => 'required',
+
+        // ]);
+
+        // dd($request->all());
+        $category = new TaskCategory();
+        $category->category_name = $request->category_name;
+
+        $category->save();
+        return redirect()->route('category')->with('success', 'category added successfully!');
+    }
+
+    public function categoryDestroy($id)
+    {
+        $task = TaskCategory::find($id)->delete();
+        return redirect()->route('category')->with('success', 'category is Deleted Successfully');
+    }
+
+
+
+    public function categoryEdit($id){
+
+        $categoryAll = TaskCategory::all();
+        $categoryEdit = TaskCategory::find($id);
+        return view('adminpanel.category_edit', compact('categoryAll', 'categoryEdit'));
+    }
+
+    public function categoryUpdate(Request $request)
+    {
+        $category = TaskCategory::find($request->id);
+        $category->category_name = $request->category_name;
+        $category->save();
+
+
+        return redirect(route('category'))->with('success', 'Successfully Updated !');
+    }
+
+    // ------------
+
+
+    public function subCategory(){
+        $category = TaskCategory::all();
+        $subcategory = TaskSubCategory::all();
+        return view('adminpanel.subcategory', compact('category', 'subcategory'));
+    }
+
+    public function subcategoryStore(Request $request)
+    {
+
+        // dd($request->all());
+        // Validate the incoming request data
+        // $request->validate([
+        //     'subcategory' => 'required|',
+
+        // ]);
+        $subcategory = new TaskSubCategory();
+        $subcategory->category_id = $request->category;
+        $subcategory->subcategory_name = $request->subcategory_name;
+
+        $subcategory->save();
+        return redirect()->route('subcategory')->with('success', 'subcategory added successfully!');
+    }
+
+    public function subcategoryDestroy($id)
+    {
+        $task = TaskSubCategory::find($id)->delete();
+        return redirect()->route('subcategory')->with('success', 'subcategory is Deleted Successfully');
+    }
+
+
+
+    public function subcategoryEdit($id){
+
+        $subcategoryAll = TaskSubCategory::all();
+        $subcategoryEdit = TaskSubCategory::find($id);
+        $category = TaskCategory::all();
+
+        return view('adminpanel.subcategory_edit', compact('subcategoryAll', 'subcategoryEdit', 'category'));
+    }
+
+    public function subcategoryUpdate(Request $request)
+    {
+        $subcategory = TaskSubCategory::find($request->id);
+        $subcategory->category_id = $request->category;
+        $subcategory->subcategory_name = $request->subcategory_name;
+            $subcategory->save();
+
+
+        return redirect(route('subcategory'))->with('success', 'Successfully Updated !');
+    }
+
+
+
+    public function workingUnitType(){
+        $unit = WorkingUnitType::all();
+        return view('adminpanel.working_unit_type', compact('unit'));
+    }
+
+    public function workingUnitTypeStore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'working_unit_type' => 'required|',
+
+        ]);
+        $workingUnitType = new WorkingUnitType();
+        $workingUnitType->working_unit_type = $request->working_unit_type;
+
+        $workingUnitType->save();
+        return redirect()->route('working_unit_type')->with('success', 'Working Unit Type added successfully!');
+    }
+
+    public function workingUnitTypeDestroy($id)
+    {
+        $workingUnitType = WorkingUnitType::find($id)->delete();
+        return redirect()->route('working_unit_type')->with('success', 'Working Unit Type is Deleted Successfully');
+    }
+
+
+
+    public function workingUnitTypeEdit($id){
+
+        $unitTypeAll = WorkingUnitType::all();
+        $unitTypeEdit = WorkingUnitType::find($id);
+        return view('adminpanel.working_unit_type_edit', compact('unitTypeAll', 'unitTypeEdit'));
+    }
+
+    public function workingUnitTypeUpdate(Request $request)
+    {
+        $workingUnitType = WorkingUnitType::find($request->id);
+        $workingUnitType->working_unit_type = $request->working_unit_type;
+        $workingUnitType->save();
+
+
+        return redirect(route('working_unit_type'))->with('success', 'Successfully Updated !');
+    }
+
+
+    public function nonConsumableCategory(){
+        $category = NonConsumableCategory::all();
+        return view('adminpanel.non_consumable_category', compact('category'));
+    }
+
+
+    public function nonConsumableCategoryStore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'category' => 'required|',
+
+        ]);
+        $category = new NonConsumableCategory();
+        $category->category = $request->category;
+
+        $category->save();
+        return redirect()->route('non-consumable-category')->with('success', 'Category added successfully!');
+    }
+
+
+
+    public function nonConsumableCategoryDestroy($id)
+    {
+        $category = NonConsumableCategory::find($id)->delete();
+        return redirect()->route('non-consumable-category')->with('success', 'Category is Deleted Successfully');
+    }
+
+    public function nonConsumableCategoryMaterial(){
+        $material = NonConsumableCategoryMaterial::all();
+        $category = NonConsumableCategory::all();
+        return view('adminpanel.non_consumable_category_material', compact('material', 'category'));
+    }
+
+
+    public function nonConsumableCategoryMaterialStore(Request $request)
+    {
+        // Validate the incoming request data
+        // $request->validate([
+        //     'category' => 'required|',
+
+        // ]);
+        $category = new NonConsumableCategoryMaterial();
+        $category->category_id = $request->category;
+        $category->material = $request->material;
+
+        $category->save();
+        return redirect()->route('non-consumable-category-material')->with('success', 'Material added successfully!');
+    }
+
+
+    public function nonConsumableCategoryMaterialDestroy($id)
+    {
+        $category = NonConsumableCategoryMaterial::find($id)->delete();
+        return redirect()->route('non-consumable-category-material')->with('success', 'Material is Deleted Successfully');
+    }
+
+
+
+    public function issue(){
+        $issue = Issues::all();
+        return view('adminpanel.issue', compact('issue'));
+    }
+
+    public function issueStore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'issue' => 'required|',
+
+        ]);
+        $issue = new Issues();
+        $issue->issue = $request->issue;
+
+        $issue->save();
+        return redirect()->route('issue')->with('success', 'Issue added successfully!');
+    }
+
+    public function issueDestroy($id)
+    {
+        $task = Issues::find($id)->delete();
+        return redirect()->route('issue')->with('success', 'Issue is Deleted Successfully');
+    }
+
+
+    public function issueEdit($id){
+
+        $issueAll = Issues::all();
+        $issueEdit = Issues::find($id);
+        return view('adminpanel.issue_edit', compact('issueAll', 'issueEdit'));
+    }
+
+    public function issueUpdate(Request $request)
+    {
+        $issue = Issues::find($request->id);
+        $issue->issue = $request->issue;
+        $issue->save();
+
+
+        return redirect(route('issue'))->with('success', 'Successfully Updated !');
+    }
+
+
+    // roles
+
+    public function appRole(){
+        $role = AppRoles::all();
+        return view('adminpanel.app_roles', compact('role'));
+
+    }
+
+    public function storeAppRole(Request $request)
+    {
+        $role = new AppRoles();
+        $role -> role = $request->role;
+        $role->save();
+        return redirect()->route('app-role')->with('success', 'Role added successfully!');
+
+    }
+
+    public function appRoleDestroy($id)
+    {
+        $role = AppRoles::find($id)->delete();
+        return redirect()->route('app-role')->with('success', 'Role Deleted Successfully');
+    }
+
+
+    public function panelRole(){
+        $role = PanelRoles::all();
+        return view('adminpanel.panel_roles', compact('role'));
+
+    }
+
+    public function storepanelRole(Request $request)
+    {
+        $role = new PanelRoles();
+        $role -> role = $request->role;
+        $role->save();
+        return redirect()->route('panel-role')->with('success', 'Role added successfully!');
+
+    }
+
+    public function panelRoleDestroy($id)
+    {
+        $role = PanelRoles::find($id)->delete();
+        return redirect()->route('panel-role')->with('success', 'Role Deleted Successfully');
+    }
+
+
+
+    // Master End
+
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+
+    // public function check(Request $request)
+    // {
+    //     //dd($request->all());
+    //     $email = $request->input('email');
+    //     $password = $request->input('password');
+
+    //     // Check if the user exists with the provided email
+    //     $user = User::where('email', $email)->first();
+
+    //     // If user exists and password matches
+    //     if ($user && \Hash::check($password, $user->password)) {
+    //         // Authentication successful, redirect to admin dashboard
+    //         return redirect()->route('dashboard');
+    //     } else {
+    //         // Authentication failed, redirect back to login page with error message
+    //         return redirect()->route('login')->with('error', 'Invalid email or password.');
+    //     }
+    // }
+    public function check(Request $request)
+    {
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        // Check if the user exists with the provided email
+        $user = User::where('email', $email)->first();
+
+        // If user exists and password matches
+        if ($user && \Hash::check($password, $user->password)) {
+            // Attempt authentication
+            if (auth()->attempt(['email' => $email, 'password' => $password])) {
+                // Authentication successful, redirect to admin dashboard
+                return redirect()->route('dashboard');
+            } else {
+                // Redirect back to login page with error message
+                return redirect()->route('login')->with('error', 'Invalid email or password.');
+            }
+        } else {
+            // Redirect back to login page with error message
+            return redirect()->route('login')->with('error', 'Invalid email or password.');
+        }
+    }
+
+
+
+
+
+
+
+}
