@@ -255,7 +255,7 @@
                         @endif
 
                         @if (Auth::user()->panel_role == 1 || in_array('site_manager', $permission))
-                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site Manager</a>
+                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site Managers</a>
                             </li>
                         @endif
 
