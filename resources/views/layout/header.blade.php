@@ -287,7 +287,7 @@
 
                     </ul>
                     </li>
-    <<<<<<< HEAD
+
                     @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission))
                         <li>
                             <a href="#" title="Inventory Managemnt"><span class="fa fa-exchange"> </span>Inventory
@@ -365,7 +365,6 @@
 
                     </ul>
                 </li>
-    =======
                     @endif
 
                     @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission))
@@ -458,17 +457,13 @@
                         </li>
                     @endif
 
-
-
-
-    >>>>>>> daraksha
-
-                    @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
-                        <li>
+                    {{-- @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission)) --}}
+                        {{-- <li>
                             <a href="#" title="User Roles"><span class="fa fa-user"> </span>User Roles</a>
-                            <ul>
+                            <ul> --}}
 
-    <<<<<<< HEAD
+
+
                 <li>
                     <a href="#" title="User Roles"><span class="fa fa-user"> </span>User Roles</a>
                     <ul>
@@ -502,10 +497,9 @@
                         @endif
 
 
-    =======
                                 <li><a href="app-user-roles"><span class="fa fa-plus"></span>App User Registration</a>
                                 </li>
-                    @endif
+                    {{-- @endif --}}
 
                     @if (Auth::user()->panel_role == 1 || in_array('panel-user-roles', $permission))
                         <li>
@@ -531,7 +525,7 @@
                         @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
                             <li><a href="expense-master"><span class="fa fa-plus"></span>Expenses</a></li>
                         @endif
-    >>>>>>> daraksha
+
                     </ul>
                 </li>
             {{-- <li>
