@@ -27,6 +27,9 @@ use App\Models\TaskSubCategory;
 use App\Models\Issues;
 use App\Models\WorkingUnitType;
 use App\Models\Approles;
+use App\Models\Engineer;
+use App\Models\Site_Manager;
+use App\Models\Site_Incharge;
 use App\Models\{PanelRoles, NonConsumableCategory, NonConsumableCategoryMaterial};
 
 
@@ -1064,10 +1067,12 @@ class DashboardController extends Controller
     public function employee(Request $request)
     {
         $ac = AccountDetails::where('employee_id', '!=', NULL)->with('employee', 'employee.cityname')->get();
+        $emp = Employee::get();
 
         $city = City::all();
-        return view('adminpanel.employee', compact('ac', 'city'));
+        return view('adminpanel.employee', compact('emp', 'city'));
     }
+
     public function employeestore(Request $request)
     {
         //  dd($request->all());
@@ -1082,6 +1087,15 @@ class DashboardController extends Controller
 
         ]);
 
+        
+        $user = new User();
+        $user->name = $request->employee_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password); // Hash the password
+        $user->role = 'employee'; 
+        $user->save();
+
+
         $employee = new Employee();
         $employee->employee_name = $request->employee_name;
         $employee->email = $request->email;
@@ -1090,6 +1104,7 @@ class DashboardController extends Controller
         $employee->pan_number = $request->pan_number;
         $employee->city_address = $request->city_address;
         $employee->city_id = $request->city_id;
+        $employee->user_id = $user->id;
 
         $employee->save();
 
@@ -1103,9 +1118,82 @@ class DashboardController extends Controller
             $account_details->save();
         }
         // dd(1);
+
+    
         return redirect()->back()->with('success', 'Employee and Account Details Added Successfully');
     }
 
+    public function edit_employee(Request $request)
+    {
+        $acc_details_edit = AccountDetails::where('employee_id', $request->id)->get();
+        $employee_edit = Employee::where('id',$request->id)->first();
+// echo json_encode($acc_details_edit);
+// echo json_encode($employee_edit);
+// exit();
+        $city = City::all();
+
+        return view('adminpanel.employee_edit', compact('employee_edit', 'city','acc_details_edit'));
+    }
+
+    
+    public function delete_acc_details(Request $request)
+        {
+        $response = AccountDetails::where('id', $request->id)->delete();
+            return response()->json($response);
+        }
+
+    public function update_employee(Request $request)
+    {
+        //  dd($request->all());
+        $request->validate([
+            'employee_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+
+        ]);
+
+        $employee = Employee::where('id',$request->id)->first();
+
+
+        $user = User:: where('email',$employee->email)->first();
+        $user->name = $request->employee_name;
+        $user->email = $request->email;
+        $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
+        $user->role = 'employee'; 
+        $user->save();
+
+        // $employee = new Employee();
+
+        $employee->employee_name = $request->employee_name;
+        $employee->email = $request->email;
+        $employee->mobile_number = $request->mobile_number;
+        $employee->aadhar_number = $request->aadhar_number;
+        $employee->pan_number = $request->pan_number;
+        $employee->city_address = $request->city_address;
+        $employee->city_id = $request->city_id;
+
+        $employee->save();
+
+        $delete = AccountDetails::where('employee_id',$employee->id)->delete();
+
+        for($i=0;$i<count($request->name); $i++){
+            if (isset($request->name[$i])){
+            $account_details = new AccountDetails();
+            $account_details->account_holder = $request->name[$i];
+            $account_details->employee_id = $employee->id;
+            $account_details->bank_name = $request->bank[$i];
+            $account_details->account_number = $request->ac_n[$i];
+            $account_details->ifsc_code = $request->ifsc[$i];
+            $account_details->save();
+        }
+    }
+
+        return redirect()->route('employee')->with('success', 'Employee and Account Details Added Successfully');
+    }
 
     public function employeeDestroy($id)
     {
@@ -1556,7 +1644,316 @@ class DashboardController extends Controller
 
 
 
+//engineer
 
+  public function engg()
+        {
+            $city = City::all();
+            $engg = Engineer::all();
+
+            return view('engineer',compact('city','engg'));
+        }
+
+ public function enggstore(Request $request)
+    {
+        //  dd($request->all());
+        $request->validate([
+            'employee_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+
+        ]);
+
+        $user = new User();
+        $user->name = $request->employee_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password); // Hash the password
+        $user->role = 'engineer'; 
+        $user->save();
+
+        $employee = new Engineer();
+        $employee->user_id = $user->id;
+        $employee->employee_name = $request->employee_name;
+        $employee->email = $request->email;
+        $employee->mobile_number = $request->mobile_number;
+        $employee->aadhar_number = $request->aadhar_number;
+        $employee->pan_number = $request->pan_number;
+        $employee->city_address = $request->city_address;
+        $employee->city_id = $request->city_id;
+        $employee->account_holder = $request->account_holder;
+        $employee->bank_name = $request->bank_name;
+        $employee->account_number = $request->account_number;
+        $employee->ifsc_code = $request->ifsc_code;
+        $employee->save();
+
+       
+        return redirect()->back()->with('success', 'Engineer Added Successfully');
+    }
+
+        public function edit_engg($id)
+        {
+            $edit_engg = Engineer::find($id);
+            $city = City::get();
+            return view('edit_engg',compact('edit_engg','city'));
+        }
+
+        public function update_engg(Request $request)
+        {
+            $request->validate([
+                'employee_name' => 'required',
+                'email' => 'required|',
+                'mobile_number' => 'required|',
+                'aadhar_number' => 'required|',
+                'pan_number' => 'required',
+                'city_address' => 'required',
+                'city_id' => 'required',
+    
+            ]);
+    
+            $employee = Engineer::where('id',$request->id)->first();
+
+            $user = User:: where('email',$employee->email)->first();
+            $user->name = $request->employee_name;
+            $user->email = $request->email;
+            $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
+            $user->role = 'engineer'; 
+            $user->save();
+
+            $employee->employee_name = $request->employee_name;
+            $employee->email = $request->email;
+            $employee->user_id = $user->id;
+            $employee->mobile_number = $request->mobile_number;
+            $employee->aadhar_number = $request->aadhar_number;
+            $employee->pan_number = $request->pan_number;
+            $employee->city_address = $request->city_address;
+            $employee->city_id = $request->city_id;
+            $employee->account_holder = $request->account_holder;
+            $employee->bank_name = $request->bank_name;
+            $employee->account_number = $request->account_number;
+            $employee->ifsc_code = $request->ifsc_code;
+            $employee->save();
+    
+           
+            return redirect()->route('engg')->with('success', 'Engineer Updated Successfully');
+        }
+
+        public function delete_engg($id)
+        {
+            Engineer::where('id',$id)->delete();
+            return back()->with('success','Record deleted successfully');
+        }
+
+        //site manager
+
+        public function site_manager()
+        {
+            $city = City::all();
+            $site = Site_Manager::all();
+
+            return view('site_manager',compact('city','site'));
+        }
+
+        public function site_managerstore(Request $request)
+        {
+        //  dd($request->all());
+        $request->validate([
+            'employee_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+
+        ]);
+
+        $user = new User();
+        $user->name = $request->employee_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password); // Hash the password
+        $user->role = 'site_manager'; 
+        $user->save();
+
+
+        $employee = new Site_Manager();
+        $employee->user_id = $user->id;
+        $employee->employee_name = $request->employee_name;
+        $employee->email = $request->email;
+        $employee->mobile_number = $request->mobile_number;
+        $employee->aadhar_number = $request->aadhar_number;
+        $employee->pan_number = $request->pan_number;
+        $employee->city_address = $request->city_address;
+        $employee->city_id = $request->city_id;
+        $employee->account_holder = $request->account_holder;
+        $employee->bank_name = $request->bank_name;
+        $employee->account_number = $request->account_number;
+        $employee->ifsc_code = $request->ifsc_code;
+        $employee->save();
+
+
+        return redirect()->back()->with('success', 'Site Manager Added Successfully');
+        }
+
+        public function edit_site_manager($id)
+        {
+            $edit_site_manager = Site_Manager::find($id);
+            $city = City::get();
+            return view('edit_site_manager',compact('edit_site_manager','city'));
+        }
+
+        public function update_site_manager(Request $request)
+        {
+            $request->validate([
+                'employee_name' => 'required',
+                'email' => 'required|',
+                'mobile_number' => 'required|',
+                'aadhar_number' => 'required|',
+                'pan_number' => 'required',
+                'city_address' => 'required',
+                'city_id' => 'required',
+
+            ]);
+
+            $employee = Site_Manager::where('id',$request->id)->first();
+
+            $user = User:: where('email',$employee->email)->first();
+            $user->name = $request->employee_name;
+            $user->email = $request->email;
+            $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
+            $user->role = 'site_manager'; 
+            $user->save();
+
+            $employee->user_id = $user->id;
+            $employee->employee_name = $request->employee_name;
+            $employee->email = $request->email;
+            $employee->mobile_number = $request->mobile_number;
+            $employee->aadhar_number = $request->aadhar_number;
+            $employee->pan_number = $request->pan_number;
+            $employee->city_address = $request->city_address;
+            $employee->city_id = $request->city_id;
+            $employee->account_holder = $request->account_holder;
+            $employee->bank_name = $request->bank_name;
+            $employee->account_number = $request->account_number;
+            $employee->ifsc_code = $request->ifsc_code;
+            $employee->save();
+
+        
+            return redirect()->route('site_manager')->with('success', 'Site Manager Updated Successfully');
+        }
+
+        public function delete_site_manager($id)
+        {
+            Site_Manager::where('id',$id)->delete();
+            return back()->with('success','Record deleted successfully');
+        }
+
+        //site incharge
+
+        public function site_incharge()
+        {
+            $city = City::all();
+            $site = Site_Incharge::all();
+
+            return view('site_incharge',compact('city','site'));
+        }
+
+        public function site_inchargestore(Request $request)
+        {
+        //  dd($request->all());
+        $request->validate([
+            'employee_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+
+        ]);
+
+        $user = new User();
+        $user->name = $request->employee_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password); // Hash the password
+        $user->role = 'site_incharge'; 
+        $user->save();
+
+
+        $employee = new Site_Incharge();
+        $employee->user_id = $user->id;
+        $employee->employee_name = $request->employee_name;
+        $employee->email = $request->email;
+        $employee->mobile_number = $request->mobile_number;
+        $employee->aadhar_number = $request->aadhar_number;
+        $employee->pan_number = $request->pan_number;
+        $employee->city_address = $request->city_address;
+        $employee->city_id = $request->city_id;
+        $employee->account_holder = $request->account_holder;
+        $employee->bank_name = $request->bank_name;
+        $employee->account_number = $request->account_number;
+        $employee->ifsc_code = $request->ifsc_code;
+        $employee->save();
+
+
+        return redirect()->back()->with('success', 'Site incharge Added Successfully');
+        }
+
+        public function edit_site_incharge($id)
+        {
+            $edit_site_incharge = Site_Incharge::find($id);
+            $city = City::get();
+            return view('edit_site_incharge',compact('edit_site_incharge','city'));
+        }
+
+        public function update_site_incharge(Request $request)
+        {
+            $request->validate([
+                'employee_name' => 'required',
+                'email' => 'required|',
+                'mobile_number' => 'required|',
+                'aadhar_number' => 'required|',
+                'pan_number' => 'required',
+                'city_address' => 'required',
+                'city_id' => 'required',
+
+            ]);
+
+            $employee = Site_Incharge::where('id',$request->id)->first();
+
+            $user = User:: where('email',$employee->email)->first();
+            $user->name = $request->employee_name;
+            $user->email = $request->email;
+            $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
+            $user->role = 'site_incharge'; 
+            $user->save();
+
+            $employee->user_id = $user->id;
+            $employee->employee_name = $request->employee_name;
+            $employee->email = $request->email;
+            $employee->mobile_number = $request->mobile_number;
+            $employee->aadhar_number = $request->aadhar_number;
+            $employee->pan_number = $request->pan_number;
+            $employee->city_address = $request->city_address;
+            $employee->city_id = $request->city_id;
+            $employee->account_holder = $request->account_holder;
+            $employee->bank_name = $request->bank_name;
+            $employee->account_number = $request->account_number;
+            $employee->ifsc_code = $request->ifsc_code;
+            $employee->save();
+
+        
+            return redirect()->route('site_incharge')->with('success', 'Site incharge Updated Successfully');
+        }
+
+        public function delete_site_incharge($id)
+        {
+            Site_Incharge::where('id',$id)->delete();
+            return back()->with('success','Record deleted successfully');
+        }
 
 
 }
