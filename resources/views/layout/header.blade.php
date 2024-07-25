@@ -250,17 +250,17 @@
                         @endif
 
                         @if (Auth::user()->panel_role == 1 || in_array('engg', $permission))
-                            <li><a href="{{ route('engg') }}"><span class="fa fa-plus"></span>Add Employes</a>
+                            <li><a href="{{ route('engg') }}"><span class="fa fa-plus"></span>Add Engineers</a>
                             </li>
                         @endif
 
                         @if (Auth::user()->panel_role == 1 || in_array('site_manager', $permission))
-                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Employes</a>
+                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site Manager</a>
                             </li>
                         @endif
 
                         @if (Auth::user()->panel_role == 1 || in_array('site_incharge', $permission))
-                            <li><a href="{{ route('site_incharge') }}"><span class="fa fa-plus"></span>Add Employes</a>
+                            <li><a href="{{ route('site_incharge') }}"><span class="fa fa-plus"></span>Add Site Incharge</a>
                             </li>
                         @endif
 
