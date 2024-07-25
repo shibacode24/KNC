@@ -6,7 +6,7 @@
         <div class="row">
 
             <div class="col-md-12" style="margin-top:5px;">
-                <a href="expense-master"> <button id="on" type="button" class="btn mjks"
+                <a href="{{route('expence-master')}}"> <button id="on" type="button" class="btn mjks"
                         style="color:#FFFFFF; height:30px; width:auto;background-color: #d54e10; "><i
                             class="fa fa-user"></i>Expense Masters</button>
                 </a>
