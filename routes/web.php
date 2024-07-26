@@ -244,7 +244,7 @@ Route::post('/assign-site-store', [DashboardController::class, 'assignSiteStore'
 
 // User Roles
 Route::get('panel-user-roles', [UserRolesController::class, 'panelUserRole'])->name('panel-user-roles');
-Route::post('panel-user-store', [UserRolesController::class, 'panelUserstore'])->name('panel-user-store');
+Route::post('panel-user-role-store', [UserRolesController::class, 'panelUserRolestore'])->name('panel-user-role-store');
 Route::get('panel-user', [UserRolesController::class, 'panelUser'])->name('panel-user');
 Route::post('panel-user-store', [UserRolesController::class, 'panelUserStore'])->name('panelUser.store');
 

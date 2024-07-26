@@ -165,9 +165,37 @@ public function panelUserStore(Request $request)
         $supervisor->permission = $rolePermissions;
 
         $supervisor->save();
-    } else {
-dd(1);
+    } elseif ($request->person === 'Employee' && $request->employee) {
+        // Get the supervisor
+        $employee = User::find($request->employee);
+
+        // Update the supervisor's role and permissions
+        $employee->panel_role = $request->role_id;
+
+        // Get permissions from PanelRoles table
+        $rolePermissions = PanelRoles::find($request->role_id)->permission;
+        $employee->permission = $rolePermissions;
+
+        $employee->save();
     }
+    elseif($request->person === 'Other'){
+        // Get permissions from PanelRoles table
+        $rolePermissions = PanelRoles::find($request->role_id)->permission;
+
+        $user = new User();
+        $user -> name = $request->name;
+        $user -> contact = $request->contact;
+        $user -> email = $request->email;
+        $user->password = bcrypt($request->password); // Hash the password
+        $user -> panel_role = $request->role_id;
+
+        $user -> role = 'Other';
+        $user->permission = $rolePermissions;
+
+        $user->save();
+
+    }
+
     return redirect(route('panel-user'))->with('success', 'Successfully Updated!');
 }
 

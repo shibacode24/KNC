@@ -23,13 +23,19 @@
                             {{ session('success') }}
                         </div>
                     @endif
-                    <form action="{{ route('panel-user-store') }}" method="post">
+                    <form action="{{ route('panel-user-role-store') }}" method="post">
                         @csrf
-                        <div class="col-md-12" style="margin-top:10px;">
-                            <!-- <div class="col-md-4"></div>
-                                                    -->
+                        <div class="col-md-12" style="margin-top: 10px; margin-left:500px; margin-bottom:20px" >
+                            <div class="d-flex justify-content-center">
+                                <div class="col-md-2 d-flex flex-column align-items-center">
+                                    <label class="control-label">Add Role<font color="#FF0000">*</font></label>
+                                    <input type="text" class="form-control" name="role" placeholder="" required />
+                                </div>
+                            </div>
 
-                            <div class="col-md-2">
+
+
+                            {{-- <div class="col-md-2">
                                 <label>Select Role</label>
                                 <select class="form-control select" data-live-search="true" name="role">
                                     @foreach ($role as $roles)
@@ -72,11 +78,7 @@
                                 <label class="control-label">Address<font color="#FF0000">*</font></label>
                                 <input type="text" class="form-control" name="city_address" placeholder="" required />
                             </div>
-                            {{--
-                        <div class="col-md-2" style="margin-top: 5px;">
-                            <label class="control-label">Password<font color="#FF0000">*</font></label>
-                            <input type="password" class="form-control" name="password" placeholder="" required />
-                        </div> --}}
+
                             <div class="col-md-2" style="margin-top: 5px;">
                                 <label class="control-label">Password<font color="#FF0000">*</font></label>
                                 <div class="input-group">
@@ -105,7 +107,6 @@
                             </div>
                             <div class="col-md-12" style="margin-top: 5px;margin-bottom: 5px;">
                                 <img src="{{ asset('public/img/line.png') }}" width="100%" />
-                                <!-- <h6>Bank Details</h6> -->
                             </div>
                             <div class="col-md-2" style="margin-top: 5px;">
                                 <label class="control-label">Account Holder<font color="#FF0000">*</font></label>
@@ -129,8 +130,8 @@
                                     style="color:#FFFFFF; height:30px; width:auto;">
                                     <i class="fa fa-plus "></i></button>
 
-                            </div>
-                            <div class="col-md-8" style="margin-top:10px;" align="right">
+                            </div> --}}
+                            {{-- <div class="col-md-8" style="margin-top:10px;" align="right">
                                 <table width="100%" border="1">
                                     <tr style="background-color:#f0f0f0; height:30px;">
                                         <th width="20%" style="text-align:center">Account Holder Name</th>
@@ -148,26 +149,23 @@
 
                                     </tbody>
                                 </table>
-                            </div>
-                            {{-- <div class="col-md-2" style="margin-top:20px;" align="left">
-                                <button id="on" type="submit" class="btn mjks"
-                                    style="color:#FFFFFF; height:30px; width:auto;">
-                                    <i class="fa fa-file"></i>Submit</button>
-
                             </div> --}}
+
                         </div>
 
-
+                        <hr>
                         <div class="col-md-12" style="margin-top: 5px;margin-bottom: 20px;">
-                            <img src="{{ asset('public/img/line.png') }}" width="100%" />
-                            <!-- <h6>Bank Details</h6> -->
+                            {{-- <img src="{{ asset('public/img/line.png') }}" width="100%" /> --}}
                         </div>
 
-                        <div class="row g-2">
+                        <div class="row g-2" style="margin-left: 10px">
                             <div class="col-md-2">
-                                <label for="inputFirstName" class="form-label" style="font-weight: bold;"> Masters
+                                <label for="inputFirstName" class="form-label" style="font-weight: bold; font-size:16px"> Masters
                                     :</label>
                             </div>
+
+                            <div class="col-md-10">
+
                             <div class="col-md-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="city"
@@ -347,14 +345,18 @@
                                     <label class="form-check-label" for="flexCheckDefault6">Panel Roles</label>
                                 </div>
                             </div>
-
+                            </div>
 
                         </div>
-                        <div class="row g-2" style="margin-top: 20px">
+                        <hr>
+                        <div class="row g-2" style="margin-top: 20px; margin-left:10px">
                             <div class="col-md-2">
-                                <label for="inputFirstName" class="form-label" style="font-weight: bold;">Inventory Management
+                                <label for="inputFirstName" class="form-label" style="font-weight: bold; font-size:16px">Inventory Management
                                     :</label>
                             </div>
+
+                            <div class="col-md-10">
+
                             <div class="col-md-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="site_material"
@@ -369,19 +371,20 @@
                                     <label class="form-check-label" for="flexCheckDefault1">Add Material</label>
                                 </div>
                             </div>
-                            {{-- <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="destroy-restro"
-                                        id="flexCheckDefault11" name="permission[]">
-                                    <label class="form-check-label" for="flexCheckDefault11">Delete</label>
-                                </div>
-                            </div> --}}
                         </div>
-                        <div class="row g-2" style="margin-top: 20px">
+                        </div>
+
+                        </div>
+
+                        <hr>
+                        <div class="row g-2" style="margin-top: 20px; margin-left:14px">
                             <div class="col-md-2">
                                 <label for="inputFirstName" class="form-label"
-                                    style="font-weight: bold;">Purchase Department :</label>
+                                    style="font-weight: bold; font-size:16px">Purchase Department :</label>
                             </div>
+
+                            <div class="col-md-10">
+
                             <div class="col-md-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="req_material"
@@ -396,19 +399,18 @@
                                     <label class="form-check-label" for="flexCheckDefault12">Order Details List</label>
                                 </div>
                             </div>
-                            {{-- <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="delete_Resto_menu"
-                                        id="flexCheckDefault115" name="permission[]">
-                                    <label class="form-check-label" for="flexCheckDefault115">Delete</label>
-                                </div>
-                            </div> --}}
+
                         </div>
-                        <div class="row g-2" style="margin-top: 20px">
+                        </div>
+                        <hr>
+                        <div class="row g-2" style="margin-top: 20px; margin-left:14px">
                             <div class="col-md-2">
                                 <label for="inputFirstName" class="form-label"
-                                    style="font-weight: bold;">Warehouse :</label>
+                                    style="font-weight: bold; font-size:16px">Warehouse :</label>
                             </div>
+
+                            <div class="col-md-10">
+
                             <div class="col-md-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="grn"
@@ -423,16 +425,9 @@
                                     <label class="form-check-label" for="flexCheckDefault71">GRN Out</label>
                                 </div>
                             </div>
-                            {{-- <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox"
-                                        value="delete_restoWise_slider" id="flexCheckDefault117"
-                                        name="permission[]">
-                                    <label class="form-check-label" for="flexCheckDefault117">Delete</label>
-                                </div>
-                            </div> --}}
-                        </div>
 
+                        </div>
+                        </div>
                     {{-- </form> --}}
 
                     {{-- apppended supervisor data end --}}
