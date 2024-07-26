@@ -429,10 +429,7 @@
                     </ul>
                 </li>
                 @endif
-            {{-- <li>
-                    <a href="#" title="Account Department"><span class="fa fa-money"> </span>Account Department</a>
-
-                </li>
+            {{--
 
                 <li>
                     <a href="#" title="Prediction"><span class="fa fa-tachometer"> </span></a>
