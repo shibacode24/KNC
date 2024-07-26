@@ -257,6 +257,21 @@
                             </li>
                         @endif
 
+                        @if (Auth::user()->panel_role == 1 || in_array('engg', $permission))
+                            <li><a href="{{ route('engg') }}"><span class="fa fa-plus"></span>Add Engineers</a>
+                            </li>
+                        @endif
+
+                        @if (Auth::user()->panel_role == 1 || in_array('site_manager', $permission))
+                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site Managers</a>
+                            </li>
+                        @endif
+
+                        @if (Auth::user()->panel_role == 1 || in_array('site_incharge', $permission))
+                            <li><a href="{{ route('site_incharge') }}"><span class="fa fa-plus"></span>Add Site Incharge</a>
+                            </li>
+                        @endif
+
                         @if (Auth::user()->panel_role == 1 || in_array('status', $permission))
                             <li><a href="{{ route('status') }}"><span class="fa fa-plus"></span>Add Status</a></li>
                         @endif
@@ -265,14 +280,7 @@
                             <li><a href="{{ route('issue') }}"><span class="fa fa-plus"></span>Add Issues</a></li>
                         @endif
 
-                        @if (Auth::user()->panel_role == 1 || in_array('app-role', $permission))
-                            <li><a href="{{ route('app-role') }}"><span class="fa fa-plus"></span>App Roles</a></li>
-                        @endif
-
-                        @if (Auth::user()->panel_role == 1 || in_array('panel-role', $permission))
-                            <li><a href="{{ route('panel-role') }}"><span class="fa fa-plus"></span>Panel Roles</a>
-                            </li>
-                        @endif
+                   
 
 
 
@@ -280,7 +288,8 @@
                     </li>
                     @endif
 
-                    @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission))
+                 
+             @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission))
 
                         <li>
                             <a href="#" title="Inventory Managemnt"><span class="fa fa-exchange"> </span>Inventory

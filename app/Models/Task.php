@@ -11,6 +11,7 @@ class Task extends Model
     protected $table = 'task';
     protected $fillable = [
         'site_id',
+        'workplace_id',
         'task_category_id',
         'description',
         'start_date',

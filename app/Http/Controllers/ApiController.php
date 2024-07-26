@@ -137,6 +137,7 @@ class ApiController extends Controller
 	{
 	$task = Task::create([
 		'site_id'=>$request->input('site_id'),
+		'workplace_id'=>$request->input('workplace_id'),
 		'task_category_id'=>$request->input('task_category_id'),
 		'description'=>$request->input('description'),
 		//'start_date'=>$request->input('start_date'),
@@ -156,6 +157,7 @@ class ApiController extends Controller
 		$task = Task::
 		leftJoin('task_category', 'task_category.id', '=', 'task.task_category_id')
 		->where('site_id', $request->site_id)
+		->where('workplace_id', $request->workplace_id)
 		->select('task.*', 'task_category.category_name' )
 			->get();
 		  if ($task->isEmpty()) {
