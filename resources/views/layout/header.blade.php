@@ -145,11 +145,8 @@
                 </li>
 
                 @php
-                @php
                     $permission = Auth::user()->permission;
                     // echo $permission;
-                @endphp
-
                 @endphp
 
 
@@ -305,7 +302,6 @@
 
                         @if (Auth::user()->panel_role == 1 || in_array('site_manager', $permission))
                             <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site Manager</a>
-                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site Manager</a>
                             </li>
                         @endif
 
@@ -389,20 +385,7 @@
                         in_array('req_material', $permission) ||
                         in_array('order_details', $permission) ||
                         in_array('direct-po-list', $permission))
-                @if (Auth::user()->panel_role == 1 ||
-                        in_array('req_material', $permission) ||
-                        in_array('order_details', $permission) ||
-                        in_array('direct-po-list', $permission))
 
-                    <li>
-                        <a href="#" title="Purchase Department"><span class="fa fa-money"> </span>Purchase
-                            Department</a>
-                        <ul>
-                            @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission))
-                                <li><a href="{{ route('req_material') }}"><span class="fa fa-plus"></span>Material
-                                        Request
-                                        List</a></li>
-                            @endif
                     <li>
                         <a href="#" title="Purchase Department"><span class="fa fa-money"> </span>Purchase
                             Department</a>
@@ -418,16 +401,7 @@
                                         Details
                                         List</a></li>
                             @endif
-                            @if (Auth::user()->panel_role == 1 || in_array('order_details', $permission))
-                                <li><a href="{{ route('order_details') }}"><span class="fa fa-plus"></span>Order
-                                        Details
-                                        List</a></li>
-                            @endif
 
-                            @if (Auth::user()->panel_role == 1 || in_array('direct-po-list', $permission))
-                                <li><a href="direct-po-list"><span class="fa fa-plus"></span>Direct PO
-                                        List</a></li>
-                            @endif
                             @if (Auth::user()->panel_role == 1 || in_array('direct-po-list', $permission))
                                 <li><a href="direct-po-list"><span class="fa fa-plus"></span>Direct PO
                                         List</a></li>
@@ -437,28 +411,13 @@
                                 <li><a href="{{ route('feedback') }}"><span class="fa fa-plus"></span>Feedback</a>
                                 </li>
                             @endif
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href="{{ route('feedback') }}"><span class="fa fa-plus"></span>Feedback</a>
-                                </li>
-                            @endif
 
-                        </ul>
-                    </li>
-                @endif
                         </ul>
                     </li>
                 @endif
 
                 @if (Auth::user()->panel_role == 1 || in_array('grn', $permission) || in_array('issue_material', $permission))
-                @if (Auth::user()->panel_role == 1 || in_array('grn', $permission) || in_array('issue_material', $permission))
 
-                    <li>
-                        <a href="#" title="Warehouse"><span class="fa fa-exchange"> </span>Warehouse</a>
-                        <ul>
-                            @if (Auth::user()->panel_role == 1 || in_array('grn', $permission))
-                                <li><a href="{{ route('grn') }}"><span class="fa fa-plus"></span>GRN IN</a>
-                                </li>
-                            @endif
                     <li>
                         <a href="#" title="Warehouse"><span class="fa fa-exchange"> </span>Warehouse</a>
                         <ul>
@@ -475,13 +434,6 @@
                         </ul>
                     </li>
                 @endif
-                            @if (Auth::user()->panel_role == 1 || in_array('issue_material', $permission))
-                                <li><a href="{{ route('issue_material') }}"><span class="fa fa-plus"></span>GRN
-                                        OUT</a></li>
-                            @endif
-                        </ul>
-                    </li>
-                @endif
 
 
 
@@ -489,23 +441,12 @@
                 <a href="#" title="Warehouse"><span class="fa fa-list"> </span>Warehouse</a>
                 <ul>
                     @if (Auth::user()->panel_role == 1 || in_array('grn', $permission))
-                    {{-- <li>
-                <a href="#" title="Warehouse"><span class="fa fa-list"> </span>Warehouse</a>
-                <ul>
-                    @if (Auth::user()->panel_role == 1 || in_array('grn', $permission))
 
-                        <li><a href="{{ route('grn') }}"><span class="fa fa-plus"></span>GRN In</a></li>
-                    @endif
                         <li><a href="{{ route('grn') }}"><span class="fa fa-plus"></span>GRN In</a></li>
                     @endif
 
                         @if (Auth::user()->panel_role == 1 || in_array('issue_material', $permission))
-                        @if (Auth::user()->panel_role == 1 || in_array('issue_material', $permission))
 
-                            <li><a href="{{ route('issue_material') }}"><span class="fa fa-plus"></span>GRN
-                                    Out</a>
-                        </li>
-                    @endif
                             <li><a href="{{ route('issue_material') }}"><span class="fa fa-plus"></span>GRN
                                     Out</a>
                         </li>
@@ -541,8 +482,6 @@
 
                     </li>
                 @endif
-                    </li>
-                @endif
 
                 @if (Auth::user()->panel_role == 1 || in_array('panel-user', $permission))
                     <li>
@@ -559,18 +498,7 @@
             @endif
 
             @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
-            @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
 
-            <li>
-                <a href="#" title="Account Department"><span class="fa fa-user"> </span>Account Department</a>
-                <ul>
-                    @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
-                        <li><a href="expense-master"><span class="fa fa-plus"></span>Expenses</a></li>
-                    @endif
-                </ul>
-            </li>
-            @endif
-        {{--
             <li>
                 <a href="#" title="Account Department"><span class="fa fa-user"> </span>Account Department</a>
                 <ul>
@@ -584,18 +512,12 @@
 
             <li>
                 <a href="#" title="Prediction"><span class="fa fa-tachometer"> </span></a>
-            <li>
-                <a href="#" title="Prediction"><span class="fa fa-tachometer"> </span></a>
 
-            </li> --}}
             </li> --}}
 
         {{-- <li>
                 <a href="#" title="User Role"><span class="fa fa-money"> </span>User Roles For App</a>
-        {{-- <li>
-                <a href="#" title="User Role"><span class="fa fa-money"> </span>User Roles For App</a>
 
-            </li> --}}
             </li> --}}
 
 
@@ -603,60 +525,22 @@
             <a href="{{ route('logout') }}" class="mb-control" data-box="#mb-signout"><span
                     class="fa fa-sign-out"></span></a>
         </li>
-        <li class="xn-icon-button pull-right">
-            <a href="{{ route('logout') }}" class="mb-control" data-box="#mb-signout"><span
-                    class="fa fa-sign-out"></span></a>
-        </li>
 
-        {{-- @if (Auth::user()->role == 1 || in_array('raw_material', $permission)) --}}
         {{-- @if (Auth::user()->role == 1 || in_array('raw_material', $permission)) --}}
 
         {{-- @endif --}}
-        {{-- @endif --}}
 
-        <!-- MESSAGES -->
         <!-- MESSAGES -->
 
         <li class="xn-icon-button pull-right"
             style="margin-right:25px; min-width:100px; color:#FFFFFF; padding-top:20px;">
             Welcome, Admin
         </li>
-        <li class="xn-icon-button pull-right"
-            style="margin-right:25px; min-width:100px; color:#FFFFFF; padding-top:20px;">
-            Welcome, Admin
-        </li>
 
-        </ul>
         </ul>
 
         @yield('content')
-        @yield('content')
 
-        <!-- MESSAGE BOX-->
-        <div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
-            <div class="mb-container">
-                <div class="mb-middle">
-                    <div class="mb-title"><span class="fa fa-sign-out"></span> Log <strong>Out</strong> ?</div>
-                    <div class="mb-content">
-                        <p>Are you sure you want to log out?</p>
-                        <p>Press No if youwant to continue work. Press Yes to logout current user.</p>
-                    </div>
-                    <div class="mb-footer">
-                        <div class="pull-right">
-                            <div style="display: flex;">
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" style="margin-right:5px;"
-                                        class="btn btn-success btn-lg">Yes</button>
-                                </form>
-                                <button class="btn btn-default btn-lg mb-control-close">No</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END MESSAGE BOX-->
         <!-- MESSAGE BOX-->
         <div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
             <div class="mb-container">
@@ -687,36 +571,8 @@
         <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
         <audio id="audio-fail" src="audio/fail.mp3" preload="auto"></audio>
         <!-- END PRELOADS -->
-        <!-- START PRELOADS -->
-        <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
-        <audio id="audio-fail" src="audio/fail.mp3" preload="auto"></audio>
-        <!-- END PRELOADS -->
 
 
-        <!-- START SCRIPTS -->
-        <script type="text/javascript" src="{{ asset('public/js/plugins/jquery/jquery.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/jquery/jquery-ui.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/bootstrap/bootstrap.min.js') }}"></script>
-        <!-- END PLUGINS -->
-        <!-- THIS PAGE PLUGINS -->
-        <script type='text/javascript' src="{{ asset('public/js/plugins/icheck/icheck.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js') }}">
-        </script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/bootstrap/bootstrap-timepicker.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/bootstrap/bootstrap-colorpicker.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/bootstrap/bootstrap-file-input.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/bootstrap/bootstrap-select.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/tagsinput/jquery.tagsinput.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/dropzone/dropzone.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/fileinput/fileinput.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/plugins/filetree/jqueryFileTree.js') }}"></script>
-        <!-- END PAGE PLUGINS -->
-        <!-- START TEMPLATE -->
-        <script type="text/javascript" src="{{ asset('public/js/plugins.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('public/js/actions.js') }}"></script>
-        <!-- END TEMPLATE -->
         <!-- START SCRIPTS -->
         <script type="text/javascript" src="{{ asset('public/js/plugins/jquery/jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('public/js/plugins/jquery/jquery-ui.min.js') }}"></script>
@@ -752,16 +608,6 @@
                 });
                 $("#filetree").fileTree({
                     root: '/',
-        <script>
-            $(function() {
-                $("#file-simple").fileinput({
-                    showUpload: false,
-                    showCaption: false,
-                    browseClass: "btn btn-danger",
-                    fileType: "any"
-                });
-                $("#filetree").fileTree({
-                    root: '/',
 
                     expandSpeed: 100,
                     collapseSpeed: 100,
@@ -775,29 +621,7 @@
                 });
             });
         </script>
-                    expandSpeed: 100,
-                    collapseSpeed: 100,
-                    multiFolder: false
-                }, function(file) {
-                    alert(file);
-                }, function(dir) {
-                    setTimeout(function() {
-                        page_content_onresize();
-                    }, 200);
-                });
-            });
-        </script>
 
-        <script>
-            function confirmDelete(Id) {
-                var result = confirm('Are you sure you want to delete this Field?');
-                if (!result) {
-                    event.preventDefault(); // Prevent the default action (deletion) if user clicks "Cancel"
-                } else {
-                    window.location.href = '{{ url('categoryDestroy') }}/' + categoryId;
-                }
-            }
-        </script>
         <script>
             function confirmDelete(Id) {
                 var result = confirm('Are you sure you want to delete this Field?');
