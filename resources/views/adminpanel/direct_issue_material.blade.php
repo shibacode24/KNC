@@ -5,6 +5,28 @@
     <div class="row">
         <div class="col-md-12">
 
+            @if ($errors->any())
+            <div class="alert alert-danger mt-2">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
             <div class="panel-body" style="padding:1px 5px 2px 5px;">
 
 
@@ -18,7 +40,7 @@
                     </div>
                 </div>
 
-                <form action="{{ route('direct-po-list-store') }}" method="post">
+                <form action="{{route('direct-issue-material.store')}}" method="post">
                     @csrf
                 <div class="col-md-12" style="margin-top:10px;">
                     <!-- <div class="col-md-4"></div>
@@ -120,17 +142,11 @@
                         <input type="number" class="form-control" name="quantity" placeholder="" />
                     </div>
 
-
-                    <div class="col-md-2" style="margin-top: 20px; margin-left:5px">
-                        <label>Select Vendor</label>
-                        <select class="form-control select" data-live-search="true" name="vendor" id="vendor">
-                            <option value="">--Select--</option>
-                            @foreach ($vendor as $vendor)
-                            <option value="{{$vendor->id}}">{{$vendor->vendor_name}}</option>
-                            @endforeach
-
-                        </select>
+                    <div class="col-md-2"  style="margin-top: 20px">
+                        <label class="control-label">Remark<font color="#FF0000">*</font></label>
+                    <textarea name="remark"  class="form-control" id="remark" cols="30" rows="3"></textarea>
                     </div>
+
 
                     <div class="col-md-1" style="margin-top:35px;">
                         <button id="on" type="submit" class="btn mjks" style="color:#FFFFFF; height:30px; width:auto;">
@@ -170,32 +186,35 @@
                                         <th>Sr. No.</th>
                                         <th>Date</th>
                                         <th>Time</th>
+                                        <th>Site Name</th>
+                                        <th>Supervisor Name</th>
                                         <th>Warehouse Name</th>
                                         <th>Material Name</th>
                                         <th>Raw Material Name</th>
                                         <th>Brand Name</th>
                                         <th>Material Unit Type</th>
                                         <th>Material Qty</th>
-                                        <th>Vendor</th>
+                                        <th>Remark</th>
                                         {{-- <th>Remark</th> --}}
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                    {{-- @foreach ($issue->sortByDesc('created_at')  as $addMaterial)
+                                    @foreach ($issue->sortByDesc('created_at')  as $addMaterial)
                                         <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$addMaterial->date}}</td>
                                         <td>{{$addMaterial->time}}</td>
-
+                                        <td>{{$addMaterial->site_name->site_name}}</td>
+                                        <td>{{$addMaterial->supervisor_name->supervisor_name}}</td>
                                         <td>{{$addMaterial->warehouse_name->warehouse_name}}</td>
                                         <td>{{$addMaterial->material_name->material}}</td>
                                         <td>{{$addMaterial->raw_material_name->raw_material_name}}</td>
                                         <td>{{$addMaterial->brand_name->brand}}</td>
                                         <td>{{$addMaterial->unit_type->unit_type}}</td>
                                         <td>{{$addMaterial->quantity}}</td>
-                                        <td>{{$addMaterial->vendor_name->vendor_name}}</td>
+                                        <td>{{$addMaterial->remark}}</td>
 
 
 
@@ -210,7 +229,7 @@
                                         </td>
                                     </tr>
 
-                                    @endforeach --}}
+                                    @endforeach
 
                                 </tbody>
                             </table>
