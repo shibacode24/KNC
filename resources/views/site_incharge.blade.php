@@ -13,11 +13,8 @@
                         <h5 class="panel-title"
                             style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                             align="center">
-                            <i class="fa fa-bars"></i> &nbsp;Add Employee
+                            <i class="fa fa-bars"></i> &nbsp;Add Site Incharge
                         </h5>
-
-
-
                     </div>
                 </div>
                 @if(session('success'))
@@ -25,7 +22,7 @@
                     {{ session('success') }}
                 </div>
                 @endif
-                <form action="{{ route('employee.store') }}" method="post">
+                <form action="{{ route('site_inchargestore') }}" method="post">
                     @csrf
                     <div class="col-md-12" style="margin-top:10px;">
                         <!-- <div class="col-md-4"></div>
@@ -35,10 +32,7 @@
 
                             <input type="text" class="form-control" name="employee_name" placeholder="" required />
                         </div>
-                        <div class="col-md-2">
-                            <label class="control-label">Email<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" name="email" placeholder="" required />
-                        </div>
+                       
                         <div class="col-md-2">
                             <label class="control-label">Mobile Number<font color="#FF0000">*</font></label>
                             <input type="text" class="form-control" name="mobile_number" maxlength="10" placeholder="" required />
@@ -64,38 +58,43 @@
                             <label class="control-label">Address<font color="#FF0000">*</font></label>
                             <input type="text" class="form-control" name="city_address" placeholder="" required />
                         </div>
-                        <div class="col-md-2" style="margin-top: 5px;">
-                            <label class="control-label">Password<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" name="password" placeholder="" required />
-                        </div>
-                        <div class="col-md-12" style="margin-top: 5px;margin-bottom: 5px;">
+                      
+                        {{-- <div class="col-md-12" style="margin-top: 5px;margin-bottom: 5px;">
                             <img src="{{ asset('public/img/line.png') }}" width="100%" />
                             <!-- <h6>Bank Details</h6> -->
-                        </div>
+                        </div> --}}
                         <div class="col-md-2" style="margin-top: 5px;">
                             <label class="control-label">Account Holder<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" id="name" placeholder="" />
+                            <input type="text" class="form-control" name="account_holder" placeholder="" required>
                         </div>
                         <div class="col-md-2" style="margin-top: 5px;">
                             <label class="control-label">Bank Name<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" id="bank" placeholder="" />
+                            <input type="text" class="form-control" name="bank_name" placeholder="" required>
                         </div>
 
                         <div class="col-md-2" style="margin-top: 5px;">
                             <label class="control-label">Account Number<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" id="ac_n" placeholder="" />
+                            <input type="text" class="form-control" name="account_number" placeholder="" required>
                         </div>
                         <div class="col-md-2" style="margin-top: 5px;">
                             <label class="control-label">IFSC Code<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" id="ifsc" placeholder="" />
+                            <input type="text" class="form-control" name="ifsc_code" placeholder="" required>
                         </div>
-                        <div class="col-md-2" style="margin-top:20px;" align="left">
+                        <div class="col-md-2">
+                            <label class="control-label">Email<font color="#FF0000">*</font></label>
+                            <input type="text" class="form-control" name="email" placeholder="" required />
+                        </div>
+                        <div class="col-md-2" style="margin-top: 5px;">
+                            <label class="control-label">Password<font color="#FF0000">*</font></label>
+                            <input type="text" class="form-control" name="password" placeholder="" required />
+                        </div>
+                        {{-- <div class="col-md-2" style="margin-top:20px;" align="left">
                             <button id="on" type="button" class="btn mjks add-row-purchase"
                                 style="color:#FFFFFF; height:30px; width:auto;">
                                 <i class="fa fa-plus "></i></button>
 
-                        </div>
-                        <div class="col-md-8" style="margin-top:10px;" align="right">
+                        </div> --}}
+                        {{-- <div class="col-md-8" style="margin-top:10px;" align="right">
                             <table width="100%" border="1">
                                 <tr style="background-color:#f0f0f0; height:30px;">
                                     <th width="20%" style="text-align:center">Account Holder Name</th>
@@ -113,7 +112,7 @@
 
                                 </tbody>
                             </table>
-                        </div>
+                        </div> --}}
                         <div class="col-md-2" style="margin-top:20px;" align="left">
                             <button id="on" type="submit" class="btn mjks"
                                 style="color:#FFFFFF; height:30px; width:auto;">
@@ -133,7 +132,7 @@
                             <h5 class="panel-title"
                                 style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                                 align="center">
-                                <i class="fa fa-bars"></i> &nbsp;Added Employees
+                                <i class="fa fa-bars"></i> &nbsp;Added Site Incharge
                             </h5>
 
 
@@ -145,8 +144,7 @@
 
                         <!-- START DEFAULT DATATABLE -->
 
-                        <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                        <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
+                          <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
                             <table class="table datatable">
                                 <thead>
                                     <tr>
@@ -159,52 +157,43 @@
                                         <th>PAN Number</th>
                                         <th>City</th>
                                         <th>Address</th>
-                                        {{-- <th>Account Holder Name</th>
+                                        <th>Account Holder Name</th>
                                         <th>Bank Name</th>
                                         <th>Account Number</th>
-                                        <th>IFSC</th> --}}
+                                        <th>IFSC</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($emp as $index => $employee)
+                                    @foreach($site as $sites)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $employee->employee_name }}</td>
-                                        <td>{{ $employee->email }}</td>
-                                        <td>{{ $employee->mobile_number }}</td>
-                                        {{-- <td>{{ $employee->whatsapp_number }}</td> --}}
-                                        <td>{{ $employee->aadhar_number }}</td>
-                                        <td>{{ $employee->pan_number }}</td>
-                                        <td>{{ $employee->cityname->city ?? ''}}</td>
-                                        <td>{{ $employee->city_address }}</td>
-                                        {{-- <td>{{ $employee->account_holder }}</td>
-                                        <td>{{ $employee->bank_name }}</td>
-                                        <td>{{ $employee->account_number }}</td>
-                                        <td>{{ $employee->ifsc_code }}</td> --}}
+                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ $sites->employee_name }}</td>
+                                        <td>{{ $sites->email }}</td>
+                                        <td>{{ $sites->mobile_number }}</td>
+                                        {{-- <td>{{ $sites->whatsapp_number }}</td> --}}
+                                        <td>{{ $sites->aadhar_number }}</td>
+                                        <td>{{ $sites->pan_number }}</td>
+                                        <td>{{ $sites->cityname->city ?? ''}}</td>
+                                        <td>{{ $sites->city_address }}</td>
+                                        <td>{{ $sites->account_holder }}</td>
+                                        <td>{{ $sites->bank_name }}</td>
+                                        <td>{{ $sites->account_number }}</td>
+                                        <td>{{ $sites->ifsc_code }}</td>
 
                                         <td>
 
-                                        <a href="{{route('edit_employee',$employee->id)}}">    <button
+                                        <a href="{{route('edit_site_incharge',$sites->id)}}">    <button
                                                 style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                 type="button" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Edit"><i class="fa fa-edit"
                                                     style="margin-left:5px;"></i></button>
 
                                         </a>
-                                                    {{-- <a href="{{ route('employee-destroy', $employee->id) }}"><button
-                                                        style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                        type="button" class="btn btn-info" data-toggle="tooltip"
-                                                        data-placement="top" title="Delete"
-                                                        onclick="confirmDelete({{ $accountDetail->id }})"><i
-                                                            class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a> --}}
-
-                                              
-                                                <a href="{{ route('employee-destroy', $employee->id) }}" onclick="return confirm('Are you sure you want to delete this Employee?')">
+                                                <a href="{{ route('delete_site_incharge', $sites->id) }}" onclick="return confirm('Are you sure you want to delete this?')">
                                                     <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a>
-                                               
+                                            
                                         </td>
                                     </tr>
 
@@ -213,6 +202,8 @@
                             </table>
                         </div>
 
+                        <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
+                
                         <!-- END DEFAULT DATATABLE -->
 
 
