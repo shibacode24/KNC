@@ -993,7 +993,7 @@ class DashboardController extends Controller
     $user->name = $request->supervisor_name;
     $user->email = $request->email;
     $user->password = bcrypt($request->password); // Hash the password
-    $user->role = 'supervisor'; // Set the role to supervisor
+    $user->role = 'Supervisor'; // Set the role to supervisor
     $user->save();
 
 
@@ -1087,12 +1087,12 @@ class DashboardController extends Controller
 
         ]);
 
-        
+
         $user = new User();
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'employee'; 
+        $user->role = 'employee';
         $user->save();
 
 
@@ -1119,7 +1119,7 @@ class DashboardController extends Controller
         }
         // dd(1);
 
-    
+
         return redirect()->back()->with('success', 'Employee and Account Details Added Successfully');
     }
 
@@ -1135,7 +1135,7 @@ class DashboardController extends Controller
         return view('adminpanel.employee_edit', compact('employee_edit', 'city','acc_details_edit'));
     }
 
-    
+
     public function delete_acc_details(Request $request)
         {
         $response = AccountDetails::where('id', $request->id)->delete();
@@ -1163,7 +1163,7 @@ class DashboardController extends Controller
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-        $user->role = 'employee'; 
+        $user->role = 'Employee';
         $user->save();
 
         // $employee = new Employee();
@@ -1672,7 +1672,7 @@ class DashboardController extends Controller
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'engineer'; 
+        $user->role = 'engineer';
         $user->save();
 
         $employee = new Engineer();
@@ -1690,7 +1690,7 @@ class DashboardController extends Controller
         $employee->ifsc_code = $request->ifsc_code;
         $employee->save();
 
-       
+
         return redirect()->back()->with('success', 'Engineer Added Successfully');
     }
 
@@ -1711,16 +1711,16 @@ class DashboardController extends Controller
                 'pan_number' => 'required',
                 'city_address' => 'required',
                 'city_id' => 'required',
-    
+
             ]);
-    
+
             $employee = Engineer::where('id',$request->id)->first();
 
             $user = User:: where('email',$employee->email)->first();
             $user->name = $request->employee_name;
             $user->email = $request->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'engineer'; 
+            $user->role = 'engineer';
             $user->save();
 
             $employee->employee_name = $request->employee_name;
@@ -1736,8 +1736,8 @@ class DashboardController extends Controller
             $employee->account_number = $request->account_number;
             $employee->ifsc_code = $request->ifsc_code;
             $employee->save();
-    
-           
+
+
             return redirect()->route('engg')->with('success', 'Engineer Updated Successfully');
         }
 
@@ -1775,7 +1775,7 @@ class DashboardController extends Controller
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'site_manager'; 
+        $user->role = 'site_manager';
         $user->save();
 
 
@@ -1824,7 +1824,7 @@ class DashboardController extends Controller
             $user->name = $request->employee_name;
             $user->email = $request->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'site_manager'; 
+            $user->role = 'site_manager';
             $user->save();
 
             $employee->user_id = $user->id;
@@ -1841,7 +1841,7 @@ class DashboardController extends Controller
             $employee->ifsc_code = $request->ifsc_code;
             $employee->save();
 
-        
+
             return redirect()->route('site_manager')->with('success', 'Site Manager Updated Successfully');
         }
 
@@ -1879,7 +1879,7 @@ class DashboardController extends Controller
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'site_incharge'; 
+        $user->role = 'site_incharge';
         $user->save();
 
 
@@ -1928,7 +1928,7 @@ class DashboardController extends Controller
             $user->name = $request->employee_name;
             $user->email = $request->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'site_incharge'; 
+            $user->role = 'site_incharge';
             $user->save();
 
             $employee->user_id = $user->id;
@@ -1945,7 +1945,7 @@ class DashboardController extends Controller
             $employee->ifsc_code = $request->ifsc_code;
             $employee->save();
 
-        
+
             return redirect()->route('site_incharge')->with('success', 'Site incharge Updated Successfully');
         }
 

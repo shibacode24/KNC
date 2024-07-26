@@ -51,7 +51,7 @@
                             <label>Select Employee</label>
                             <select class="form-control select" data-live-search="true" name="employee" id="employee">
                                 @foreach ($employee as $employee)
-                                    <option value="{{ $employee->id }}">{{ $employee->employee_name }}</option>
+                                    <option value="{{ $employee->id }}">{{ $employee->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -92,11 +92,78 @@
                             <h5 class="panel-title"
                                 style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                                 align="center">
-                                <i class="fa fa-plus"></i> &nbsp;Added Raw Materials
+                                <i class="fa fa-plus"></i> &nbsp;Added User
                             </h5>
                         </div>
                     </div>
+                    <div class="col-md-12" style="margin-top:15px;">
+
+                        <!-- START DEFAULT DATATABLE -->
+
+                        <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
+                        <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
+                            <table class="table datatable">
+                                <thead>
+
+                                    <tr>
+                                        <th>Sr. No.</th>
+                                        <th>Selected Role</th>
+                                        <th>Name</th>
+                                        <th>Mobile Number</th>
+                                        <th>Email Id</th>
+                                        <th>User Role</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach ($supervisor_data->sortByDesc('created_at')  as $supervisor)
+                                        <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$supervisor->role}}</td>
+
+
+                                        @if($supervisor->role == 'supervisor')
+                                        <td>{{ $supervisor->supervisor->supervisor_name ?? '' }}</td>
+                                        <td>{{ $supervisor->supervisor->mobile_number ?? ''}}</td>
+                                        <td>{{ $supervisor->supervisor->email ?? '' }}</td>
+
+                                    @elseif($supervisor->role == 'employee')
+                                        <td>{{ $supervisor->employee->employee_name ?? '' }}</td>
+                                        <td>{{ $supervisor->employee->mobile_number ?? '' }}</td>
+                                        <td>{{ $supervisor->employee->email ?? ''}}</td>
+                                    @elseif($supervisor->role == 'Other')
+                                        <td>{{ $supervisor->name }}</td>
+                                        <td>{{ $supervisor->contact }}</td>
+                                        <td>{{ $supervisor->email }}</td>
+
+                                    @else
+                                        <td>N/A</td> <!-- Fallback in case role is not recognized -->
+                                    @endif
+
+                                    <td>{{$supervisor->role_name->role}}</td>
+                                      <td>
+                                        <a href=""><button
+                                            style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                            type="button" class="btn btn-info" data-toggle="tooltip"
+                                            data-placement="top" title="Edit"><i class="fa fa-edit"
+                                                style="margin-left:5px;"></i></button></a>
+                                      </td>
+                                    </tr>
+
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- END DEFAULT DATATABLE -->
+
+
+                    </div>
                     <div class="col-md-2" style="margin-top:15px;"></div>
+
                 </div>
             </div>
         </div>

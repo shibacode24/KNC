@@ -33,6 +33,19 @@ class User extends Authenticatable
         'permission'
     ];
 
+        public function supervisor(){
+            return $this->hasOne(Supervisor::class, 'user_id', 'id');
+        }
+
+        public function employee()
+        {
+            return $this->hasOne(Employee::class, 'user_id', 'id');
+        }
+
+        public function role_name()
+        {
+            return $this->hasOne(PanelRoles::class, 'id', 'panel_role');
+        }
     /**
      * The attributes that should be hidden for serialization.
      *
