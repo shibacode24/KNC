@@ -352,8 +352,8 @@
                             @endif
 
 
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href=""><span class="fa fa-plus"></span>Direct Issue Material</a></li>
+                            @if (Auth::user()->panel_role == 1 || in_array('direct-issue-material', $permission))
+                                <li><a href="direct-issue-material"><span class="fa fa-plus"></span>Direct Issue Material</a></li>
                             @endif
     </ul>
  </li>
@@ -407,10 +407,10 @@
                                         List</a></li>
                             @endif
 
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            {{-- @if (Auth::user()->panel_role == 1 || in_array('', $permission))
                                 <li><a href="{{ route('feedback') }}"><span class="fa fa-plus"></span>Feedback</a>
                                 </li>
-                            @endif
+                            @endif --}}
 
                         </ul>
                     </li>
@@ -431,6 +431,17 @@
                                 <li><a href="{{ route('issue_material') }}"><span class="fa fa-plus"></span>GRN
                                         OUT</a></li>
                             @endif
+
+                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            <li><a href="{{ route('') }}"><span class="fa fa-plus"></span>Direct GRN IN</a>
+                            </li>
+                        @endif
+
+
+                        @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            <li><a href="{{ route('') }}"><span class="fa fa-plus"></span>Direct GRN
+                                    OUT</a></li>
+                        @endif
                         </ul>
                     </li>
                 @endif

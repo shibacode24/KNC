@@ -8,8 +8,8 @@ use App\Models\RequestedMaterial;
 use App\Models\Material;
 use App\Models\Brand;
 use App\Models\UnitType;
-use App\Models\{Warehouse, AvailableMaterial, RawMaterial, Status};
-use App\Models\Inventory\AddMaterial;
+use App\Models\{Warehouse, AvailableMaterial, RawMaterial, Status, Site, Supervisor};
+use App\Models\Inventory\{AddMaterial, DirectIssueMaterial};
 use App\Models\Inventory\IssueMaterialByInventory;
 
 class InventoryManagementController extends Controller
@@ -201,7 +201,29 @@ public function site_non_consumed_material()
         $addMaterial = AddMaterial::all();
         $rawmaterial = RawMaterial::all();
         $warehouse = Warehouse::all();
-        return view('adminpanel.direct-issue-material', compact('warehouse', 'material', 'brand', 'unit', 'addMaterial', 'rawmaterial'));
+        $site = Site::all();
+        $supervisor = Supervisor::all();
+        $issue = DirectIssueMaterial::all();
+        return view('adminpanel.direct_issue_material', compact('issue', 'site', 'warehouse', 'material', 'brand', 'unit', 'addMaterial', 'rawmaterial', 'supervisor'));
+    }
+
+    public function addDirectIssueMaterial(Request $request)
+    {
+        $material = new DirectIssueMaterial();
+        $material->date = $request->date;
+        $material->time = $request->time;
+        $material->site_id = $request->site;
+        $material->supervisor_id = $request->supervisor;
+        $material->warehouse_id = $request->warehouse;
+        $material->material_id = $request->material;
+        $material->brand_id = $request->brand;
+        $material->unit_id = $request->unit_type;
+        $material->raw_material_id = $request->raw_material;
+        $material->quantity = $request->quantity;
+        $material->remark = $request->remark;
+
+        $material->save();
+        return redirect()->route('direct-issue-material')->with('success', 'Request added successfully!');
     }
 
 
