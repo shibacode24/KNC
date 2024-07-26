@@ -192,4 +192,17 @@ public function site_non_consumed_material()
         return redirect()->route('add_material')->with('success', 'Request added successfully!');
     }
 
+
+    public function directIssueMaterial(Request $request)
+    {
+        $material = Material::all();
+        $brand = Brand::all();
+        $unit = UnitType::all();
+        $addMaterial = AddMaterial::all();
+        $rawmaterial = RawMaterial::all();
+        $warehouse = Warehouse::all();
+        return view('adminpanel.direct-issue-material', compact('warehouse', 'material', 'brand', 'unit', 'addMaterial', 'rawmaterial'));
+    }
+
+
 }
