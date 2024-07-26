@@ -193,6 +193,9 @@ Route::post('add-material-store', [InventoryManagementController::class, 'addMat
 Route::get('/material/getMaterialBrands', [InventoryManagementController::class, 'getMaterialBrands'])->name('material.getBrands');
 Route::get('/material/getRawMaterial', [InventoryManagementController::class, 'getRawMaterial'])->name('material.getRawMaterial');
 
+Route::get('/direct-issue-material', [InventoryManagementController::class, 'directIssueMaterial'])->name('direct-issue-material');
+
+
 Route::get('/site-material', [InventoryManagementController::class, 'site_material'])->name('site_material');
 Route::get('/viewservicearea', [InventoryManagementController::class, 'viewservicearea'])->name('viewservicearea');
 Route::post('/get-available-material', [InventoryManagementController::class, 'getAvailableMaterial'])->name('get-available-material');

@@ -143,11 +143,20 @@ class UserRolesController extends Controller
 public function panelUser(Request $request)
 {
 
+    $supervisor_data = User::where(function($query) {
+        $query->where('role', 'supervisor')
+              ->orWhere('role', 'employee')
+              ->orWhere('role', 'Other');
+    })
+    ->whereNotNull('panel_role')
+    ->with(['role_name', 'supervisor', 'employee']) // Eager load relationships
+    ->get();
     $supervisor = User::where('role', 'supervisor')->get();
-    $employee = Employee::all();
+    $employee =  User::where('role', 'employee')->get();
     $role = PanelRoles::all();
+    $user = User::all();
 
-        return view('adminpanel.panel_user', compact('supervisor', 'employee', 'role'));
+        return view('adminpanel.panel_user', compact('supervisor_data', 'employee', 'role', 'user', 'supervisor'));
     }
 
 
