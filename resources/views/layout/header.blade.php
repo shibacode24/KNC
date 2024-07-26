@@ -144,11 +144,17 @@
 
                 </li>
 
-                @php
+                {{-- @php
                     $permission = Auth::user()->permission;
                     // echo $permission;
-                @endphp
+                @endphp --}}
 
+
+                @php
+    // Retrieve the permissions and ensure it's an array
+    $permission = Auth::user()->permission;
+    // $permission = is_array($permission) ? $permission : json_decode($permission, true) ?? [];
+@endphp
 
             @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission) || in_array('city', $permission))
                 <li>
@@ -274,111 +280,24 @@
                             <li><a href="{{ route('issue') }}"><span class="fa fa-plus"></span>Add Issues</a></li>
                         @endif
 
-                        @if (Auth::user()->panel_role == 1 || in_array('app-role', $permission))
-                            <li><a href="{{ route('app-role') }}"><span class="fa fa-plus"></span>App Roles</a></li>
-                        @endif
-
-                        @if (Auth::user()->panel_role == 1 || in_array('panel-role', $permission))
-                            <li><a href="{{ route('panel-role') }}"><span class="fa fa-plus"></span>Panel Roles</a>
-                            </li>
-                        @endif
+                   
 
 
 
                     </ul>
                     </li>
-    <<<<<<< HEAD
-                    @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission))
-                        <li>
-                            <a href="#" title="Inventory Managemnt"><span class="fa fa-exchange"> </span>Inventory
-                                Managemnt</a>
-                            <ul>
-
-                                <li><a href="{{ route('site_material') }}"><span class="fa fa-plus"></span>Site Material
-                                        Request List</a>
-                                </li>
                     @endif
 
-
-                    @if (Auth::user()->panel_role == 1 || in_array('add_material', $permission))
-                        <li><a href="{{ route('add_material') }}"><span class="fa fa-plus"></span>Add
-                                Material</a></li>
-                    @endif
-
-                    <li><a href="{{ route('site-non-consumed-material') }}"><span class="fa fa-plus"></span>Site
-                            Non-Consumed Material Request List</a>
-                    </li>
-
-
-                    @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                        <li><a href=""><span class="fa fa-plus"></span>Direct Issue Material</a></li>
-                    @endif
-
-                    @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                        <li><a href=""><span class="fa fa-plus"></span>Transfer Stock</a></li>
-                    @endif
-
-
-                </ul>
-                </li>
-                @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission))
-                    <li>
-                        <a href="#" title="Purchase Department"><span class="fa fa-money"> </span>Purchase
-                            Department</a>
-                        <ul>
-
-                            <li><a href="{{ route('req_material') }}"><span class="fa fa-plus"></span>Material Request
-                                    List</a></li>
-                @endif
-
-                @if (Auth::user()->panel_role == 1 || in_array('order_details', $permission))
-                    <li><a href="{{ route('order_details') }}"><span class="fa fa-plus"></span>Order
-                            Details
-                            List</a></li>
-                @endif
-
-                @if (Auth::user()->panel_role == 1 || in_array('direct-po-list', $permission))
-                    <li><a href="direct-po-list"><span class="fa fa-plus"></span>Direct PO
-                            List</a></li>
-                @endif
-
-                @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                    <li><a href="{{ route('feedback') }}"><span class="fa fa-plus"></span>Feedback</a></li>
-                @endif
-
-                </ul>
-                </li>
-
-                <li>
-                    <a href="#" title="Warehouse"><span class="fa fa-database"> </span>Warehouse</a>
-                    <ul>
-                        @if (Auth::user()->panel_role == 1 || in_array('grn', $permission))
-                            <li><a href="{{ route('grn') }}"><span class="fa fa-plus"></span>GRN In</a></li>
-                        @endif
-
-                        @if (Auth::user()->panel_role == 1 || in_array('issue_material', $permission))
-                            <li><a href="{{ route('issue_material') }}"><span class="fa fa-plus"></span>GRN
-                                    Out</a>
-                            </li>
-                        @endif
-
-
-                    </ul>
-                </li>
-    =======
-                    @endif
-
-                    @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission))
+                 
+             @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission))
 
                         <li>
                             <a href="#" title="Inventory Managemnt"><span class="fa fa-exchange"> </span>Inventory
                                 Managemnt</a>
                             <ul>
-                                @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission))
-                                    <li><a href="{{ route('site_material') }}"><span class="fa fa-plus"></span>Site
-                                            Material Request List</a>
-                                    </li>
-                                @endif
+                                @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission))
+                                <li><a href="{{ route('assign_site') }}"><span class="fa fa-bars"></span>Assign Site</a></li>
+                            @endif
 
 
                                 @if (Auth::user()->panel_role == 1 || in_array('add_material', $permission))
@@ -460,52 +379,33 @@
 
 
 
-
-    >>>>>>> daraksha
-
-                    @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
-                        <li>
-                            <a href="#" title="User Roles"><span class="fa fa-user"> </span>User Roles</a>
-                            <ul>
-
-    <<<<<<< HEAD
-                <li>
-                    <a href="#" title="User Roles"><span class="fa fa-user"> </span>User Roles</a>
+                        {{-- <li>
+                    <a href="#" title="Warehouse"><span class="fa fa-list"> </span>Warehouse</a>
                     <ul>
-                        @if (Auth::user()->panel_role == 1 ||
-                                in_array(
-                                    'app-user-roles
+                        @if (Auth::user()->panel_role == 1 || in_array('grn', $permission))
 
-
-                                                ',
-                                    $permission))
-                            <li><a href="app-user-roles"><span class="fa fa-plus"></span>App User Registration</a></li>
+                            <li><a href="{{ route('grn') }}"><span class="fa fa-plus"></span>GRN In</a></li>
                         @endif
 
+                            @if (Auth::user()->panel_role == 1 || in_array('issue_material', $permission))
 
-                        @if (Auth::user()->panel_role == 1 || in_array('panel-user-roles', $permission))
-                            <li>
-                                <a href="{{ route('panel-user-roles') }}" title="User Role"><span class="fa fa-plus">
-                                    </span>User Roles For Panel</a>
-
+                                <li><a href="{{ route('issue_material') }}"><span class="fa fa-plus"></span>GRN
+                                        Out</a>
                             </li>
                         @endif
 
+
                     </ul>
-                </li>
-
+                </li> --}}
+                @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission) || in_array('panel-user-roles', $permission)
+                || in_array('panel-user', $permission))
                 <li>
-                    <a href="#" title="Account Department"><span class="fa fa-user"> </span>Account Department</a>
+                        <a href="#" title="User Roles"><span class="fa fa-user"> </span>User Roles</a>
                     <ul>
-                        @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
-                            <li><a href="{{ route('expence-master') }}"><span class="fa fa-plus"></span>Expenses</a></li>
-                        @endif
-
-
-    =======
+                        @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
                                 <li><a href="app-user-roles"><span class="fa fa-plus"></span>App User Registration</a>
                                 </li>
-                    @endif
+                @endif
 
                     @if (Auth::user()->panel_role == 1 || in_array('panel-user-roles', $permission))
                         <li>
@@ -525,19 +425,20 @@
 
                 </ul>
                 </li>
+                @endif
+
+                @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
+
                 <li>
                     <a href="#" title="Account Department"><span class="fa fa-user"> </span>Account Department</a>
                     <ul>
                         @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
                             <li><a href="expense-master"><span class="fa fa-plus"></span>Expenses</a></li>
                         @endif
-    >>>>>>> daraksha
                     </ul>
                 </li>
-            {{-- <li>
-                    <a href="#" title="Account Department"><span class="fa fa-money"> </span>Account Department</a>
-
-                </li>
+                @endif
+            {{--
 
                 <li>
                     <a href="#" title="Prediction"><span class="fa fa-tachometer"> </span></a>
