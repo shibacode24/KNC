@@ -58,6 +58,32 @@ public function viewservicearea(Request $request)
 }
 
 
+public function viewservicearea_edit(Request $request)
+{
+    // dd($request->id);
+    // Ensure that 'date' and 'site_id' parameters are provided
+    if (!$request->has(['id'])) {
+        return response()->json(['html' => '<p>Invalid request parameters</p>']);
+    }
+
+    // Fetch requested materials based on the date and site ID
+    $appendData = IssueMaterialByInventory::
+                                   where('id', $request->id)
+                                   ->get();
+    $warehouseId = Warehouse::all();
+    $statusId = Status::all();
+    // echo json_encode($appendData);
+// dd($statusId);
+    // Check if no records are found
+    // if ($appendData->isEmpty()) {
+    //     return response()->json(['html' => '<p>No data found</p>', 'status' => 'error', 'message' => 'No data found']);
+    // }
+
+    $render_view = view('adminpanel.site_material_edit_view', compact('appendData', 'warehouseId', 'statusId'))->render();
+    return response()->json(['html' => $render_view, 'status' => 'success', 'message' => 'Data loaded successfully']);
+}
+
+
 // In your controller
 public function getAvailableMaterial(Request $request)
 {
@@ -121,6 +147,70 @@ public function addIssuedMaterial(Request $request)
     }
     return redirect()->route('site_material')->with('success', 'Requests added successfully!');
 }
+
+
+
+public function update_site_material(Request $request)
+{
+// dd($request->all);
+    $data = $request->input('data');
+    $id = $data[0]['id'];
+    $material = IssueMaterialByInventory::where('id',$id)->first();
+echo json_encode( $data );
+exit(); 
+    // if ($material) {
+    //     // Create a new instance of IssueMaterialByInventory
+    //     $material = new IssueMaterialByInventory();
+    //     // $material->requested_material_date =$data[0]['requested_material_date'];
+    //     // $material->site_id =$data['site_id'];
+    //     $material->material_type =$data['material_type'];
+    //     $material->requested_material_id =$data['requested_material_id'];
+    //     $material->material_id = $data['material_id'];
+    //     $material->raw_material_id =$data['raw_material_id'];
+    //     $material->brand_id =$data['brand_id'];
+    //     $material->requested_material_quantity =$data['requested_material_quantity'];
+    //     $material->material_unit_id =$data['material_unit_id'];
+    //     $material->selected_warehouse_id =$data['selected_warehouse_id'];
+    //     $material->available_material =$data['available_material'];
+    //     $material->issue_material =$data['issue_material'];
+    //     $material->remaining_material =$data['remaining_material'];
+    //     $material->remark =$data['remark']; // Assign the remar
+    //     $material->app_status =$data['status'];
+    //     echo json_encode($material);
+    //     exit();
+    //     $material->save();
+    //     // Update the status of the requested material to 'Submitted'
+    //     $material->update(['status' => 'Submitted']);
+    // }
+
+
+
+    if ($material) {
+        // Update the existing material
+        $material->material_type = $data[0]['material_type'];
+        $material->requested_material_id = $data[0]['requested_material_id'];
+        $material->material_id = $data[0]['material_id'];
+        $material->raw_material_id = $data[0]['raw_material_id'];
+        $material->brand_id = $data[0]['brand_id'];
+        $material->requested_material_quantity = $data[0]['requested_material_quantity'];
+        $material->material_unit_id = $data[0]['material_unit_id'];
+        $material->selected_warehouse_id = $data[0]['selected_warehouse_id'];
+        $material->available_material = $data[0]['available_material'];
+        $material->issue_material = $data[0]['issue_material'];
+        $material->remaining_material = $data[0]['remaining_material'];
+        $material->remark = $data[0]['remark'];
+        $material->app_status = $data[0]['status'];
+        
+        // Save the updated material
+        $material->save();
+
+        // Update the status of the requested material to 'Submitted'
+        $material->update(['status' => 'Submitted']);
+    } 
+
+    return back();
+}
+
 
 
 // ----------------------------------Non Consumed Material -------------------------------------------
