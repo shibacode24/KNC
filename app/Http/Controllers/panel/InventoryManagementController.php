@@ -8,9 +8,11 @@ use App\Models\RequestedMaterial;
 use App\Models\Material;
 use App\Models\Brand;
 use App\Models\UnitType;
-use App\Models\{Warehouse, AvailableMaterial, RawMaterial, Status, Site, Supervisor};
+use App\Models\{Warehouse, AvailableMaterial, NonConsumableBrand, NonConsumableCategoryMaterial, NonConsumableUnitType, RawMaterial, Status, Site, Supervisor};
 use App\Models\Inventory\{AddMaterial, DirectIssueMaterial};
 use App\Models\Inventory\IssueMaterialByInventory;
+use App\Models\Inventory\NonConsumableMaterial;
+use App\Models\Inventory\NonConsumableDirectIssueMaterial;
 
 class InventoryManagementController extends Controller
 {
@@ -231,9 +233,77 @@ public function site_non_consumed_material()
     // $requestedMaterial = RequestedMaterial::all()->groupBy(function($item) {
     //     return $item->created_at->format('Y-m-d') . '_' . $item->site_id;
     // });
-    return view('adminpanel.site_non_consumed_material', compact('requestedMaterial', 'issueMaterial'));
+    return view('inventory_managmt.site_non_consumed_material', compact('requestedMaterial', 'issueMaterial'));
 }
 
+public function non_consumable_add_material(Request $request)
+{
+    $material = NonConsumableCategoryMaterial::all();
+    $brand = NonConsumableBrand::all();
+    $unit = NonConsumableUnitType::all();
+    $addMaterial = NonConsumableMaterial::all();
+    // echo json_encode($addMaterial);
+    // exit();
+    // $rawmaterial = RawMaterial::all();
+    $warehouse = Warehouse::all();
+    return view('inventory_managmt.non_consumable_add_material', compact('warehouse', 'material', 'brand', 'unit', 'addMaterial'));
+}
+
+public function getNonConsumableMaterialBrands(Request $request)
+{
+    $material_id = $request->get('material_id');
+    $brands = NonConsumableBrand::where('material_id', $material_id)->get();
+
+    return response()->json($brands);
+}
+
+public function addNonConsumableMaterialstore(Request $request)
+{
+    // dd($request->all());
+    $material = new NonConsumableMaterial();
+    $material->date = $request->date;
+    $material->warehouse_id = $request->warehouse;
+    $material->material_id = $request->material;
+    $material->brand_id = $request->brand;
+    $material->material_unit_id = $request->unit_type;
+    $material->quantity = $request->quantity;
+// dump( $material);
+    $material->save();
+    return redirect()->route('non_consumable_add_material')->with('success', 'Request added successfully!');
+}
+
+public function Nonconsumable_directIssueMaterial(Request $request)
+    {
+        $material = NonConsumableCategoryMaterial::all();
+        $brand = NonConsumableBrand::all();
+        $unit = NonConsumableUnitType::all();
+        $addMaterial = NonConsumableMaterial::all();
+        // $rawmaterial = RawMaterial::all();
+        $warehouse = Warehouse::all();
+        $site = Site::all();
+        $supervisor = Supervisor::all();
+        $issue = NonConsumableDirectIssueMaterial::all();
+        return view('inventory_managmt.non_consumable_direct_issue_material', compact('issue', 'site', 'warehouse', 'material', 'brand', 'unit', 'addMaterial','supervisor'));
+    }
+
+    public function Nonconsumable_addDirectIssueMaterial(Request $request)
+    {
+        $material = new NonConsumableDirectIssueMaterial();
+        $material->date = $request->date;
+        $material->time = $request->time;
+        $material->site_id = $request->site;
+        $material->supervisor_id = $request->supervisor;
+        $material->warehouse_id = $request->warehouse;
+        $material->material_id = $request->material;
+        $material->brand_id = $request->brand;
+        $material->unit_id = $request->unit_type;
+        // $material->raw_material_id = $request->raw_material;
+        $material->quantity = $request->quantity;
+        $material->remark = $request->remark;
+
+        $material->save();
+        return redirect()->route('direct-issue-material')->with('success', 'Request added successfully!');
+    }
 
 // ---------------------------------------------------------------------------------------------------
 

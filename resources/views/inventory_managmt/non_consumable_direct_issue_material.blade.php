@@ -5,6 +5,28 @@
     <div class="row">
         <div class="col-md-12">
 
+            @if ($errors->any())
+            <div class="alert alert-danger mt-2">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
             <div class="panel-body" style="padding:1px 5px 2px 5px;">
 
 
@@ -13,12 +35,12 @@
                         <h5 class="panel-title"
                             style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                             align="center">
-                            <i class="fa fa-plus"></i> &nbsp;Add Materials
+                            <i class="fa fa-plus"></i> &nbsp;Add Direct Issue Materials
                         </h5>
                     </div>
                 </div>
 
-                <form action="{{ route('add-material-store') }}" method="post">
+                <form action="{{route('non_consumable_direct_issue_material_store')}}" method="post">
                     @csrf
                 <div class="col-md-12" style="margin-top:10px;">
                     <!-- <div class="col-md-4"></div>
@@ -28,18 +50,51 @@
                        <input type="date" name="date" id="date" class="form-control" >
                     </div>
 
+                    <div class="col-md-2" style="margin-left: 5px;">
+                        <label class="control-label">Time<font color="#FF0000">*</font></label>
+                       <input type="time" name="time" id="time" class="form-control" >
+                    </div>
+
                     <div class="col-md-2">
-                        <label>Select Warehouse</label>
-                        <select class="form-control select" data-live-search="true" name="warehouse" id="warehouse">
-                            <option value="">--Select--</option>
-                            @foreach ($warehouse as $warehouse)
-                            <option value="{{$warehouse->id}}">{{$warehouse->warehouse_name}}</option>
+                        <label>Select Site</label>
+                        <select class="form-control select" data-live-search="true" name="site" id="site">
+                          <option value="">--Select--</option>
+                            @foreach ($site as $site)
+
+                            <option value="{{$site->id}}">{{$site->site_name}}</option>
+
                             @endforeach
 
                         </select>
                     </div>
 
                     <div class="col-md-2">
+                        <label>Select Supervisor</label>
+                        <select class="form-control select" data-live-search="true" name="supervisor" id="supervisor">
+                          <option value="">--Select--</option>
+                            @foreach ($supervisor as $supervisor)
+
+                            <option value="{{$supervisor->id}}">{{$supervisor->supervisor_name}}</option>
+
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Select Warehouse</label>
+                        <select class="form-control select" data-live-search="true" name="warehouse" id="warehouse">
+                          <option value="">--Select--</option>
+                            @foreach ($warehouse as $warehouse)
+
+                            <option value="{{$warehouse->id}}">{{$warehouse->warehouse_name}}</option>
+
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2" style="margin-top: 15px; margin-left:10px">
                         <label>Select Materials</label>
                         <select class="form-control select" data-live-search="true" name="material" id="material">
                             <option value="">--Select--</option>
@@ -50,7 +105,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="margin-top: 15px">
                         <label>Select Brand</label>
                         <select class="form-control select" data-live-search="true" name="brand" id="brand">
                           <option value="">--Select--</option>
@@ -63,16 +118,15 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2">
+                    {{-- <div class="col-md-2" style="margin-top: 15px">
                         <label>Select Raw Materials</label>
                         <select class="form-control select" data-live-search="true" name="raw_material" id="rawmaterial">
                             <option value="">--Select--</option>
                             @foreach ($rawmaterial as $raw_material)
                             <option value="{{$raw_material->id}}">{{$raw_material->raw_material_name}}</option>
                             @endforeach
-
                         </select>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-2" style="margin-top: 15px">
                         <label>Select Unit</label>
@@ -83,13 +137,18 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2"  style="margin-top: 15px">
+                    <div class="col-md-2"  style="margin-top: 20px">
                         <label class="control-label">Material Qty<font color="#FF0000">*</font></label>
                         <input type="number" class="form-control" name="quantity" placeholder="" />
                     </div>
 
+                    <div class="col-md-2"  style="margin-top: 20px">
+                        <label class="control-label">Remark<font color="#FF0000">*</font></label>
+                    <textarea name="remark"  class="form-control" id="remark" cols="30" rows="3"></textarea>
+                    </div>
 
-                    <div class="col-md-1" style="margin-top:30px;">
+
+                    <div class="col-md-1" style="margin-top:35px;">
                         <button id="on" type="submit" class="btn mjks" style="color:#FFFFFF; height:30px; width:auto;">
                             <i class="fa fa-file"></i>Submit</button>
 
@@ -105,7 +164,7 @@
                             <h5 class="panel-title"
                                 style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                                 align="center">
-                                <i class="fa fa-plus"></i> &nbsp;Added Materials
+                                <i class="fa fa-plus"></i> &nbsp;Requested Materials List of Inventory to PO Manager
 
                             </h5>
 
@@ -126,32 +185,47 @@
                                     <tr>
                                         <th>Sr. No.</th>
                                         <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Site Name</th>
+                                        <th>Supervisor Name</th>
                                         <th>Warehouse Name</th>
                                         <th>Material Name</th>
+                                        {{-- <th>Raw Material Name</th> --}}
                                         <th>Brand Name</th>
-                                        <th>Raw Material Name</th>
-                                        <th>Material Unit</th>
+                                        <th>Material Unit Type</th>
                                         <th>Material Qty</th>
+                                        <th>Remark</th>
                                         {{-- <th>Remark</th> --}}
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                    @foreach ($addMaterial->sortByDesc('created_at')  as $addMaterial)
+                                    @foreach ($issue->sortByDesc('created_at')  as $addMaterial)
                                         <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$addMaterial->date}}</td>
+                                        <td>{{$addMaterial->time}}</td>
+                                        <td>{{$addMaterial->site_name->site_name}}</td>
+                                        <td>{{$addMaterial->supervisor_name->supervisor_name}}</td>
                                         <td>{{$addMaterial->warehouse_name->warehouse_name}}</td>
                                         <td>{{$addMaterial->material_name->material}}</td>
+                                        {{-- <td>{{$addMaterial->raw_material_name->raw_material_name}}</td> --}}
                                         <td>{{$addMaterial->brand_name->brand}}</td>
-                                        <td>{{$addMaterial->raw_material_name->raw_material_name}}</td>
                                         <td>{{$addMaterial->unit_type->unit_type}}</td>
                                         <td>{{$addMaterial->quantity}}</td>
-                                        {{-- <td>Urgent Requirement</td> --}}
-                                        {{-- <td><span style="color: red;font-weight: bold;">{{$addMaterial->status}}</span></td> --}}
-                                        <td style="font-weight: bold; color: {{ $addMaterial->status == 'Completed' ? 'green' : 'red' }}">
-                                            {{ $addMaterial->status }}
+                                        <td>{{$addMaterial->remark}}</td>
+
+
+
+                                        <td>
+
+                                            <button
+                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                type="button" class="btn btn-info" data-toggle="tooltip"
+                                                data-placement="top" title="Edit"><i class="fa fa-edit"
+                                                    style="margin-left:5px;"></i></button>
+
                                         </td>
                                     </tr>
 
@@ -197,7 +271,6 @@
 @stop
 @section('js')
 
-
 <script>
     $(document).ready(function () {
          // Set current date in date input field
@@ -207,7 +280,7 @@
         $('#material').change(function () {
             var material_id = $(this).val();
             $.ajax({
-                url: '{{ route('material.getBrands') }}',
+                url: '{{ route('getNonConsumableMaterialBrands') }}',
                 type: 'GET',
                 data: { material_id: material_id },
                 success: function (response) {
