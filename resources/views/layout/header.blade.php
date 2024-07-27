@@ -230,7 +230,7 @@
 
 
                                 @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href=""><span class="fa fa-plus"></span>Add Unit Type</a>
+                                <li><a href="{{ route('non_consumable_unit_type') }}"><span class="fa fa-plus"></span>Add Unit Type</a>
                                 </li>
                                @endif
 
@@ -247,7 +247,7 @@
                             @endif
 
                             @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                            <li><a href=""><span class="fa fa-plus"></span>Add Brand</a></li>
+                            <li><a href="{{route('non_consumable_brand')}}"><span class="fa fa-plus"></span>Add Brand</a></li>
                         @endif
 
                             </ul>
@@ -370,9 +370,19 @@
                                 <ul>
                             @if (Auth::user()->panel_role == 1 || in_array('site-non-consumed-material', $permission))
                                 <li><a href="{{ route('site-non-consumed-material') }}"><span
-                                            class="fa fa-plus"></span>Site Non-Consumed Material Request List</a>
+                                            class="fa fa-plus"></span>Non Consumeble Site Material Request List</a>
                                 </li>
                             @endif
+
+                            @if (Auth::user()->panel_role == 1 || in_array('non_consumable_add_material', $permission))
+                            <li><a href="{{ route('non_consumable_add_material') }}"><span
+                                        class="fa fa-plus"></span>Non Consumable Add Material</a>
+                            </li>
+                        @endif
+                        @if (Auth::user()->panel_role == 1 || in_array('non_consumable_direct_issue_material', $permission))
+                                <li><a href="non_consumable_direct_issue_material"><span class="fa fa-plus"></span>Non Consumable Direct Issue Material</a></li>
+                            @endif
+                        
                                 </ul>
                             </li>
                             {{-- @endif --}}
@@ -426,26 +436,25 @@
                                 </li>
                             @endif
 
-
                             @if (Auth::user()->panel_role == 1 || in_array('issue_material', $permission))
                                 <li><a href="{{ route('issue_material') }}"><span class="fa fa-plus"></span>GRN
                                         OUT</a></li>
                             @endif
 
+{{-- route name is missing --}}
                             @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                            <li><a href="{{ route('') }}"><span class="fa fa-plus"></span>Direct GRN IN</a>
+                            <li><a href="{{ route('grn') }}"><span class="fa fa-plus"></span>Direct GRN IN</a>
                             </li>
                         @endif
 
 
                         @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                            <li><a href="{{ route('') }}"><span class="fa fa-plus"></span>Direct GRN
+                            <li><a href="{{ route('grn') }}"><span class="fa fa-plus"></span>Direct GRN
                                     OUT</a></li>
                         @endif
                         </ul>
                     </li>
                 @endif
-
 
 
                     {{-- <li>

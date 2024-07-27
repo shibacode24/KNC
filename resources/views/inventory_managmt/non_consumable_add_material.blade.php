@@ -18,7 +18,7 @@
                     </div>
                 </div>
 
-                <form action="{{ route('add-material-store') }}" method="post">
+                <form action="{{ route('addNonConsumableMaterialstore') }}" method="post">
                     @csrf
                 <div class="col-md-12" style="margin-top:10px;">
                     <!-- <div class="col-md-4"></div>
@@ -63,7 +63,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2">
+                    {{-- <div class="col-md-2">
                         <label>Select Raw Materials</label>
                         <select class="form-control select" data-live-search="true" name="raw_material" id="rawmaterial">
                             <option value="">--Select--</option>
@@ -72,11 +72,12 @@
                             @endforeach
 
                         </select>
-                    </div>
+                    </div> --}}
 
-                    <div class="col-md-2" style="margin-top: 15px">
+                    <div class="col-md-2">
                         <label>Select Unit</label>
                         <select class="form-control select" data-live-search="true" name="unit_type">
+                          <option value="">--Select--</option>
                            @foreach ($unit as $unit)
                             <option value="{{$unit->id}}">{{$unit->unit_type}}</option>
                             @endforeach
@@ -129,7 +130,7 @@
                                         <th>Warehouse Name</th>
                                         <th>Material Name</th>
                                         <th>Brand Name</th>
-                                        <th>Raw Material Name</th>
+                                        {{-- <th>Raw Material Name</th> --}}
                                         <th>Material Unit</th>
                                         <th>Material Qty</th>
                                         {{-- <th>Remark</th> --}}
@@ -142,11 +143,11 @@
                                         <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$addMaterial->date}}</td>
-                                        <td>{{$addMaterial->warehouse_name->warehouse_name}}</td>
-                                        <td>{{$addMaterial->material_name->material}}</td>
-                                        <td>{{$addMaterial->brand_name->brand}}</td>
-                                        <td>{{$addMaterial->raw_material_name->raw_material_name}}</td>
-                                        <td>{{$addMaterial->unit_type->unit_type}}</td>
+                                        <td>{{$addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
+                                        <td>{{$addMaterial->material_name->material ?? ''}}</td>
+                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
+                                        {{-- <td>{{$addMaterial->raw_material_name->raw_material_name ?? ''}}</td> --}}
+                                        <td>{{$addMaterial->unit_type->unit_type ?? ''}}</td>
                                         <td>{{$addMaterial->quantity}}</td>
                                         {{-- <td>Urgent Requirement</td> --}}
                                         {{-- <td><span style="color: red;font-weight: bold;">{{$addMaterial->status}}</span></td> --}}
@@ -207,7 +208,7 @@
         $('#material').change(function () {
             var material_id = $(this).val();
             $.ajax({
-                url: '{{ route('material.getBrands') }}',
+                url: '{{ route('getNonConsumableMaterialBrands') }}',
                 type: 'GET',
                 data: { material_id: material_id },
                 success: function (response) {
