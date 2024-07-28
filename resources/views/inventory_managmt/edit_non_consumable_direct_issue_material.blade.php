@@ -40,19 +40,20 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('non_consumable_direct_issue_material_store') }}" method="post">
+                    <form action="{{ route('non_consumable_direct_issue_material_update') }}" method="post">
                         @csrf
                         <div class="col-md-12" style="margin-top:10px;">
                             <!-- <div class="col-md-4"></div>
                                                 -->
+                            <input type="hidden" name="id" value="{{ $edit_material->id }}">
                             <div class="col-md-2" style="margin-left: 5px;">
                                 <label class="control-label">Date<font color="#FF0000">*</font></label>
-                                <input type="date" name="date" id="date" class="form-control">
+                                <input type="date" name="date" id="date" value="{{ $edit_material->name }}" class="form-control">
                             </div>
 
                             <div class="col-md-2" style="margin-left: 5px;">
                                 <label class="control-label">Time<font color="#FF0000">*</font></label>
-                                <input type="time" name="time" id="time" class="form-control">
+                                <input type="time" name="time" id="time" value="{{ $edit_material->time }}" class="form-control">
                             </div>
 
                             <div class="col-md-2">
@@ -60,7 +61,9 @@
                                 <select class="form-control select" data-live-search="true" name="site" id="site">
                                     <option value="">--Select--</option>
                                     @foreach ($site as $site)
-                                        <option value="{{ $site->id }}">{{ $site->site_name }}</option>
+                                        <option value="{{ $site->id }}" @if ($edit_material->site_id == $site->id)
+                                            selected
+                                        @endif>{{ $site->site_name }}</option>
                                     @endforeach
 
                                 </select>
@@ -72,7 +75,9 @@
                                     id="supervisor">
                                     <option value="">--Select--</option>
                                     @foreach ($supervisor as $supervisor)
-                                        <option value="{{ $supervisor->id }}">{{ $supervisor->supervisor_name }}</option>
+                                        <option value="{{ $supervisor->id }}" @if ($edit_material->supervisor_id == $supervisor->id)
+                                            selected
+                                        @endif>{{ $supervisor->supervisor_name }}</option>
                                     @endforeach
 
                                 </select>
@@ -83,7 +88,9 @@
                                 <select class="form-control select" data-live-search="true" name="warehouse" id="warehouse">
                                     <option value="">--Select--</option>
                                     @foreach ($warehouse as $warehouse)
-                                        <option value="{{ $warehouse->id }}">{{ $warehouse->warehouse_name }}</option>
+                                        <option value="{{ $warehouse->id }}" @if ($edit_material->warehouse_id == $warehouse->id)
+                                            selected
+                                        @endif>{{ $warehouse->warehouse_name }}</option>
                                     @endforeach
 
                                 </select>
@@ -93,8 +100,10 @@
                                 <label>Select Materials</label>
                                 <select class="form-control select" data-live-search="true" name="material" id="material">
                                     <option value="">--Select--</option>
-                                    @foreach ($material as $material)
-                                        <option value="{{ $material->id }}">{{ $material->material }}</option>
+                                    @foreach ($materials as $materials)
+                                        <option value="{{ $materials->id }}" @if ($edit_material->material_id == $materials->id)
+                                            selected
+                                        @endif>{{ $materials->material }}</option>
                                     @endforeach
 
                                 </select>
@@ -105,7 +114,9 @@
                                 <select class="form-control select" data-live-search="true" name="brand" id="brand">
                                     <option value="">--Select--</option>
                                     @foreach ($brand as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->brand }}</option>
+                                        <option value="{{ $brand->id }}" @if ($edit_material->brand_id == $brand->id)
+                                            selected
+                                        @endif>{{ $brand->brand }}</option>
                                     @endforeach
 
                                 </select>
@@ -132,110 +143,26 @@
 
                             <div class="col-md-2" style="margin-top: 20px">
                                 <label class="control-label">Material Qty<font color="#FF0000">*</font></label>
-                                <input type="number" class="form-control" name="quantity" placeholder="" />
+                                <input type="number" value="{{ $edit_material->quantity }}" class="form-control" name="quantity" placeholder="" />
                             </div>
 
                             <div class="col-md-2" style="margin-top: 20px">
                                 <label class="control-label">Remark<font color="#FF0000">*</font></label>
-                                <textarea name="remark" class="form-control" id="remark" cols="30" rows="3"></textarea>
+                                <textarea name="remark" class="form-control" id="remark" cols="30" rows="3">{{ $edit_material->remark }}</textarea>
                             </div>
 
 
                             <div class="col-md-1" style="margin-top:35px;">
                                 <button id="on" type="submit" class="btn mjks"
                                     style="color:#FFFFFF; height:30px; width:auto;">
-                                    <i class="fa fa-file"></i>Submit</button>
+                                    <i class="fa fa-file"></i>Update</button>
 
                             </div>
 
                         </div>
 
                     </form>
-                    <div class="row">
 
-                        <div class="col-md-12" style="margin-top:15px;">
-                            <div class="panel panel-default">
-                                <h5 class="panel-title"
-                                    style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
-                                    align="center">
-                                    <i class="fa fa-plus"></i> &nbsp;Non Consumable Added Direct Issue Materials
-
-                                </h5>
-
-
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-12" style="margin-top:15px;">
-
-                            <!-- START DEFAULT DATATABLE -->
-
-                            <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                            <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
-                                <table class="table datatable">
-                                    <thead>
-
-                                        <tr>
-                                            <th>Sr. No.</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Site Name</th>
-                                            <th>Supervisor Name</th>
-                                            <th>Warehouse Name</th>
-                                            <th>Material Name</th>
-                                            {{-- <th>Raw Material Name</th> --}}
-                                            <th>Brand Name</th>
-                                            <th>Material Unit Type</th>
-                                            <th>Material Qty</th>
-                                            <th>Remark</th>
-                                            {{-- <th>Remark</th> --}}
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @foreach ($issue->sortByDesc('created_at') as $addMaterial)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $addMaterial->date }}</td>
-                                                <td>{{ $addMaterial->time }}</td>
-                                                <td>{{ $addMaterial->site_name->site_name }}</td>
-                                                <td>{{ $addMaterial->supervisor_name->supervisor_name }}</td>
-                                                <td>{{ $addMaterial->warehouse_name->warehouse_name }}</td>
-                                                <td>{{ $addMaterial->material_name->material }}</td>
-                                                {{-- <td>{{$addMaterial->raw_material_name->raw_material_name}}</td> --}}
-                                                <td>{{ $addMaterial->brand_name->brand }}</td>
-                                                <td>{{ $addMaterial->unit_type->unit_type }}</td>
-                                                <td>{{ $addMaterial->quantity }}</td>
-                                                <td>{{ $addMaterial->remark }}</td>
-
-
-
-                                                <td>
-                                                    <a
-                                                        href="{{ route('non_consumable_direct_issue_material_edit', $addMaterial->id) }}">
-                                                        <button
-                                                            style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                            type="button" class="btn btn-info" data-toggle="tooltip"
-                                                            data-placement="top" title="Edit"><i class="fa fa-edit"
-                                                                style="margin-left:5px;"></i></button>
-                                                    </a>
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- END DEFAULT DATATABLE -->
-
-
-                        </div>
-                        <div class="col-md-2" style="margin-top:15px;"></div>
-                    </div>
                 </div>
             </div>
         </div>

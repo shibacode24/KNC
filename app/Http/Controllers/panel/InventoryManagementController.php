@@ -154,61 +154,65 @@ public function addIssuedMaterial(Request $request)
 
 public function update_site_material(Request $request)
 {
-// dd($request->all);
+// dd($request->input('data'));
     $data = $request->input('data');
+
     $id = $data[0]['id'];
+   $requested_material_date =  $data[0]['raw_material_id'];
     $material = IssueMaterialByInventory::where('id',$id)->first();
-echo json_encode( $data );
-exit(); 
-    // if ($material) {
-    //     // Create a new instance of IssueMaterialByInventory
-    //     $material = new IssueMaterialByInventory();
-    //     // $material->requested_material_date =$data[0]['requested_material_date'];
-    //     // $material->site_id =$data['site_id'];
-    //     $material->material_type =$data['material_type'];
-    //     $material->requested_material_id =$data['requested_material_id'];
-    //     $material->material_id = $data['material_id'];
-    //     $material->raw_material_id =$data['raw_material_id'];
-    //     $material->brand_id =$data['brand_id'];
-    //     $material->requested_material_quantity =$data['requested_material_quantity'];
-    //     $material->material_unit_id =$data['material_unit_id'];
-    //     $material->selected_warehouse_id =$data['selected_warehouse_id'];
-    //     $material->available_material =$data['available_material'];
-    //     $material->issue_material =$data['issue_material'];
-    //     $material->remaining_material =$data['remaining_material'];
-    //     $material->remark =$data['remark']; // Assign the remar
-    //     $material->app_status =$data['status'];
-    //     echo json_encode($material);
-    //     exit();
-    //     $material->save();
-    //     // Update the status of the requested material to 'Submitted'
-    //     $material->update(['status' => 'Submitted']);
-    // }
-
-
-
+// echo json_encode( $data );
+// echo json_encode( $material );
+// echo json_encode( $requested_material_date );
+// exit(); 
     if ($material) {
-        // Update the existing material
-        $material->material_type = $data[0]['material_type'];
-        $material->requested_material_id = $data[0]['requested_material_id'];
+    //     // Create a new instance of IssueMaterialByInventory
+        // $material = new IssueMaterialByInventory();
+        $material->requested_material_date =$material->requested_material_date;
+        $material->site_id =$material->site_id;
+        $material->material_type =$material->material_type;
+        $material->requested_material_id =$material->requested_material_id;
+        $material->material_unit_id =$material->material_unit_id;
         $material->material_id = $data[0]['material_id'];
-        $material->raw_material_id = $data[0]['raw_material_id'];
-        $material->brand_id = $data[0]['brand_id'];
-        $material->requested_material_quantity = $data[0]['requested_material_quantity'];
-        $material->material_unit_id = $data[0]['material_unit_id'];
-        $material->selected_warehouse_id = $data[0]['selected_warehouse_id'];
-        $material->available_material = $data[0]['available_material'];
-        $material->issue_material = $data[0]['issue_material'];
-        $material->remaining_material = $data[0]['remaining_material'];
-        $material->remark = $data[0]['remark'];
-        $material->app_status = $data[0]['status'];
-        
-        // Save the updated material
+        $material->raw_material_id =$data[0]['raw_material_id'];
+        $material->brand_id =$data[0]['brand_id'];
+        $material->requested_material_quantity =$data[0]['requested_material_quantity'];
+        $material->selected_warehouse_id =$data[0]['selected_warehouse_id'];
+        $material->available_material =$data[0]['available_material'];
+        $material->issue_material =$data[0]['issue_material'];
+        $material->remaining_material =$data[0]['remaining_material'];
+        $material->remark =$data[0]['remark']; // Assign the remar
+        $material->app_status =$data[0]['status'];
+        // echo json_encode($material);
+        // exit();
         $material->save();
-
         // Update the status of the requested material to 'Submitted'
         $material->update(['status' => 'Submitted']);
-    } 
+    }
+
+
+
+    // if ($material) {
+    //     // Update the existing material
+    //     $material->material_type = $request->material_type;
+    //     $material->requested_material_id = $request->material_id;
+    //     $material->material_id = $request->material_id;
+    //     $material->raw_material_id = $request->raw_material_id;
+    //     $material->brand_id = $request->brand_id;
+    //     $material->requested_material_quantity = $request->requested_material_quantity;
+    //     $material->material_unit_id = $request->material_unit_id;
+    //     $material->selected_warehouse_id = $request->selected_warehouse_id;
+    //     $material->available_material = $request->available_material;
+    //     $material->issue_material = $request->issue_material;
+    //     $material->remaining_material = $request->remaining_material;
+    //     $material->remark = $request->remark;
+    //     $material->app_status = $request->status;
+        
+    //     // Save the updated material
+    //     $material->save();
+
+        // Update the status of the requested material to 'Submitted'
+    //     $material->update(['status' => 'Submitted']);
+    // } 
 
     return back();
 }
@@ -302,9 +306,43 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         $material->remark = $request->remark;
 
         $material->save();
-        return redirect()->route('direct-issue-material')->with('success', 'Request added successfully!');
+        return redirect()->route('non_consumable_direct_issue_material')->with('success', 'Request added successfully!');
     }
 
+    public function Nonconsumable_directIssueMaterial_edit(Request $request)
+    {
+        $materials = NonConsumableCategoryMaterial::all();
+        $brand = NonConsumableBrand::all();
+        $unit = NonConsumableUnitType::all();
+        $addMaterial = NonConsumableMaterial::all();
+        // $rawmaterial = RawMaterial::all();
+        $warehouse = Warehouse::all();
+        $site = Site::all();
+        $supervisor = Supervisor::all();
+        $edit_material = NonConsumableDirectIssueMaterial::find($request->id);
+        return view('inventory_managmt.edit_non_consumable_direct_issue_material', compact('edit_material', 'site', 'warehouse', 'materials', 'brand', 'unit', 'addMaterial','supervisor'));
+    }
+
+    public function Nonconsumable_DirectIssueMaterial_update(Request $request)
+    {
+        $material = NonConsumableDirectIssueMaterial::find($request->id);
+        $material->date = $request->date;
+        $material->time = $request->time;
+        $material->site_id = $request->site;
+        $material->supervisor_id = $request->supervisor;
+        $material->warehouse_id = $request->warehouse;
+        $material->material_id = $request->material;
+        $material->brand_id = $request->brand;
+        $material->unit_id = $request->unit_type;
+        // $material->raw_material_id = $request->raw_material;
+        $material->quantity = $request->quantity;
+        $material->remark = $request->remark;
+
+        $material->save();
+        return redirect()->route('non_consumable_direct_issue_material')->with('success', 'Request added successfully!');
+    }
+
+    
 // ---------------------------------------------------------------------------------------------------
 
 
