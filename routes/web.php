@@ -231,6 +231,9 @@ Route::get('non_consumable_add_material', [InventoryManagementController::class,
 Route::get('non_consumable_direct_issue_material', [InventoryManagementController::class, 'Nonconsumable_directIssueMaterial'])->name('non_consumable_direct_issue_material');
 Route::post('non_consumable_direct_issue_material_store', [InventoryManagementController::class, 'Nonconsumable_addDirectIssueMaterial'])->name('non_consumable_direct_issue_material_store');
 
+Route::get('non_consumable_direct_issue_material_edit/{id}', [InventoryManagementController::class, 'Nonconsumable_DirectIssueMaterial_edit'])->name('non_consumable_direct_issue_material_edit');
+
+Route::post('non_consumable_direct_issue_material_update', [InventoryManagementController::class, 'Nonconsumable_DirectIssueMaterial_update'])->name('non_consumable_direct_issue_material_update');
 
 
 

@@ -87,7 +87,7 @@
                         </td>
 
                         <td style="padding:10px;" align="center">
-                            <select class="form-control select" data-live-search="true" name="data[{{  $loop->index }}][status]" data-loop-index="{{  $loop->index }}">
+                            <select class="form-control" data-live-search="true" name="data[{{  $loop->index }}][status]" data-loop-index="{{  $loop->index }}">
                                 @foreach ($statusId as $status)
                                     <option value="{{ $status->id }}" @if ($data->status == $status->id)
                                         selected
