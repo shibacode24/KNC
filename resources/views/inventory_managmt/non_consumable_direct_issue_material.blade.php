@@ -190,7 +190,7 @@
                                             <th>Material Qty</th>
                                             <th>Remark</th>
                                             {{-- <th>Remark</th> --}}
-                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
