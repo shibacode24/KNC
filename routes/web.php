@@ -225,6 +225,18 @@ Route::post('/add-issued-material', [InventoryManagementController::class, 'addI
 
 //non consumable
 Route::get('/site-non-consumed-material', [InventoryManagementController::class, 'site_non_consumed_material'])->name('site-non-consumed-material');
+
+Route::get('non_consumable_viewservicearea', [InventoryManagementController::class, 'non_consumable_viewservicearea'])->name('non_consumable_viewservicearea');
+
+Route::post('nonConsumable_addIssuedMaterial', [InventoryManagementController::class, 'nonConsumable_addIssuedMaterial'])->name('nonConsumable_addIssuedMaterial');
+
+Route::post('/get-non-consumable-available-material', [InventoryManagementController::class, 'getNonConsumable_AvailableMaterial'])->name('get-non-consumable-available-material');
+
+Route::get('non_consumable_viewservicearea_edit', [InventoryManagementController::class, 'non_consumable_viewservicearea_edit'])->name('non_consumable_viewservicearea_edit');
+
+Route::post('update_non_consumable_site_material', [InventoryManagementController::class, 'update_non_consumable_site_material'])->name('update_non_consumable_site_material');
+
+
 Route::get('getNonConsumableMaterialBrands', [InventoryManagementController::class, 'getNonConsumableMaterialBrands'])->name('getNonConsumableMaterialBrands');
 Route::post('addNonConsumableMaterialstore', [InventoryManagementController::class, 'addNonConsumableMaterialstore'])->name('addNonConsumableMaterialstore');
 Route::get('non_consumable_add_material', [InventoryManagementController::class, 'non_consumable_add_material'])->name('non_consumable_add_material');
