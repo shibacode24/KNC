@@ -20,6 +20,7 @@ class IssueMaterialByInventory extends Model
         'requested_material_date',
         'material_type',
         'site_id',
+        'supervisor_id',
         'requested_material_id',
         'material_id',
         'raw_material_id',
@@ -33,6 +34,7 @@ class IssueMaterialByInventory extends Model
         'remark',
         'inventory_status',
         'app_status',
+        'issue_type',
     ];
 
     public function material_name()

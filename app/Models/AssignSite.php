@@ -10,13 +10,20 @@ class AssignSite extends Model
     use HasFactory;
     protected $table = 'assign_site';
     protected $fillable = ['date', 'site_assign', 'role_id', 'user_id'];
-    public function sitename()
+
+
+    public function site_name()
     {
         return $this->hasOne(Site::class, 'id', 'site_assign');
     }
     public function username()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function role_name()
+    {
+        return $this->hasOne(PanelRoles::class, 'id', 'role_id');
     }
 
     protected $casts = [

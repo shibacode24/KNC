@@ -325,58 +325,39 @@
                         </form>
                     <div class="row">
 
-                        {{-- <div class="col-md-12" style="margin-top:15px;">
+                        <div class="col-md-12" style="margin-top:15px;">
                             <div class="panel panel-default">
                                 <h5 class="panel-title"
                                     style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                                     align="center">
-                                    <i class="fa fa-bars"></i> &nbsp;Added Supervisor
+                                    <i class="fa fa-bars"></i> &nbsp;Added Roles
                                 </h5>
 
 
 
                             </div>
-                        </div> --}}
+                        </div>
 
                         <div class="col-md-12" style="margin-top:15px;">
 
                             <!-- START DEFAULT DATATABLE -->
 
                             <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                            {{-- <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
+                            <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
                             <table class="table datatable">
                                 <thead>
                                     <tr>
                                         <th>Sr. No.</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Mobile Number</th>
-                                        <th>Aadhar Number</th>
-                                        <th>PAN Number</th>
-                                        <th>City</th>
-                                        <th>Address</th>
-                                        <th>Account Holder Name</th>
-                                        <th>Bank Name</th>
-                                        <th>Account Number</th>
-                                        <th>IFSC</th>
+                                        <th>Role</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($ac as $index => $accountDetail)
+                                    @foreach ($role->sortByDesc('created_at') as $role)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $accountDetail->supervisor->supervisor_name ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->email ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->mobile_number ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->aadhar_number ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->pan_number ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->cityname->city ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->city_address ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->account_holder }}</td>
-                                        <td>{{ $accountDetail->bank_name }}</td>
-                                        <td>{{ $accountDetail->account_number }}</td>
-                                        <td>{{ $accountDetail->ifsc_code }}</td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $role->role ?? 'N/A' }}</td>
+                                        <td>{{ is_array($role->permission) ? implode(', ', $role->permission) : ($role->permission ?? 'N/A') }}</td>
 
                                         <td>
 
@@ -386,20 +367,13 @@
                                                 data-placement="top" title="Edit"><i class="fa fa-edit"
                                                     style="margin-left:5px;"></i></button>
 
-
-                                                @if ($accountDetail->supervisor)
-
-                                                <a href="{{ route('supervisor-destroy', $accountDetail->supervisor->id) }}" onclick="return confirm('Are you sure you want to delete this Supervisor?')">
-                                                    <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
-                                                @endif
                                         </td>
                                     </tr>
 
                                     @endforeach
                                 </tbody>
                             </table>
-                        </div> --}}
+                        </div>
 
                             <!-- END DEFAULT DATATABLE -->
 

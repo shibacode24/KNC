@@ -145,14 +145,14 @@ public function panelUser(Request $request)
 
     $supervisor_data = User::where(function($query) {
         $query->where('role', 'supervisor')
-              ->orWhere('role', 'employee')
+              ->orWhere('role', 'Employee')
               ->orWhere('role', 'Other');
     })
     ->whereNotNull('panel_role')
     ->with(['role_name', 'supervisor', 'employee']) // Eager load relationships
     ->get();
     $supervisor = User::where('role', 'supervisor')->get();
-    $employee =  User::where('role', 'employee')->get();
+    $employee =  User::where('role', 'Employee')->get();
     $role = PanelRoles::all();
     $user = User::all();
 

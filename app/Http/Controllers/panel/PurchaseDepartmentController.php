@@ -92,7 +92,7 @@ class PurchaseDepartmentController extends Controller
     public function directPoList(Request $request)
     {
 
-        $reqMaterial = DirectPOList::all();
+        $reqMaterial = MaterialRequestList::whereNotNull('order_by')->get();
         $vendor = Vendor::all();
         $material = Material::all();
         $rawmaterial = RawMaterial::all();
@@ -106,7 +106,10 @@ class PurchaseDepartmentController extends Controller
 
     public function storeDirectPOList(Request $request)
     {
-        $po = new DirectPOList();
+
+        $orderId = 'OD'.time(); // You can customize the prefix as needed
+
+        $po = new MaterialRequestList();
         $po->date = $request->date;
         $po->warehouse_id = $request->warehouse;
         $po->material_id = $request->material;
@@ -114,9 +117,52 @@ class PurchaseDepartmentController extends Controller
         $po->material_unit_id = $request->unit_type;
         $po->raw_material_id = $request->raw_material;
         $po->quantity = $request->quantity;
+        $po->vendor_id = $request->vendor;
+        $po->order_id = $orderId; // Add the generated order_id here
+        $po->order_by = 'Direct Order';
 
         $po->save();
-        return redirect()->route('add_po')->with('success', 'Request added successfully!');
+        return redirect()->route('direct-po-list')->with('success', 'Request added successfully!');
+    }
+
+    public function editDirectPoList($id)
+    {
+        $issueEdit = MaterialRequestList::find($id);
+        $issueAll = MaterialRequestList::all();
+        $vendor = Vendor::all();
+        $material = Material::all();
+        $rawmaterial = RawMaterial::all();
+        $unit = UnitType::all();
+        $brand = Brand::all();
+        $warehouse = Warehouse::all();
+
+        return view('adminpanel.direct_po_list_edit', compact('issueEdit', 'issueAll', 'vendor',  'warehouse', 'material', 'brand', 'unit', 'rawmaterial'));
+
+    }
+
+    public function updateDirectPoList(Request $request)
+    {
+        $po = MaterialRequestList::find($request->id);
+        if (!$po) {
+            return redirect()->back()->with('error', 'PO not found');
+        }
+
+        $po->date = $request->date;
+        $po->warehouse_id = $request->warehouse;
+        $po->material_id = $request->material;
+        $po->brand_id = $request->brand;
+        $po->material_unit_id = $request->unit_type;
+        $po->raw_material_id = $request->raw_material;
+        $po->quantity = $request->quantity;
+        $po->vendor_id = $request->vendor;
+        // $po->order_id = $request->input($po->order_id);
+
+        // $po->order_id = $orderId; // Add the generated order_id here
+        $po->order_by = 'Direct Order';
+
+        $po->save();
+
+        return redirect(route('direct-po-list'))->with('success', 'Successfully Updated !');
     }
 
 

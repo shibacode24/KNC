@@ -29,6 +29,7 @@ class MaterialRequestList extends Model
         'invoice_date',
         'invoice_number',
         'invoice',
+        'order_by',
         'status',
     ];
 

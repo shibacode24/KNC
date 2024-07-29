@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-md-2">
                             <label>Site</label>
-                            <select class="form-control select" data-live-search="true" name="site_id">
+                            <select class="form-control select" data-live-search="true" name="site">
                                 @foreach($site as $site)
                                 <option value="{{ $site->id }}"
                                     {{ old('site', $assignSiteEdit->site_assign) == $site->id ? 'selected' : '' }}>
@@ -52,15 +52,25 @@
                         </div>
 
                         <div class="col-md-2">
-                            <label>Assign Supervisor</label>
-                            <select class="form-control select" data-live-search="true" name="supervisor_id">
-                                @foreach($supervisor as $supervisor)
-                                <option value="{{ $supervisor->user_id }}"
-                                   {{old('supervisor_id', $assignSiteEdit->supervisor) == $supervisor->id ? 'selected' : ''}} >
-                                    {{ $supervisor->supervisor_name }}</option>
+                            <label>Select Role</label>
+                            <select class="form-control select" data-live-search="true" name="role" id="role">
+                                @foreach($role as $role)
+                                    <option value="{{ $role->id }}"
+                                        {{ old('role', $assignSiteEdit->role_id) == $role->id ? 'selected' : '' }}>
+                                        {{ $role->role }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
+
+                        <div class="col-md-2">
+                            <label>Assign To</label>
+                            <select class="form-control select2" data-live-search="true" name="assign_to[]" id="assign_to" multiple>
+                                {{-- The options will be populated by JavaScript --}}
+                            </select>
+                        </div>
+
                         <div class="col-md-2" style="margin-top:15px;" align="left">
                             <button id="on" type="submit" class="btn mjks"
                                 style="color:#FFFFFF; height:30px; width:auto;">
@@ -113,5 +123,53 @@
 <!-- END PAGE CONTAINER -->
 
 @stop
+
 @section('js')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize select2
+        $('.select2').select2();
+
+        // Populate the Assign To dropdown with previously saved values
+        var initialValues = @json($assignSiteEdit->user_id ?? []);
+
+        // Function to update the dropdown with values
+        function updateDropdown(users) {
+            $('#assign_to').empty().append('<option value="">--Select--</option>');
+            $.each(users, function(key, value) {
+                // Skip admin user
+                if (value.name !== 'admin') {
+                    $('#assign_to').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                }
+            });
+            // Reapply previously saved values
+            $('#assign_to').val(initialValues).trigger('change');
+        }
+
+        // Load the initial values if any
+        updateDropdown(@json($user)); // Use the initial list of users
+
+        // Event listener for role change
+        $('#role').change(function() {
+            let roleId = $(this).val();
+            if (roleId) {
+                $.ajax({
+                    url: '{{ route("get-users-by-role") }}',
+                    type: 'GET',
+                    data: { role_id: roleId },
+                    success: function(data) {
+                        updateDropdown(data); // Update dropdown with users based on selected role
+                    }
+                });
+            } else {
+                // Clear dropdown if no role is selected
+                $('#assign_to').empty().append('<option value="">--Select--</option>').select2();
+            }
+        });
+    });
+</script>
 @stop
+
+
