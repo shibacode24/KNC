@@ -286,19 +286,19 @@ public function nonConsumable_addIssuedMaterial(Request $request)
                 // Update the status of the requested material to 'Submitted'
                 $requestedMaterial->update(['status' => 'Submitted']);
             }
-            $availableMaterial = AvailableMaterial::where('warehouse_id', $item['warehouse'])
-            ->where('material_id', $item['material'])
-            ->where('brand_id',$item['brand'])
-            ->orwhere('raw_material_id',$item['raw_material'])
-            ->where('type', 'Non-Consumable')
-            ->first();
+        //     $availableMaterial = AvailableMaterial::where('warehouse_id', $item['warehouse'])
+        //     ->where('material_id', $item['material'])
+        //     ->where('brand_id',$item['brand'])
+        //     ->orwhere('raw_material_id',$item['raw_material'])
+        //     ->where('type', 'Non-Consumable')
+        //     ->first();
     
-        // If available material is found, update the quantity
-        if ($availableMaterial) {
-            $availableMaterial->available_quantity = $item['remaining_material'];
-            $availableMaterial->save();
+        // // If available material is found, update the quantity
+        // if ($availableMaterial) {
+        //     $availableMaterial->available_quantity = $item['remaining_material'];
+        //     $availableMaterial->save();
     
-        }
+        // }
     }
 }
     return redirect()->back()->with('success', 'Requests added successfully!');
@@ -398,19 +398,19 @@ public function update_non_consumable_site_material(Request $request)
     
         }
 
-        $availableMaterial = AvailableMaterial::where('warehouse_id', $data[0]['selected_warehouse_id'])
-        ->where('material_id', $data[0]['material_id'])
-        ->where('brand_id',$data[0]['brand_id'])
-        ->orwhere('raw_material_id',$data[0]['raw_material_id'])
-        ->where('type', 'Non-Consumable')
-        ->first();
+    //     $availableMaterial = AvailableMaterial::where('warehouse_id', $data[0]['selected_warehouse_id'])
+    //     ->where('material_id', $data[0]['material_id'])
+    //     ->where('brand_id',$data[0]['brand_id'])
+    //     ->orwhere('raw_material_id',$data[0]['raw_material_id'])
+    //     ->where('type', 'Non-Consumable')
+    //     ->first();
 
-    // If available material is found, update the quantity
-    if ($availableMaterial) {
-        $availableMaterial->available_quantity =$data[0]['remaining_material'];
-        $availableMaterial->save();
+    // // If available material is found, update the quantity
+    // if ($availableMaterial) {
+    //     $availableMaterial->available_quantity =$data[0]['remaining_material'];
+    //     $availableMaterial->save();
 
-    }
+    // }
         return back()->with('success','record update successfully');
     }
     
