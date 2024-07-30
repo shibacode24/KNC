@@ -30,6 +30,8 @@ use App\Models\Approles;
 use App\Models\Engineer;
 use App\Models\Site_Manager;
 use App\Models\Site_Incharge;
+use App\Models\NonConsumableUnitType;
+use App\Models\NonConsumableBrand;
 use App\Models\{PanelRoles, NonConsumableCategory, NonConsumableCategoryMaterial};
 
 
@@ -526,8 +528,106 @@ class DashboardController extends Controller
         return redirect(route('unit_type'))->with('success', 'Successfully Updated !');
     }
 
+//non consumable unit type
+
+//unit master
+public function non_consumable_unit_type(Request $request)
+{
+    $unit = NonConsumableUnitType::all();
+    return view('adminpanel.non_consumable_unit_type', compact('unit'));
+}
+public function non_consumable_unit_type_store(Request $request)
+{
+    // Validate the incoming request data
+    $request->validate([
+        'unit_type' => 'required|',
+
+    ]);
+    $unit_type = new NonConsumableUnitType();
+    $unit_type->unit_type = $request->unit_type;
+
+    $unit_type->save();
+    return redirect()->route('non_consumable_unit_type')->with('success', 'Unit added successfully!');
+}
+
+public function non_consumable_unit_type_delete($id)
+{
+    $task = NonConsumableUnitType::find($id)->delete();
+    return redirect()->route('non_consumable_unit_type')->with('success', 'Unit type is Deleted Successfully');
+}
 
 
+public function non_consumable_unit_type_edit($id){
+
+    $unitTypeAll = NonConsumableUnitType::all();
+    $unitTypeEdit = NonConsumableUnitType::find($id);
+
+    return view('adminpanel.edit_non_consumable_unit_type', compact('unitTypeAll', 'unitTypeEdit',));
+}
+
+public function non_consumable_unit_type_update(Request $request)
+{
+    // dd($request->all());
+    $unitTypes = NonConsumableUnitType::find($request->id);
+    $unitTypes->unit_type = $request->unit_type;
+    $unitTypes->save();
+    return redirect(route('non_consumable_unit_type'))->with('success', 'Successfully Updated !');
+}
+
+//end of non consumable unit type
+
+ //non consumable brand Master
+
+ public function non_consumablebrand(Request $request)
+ {
+     $brand = NonConsumableBrand::all();
+     $material = NonConsumableCategoryMaterial::all();
+     return view('adminpanel.non_consumable_brand', compact('brand', 'material'));
+ }
+ public function non_consumablebrandstore(Request $request)
+ {
+     // Validate the incoming request data
+     $request->validate([
+         'brand' => 'required|',
+         'material_id' => 'required|',
+
+
+     ]);
+     $brand = new NonConsumableBrand();
+     $brand->brand = $request->brand;
+     $brand->material_id = $request->material_id;
+
+     $brand->save();
+     return redirect()->route('non_consumable_brand')->with('success', 'brand added successfully!');
+ }
+
+ public function non_consumablebrandDestroy($id)
+ {
+     $task = NonConsumableBrand::find($id)->delete();
+     return redirect()->route('non_consumable_brand')->with('success', 'Brand is Deleted Successfully');
+ }
+
+
+
+ public function non_consumablebrandEdit($id){
+
+    $brand_edit = NonConsumableBrand::find($id);
+    $material = NonConsumableCategoryMaterial::all();
+     return view('adminpanel.edit_non_consumable_brand', compact('brand_edit', 'material'));
+ }
+
+ public function non_consumablebrandUpdate(Request $request)
+ {
+     $brand =  NonConsumableBrand::find($request->id);
+     $brand->brand = $request->brand;
+     $brand->material_id = $request->material_id;
+
+     $brand->save();
+
+
+     return redirect(route('non_consumable_brand'))->with('success', 'Successfully Updated !');
+ }
+ //end of non consumable brand
     //material master
     public function material(Request $request)
     {

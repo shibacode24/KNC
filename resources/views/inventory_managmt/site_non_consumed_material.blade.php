@@ -97,9 +97,9 @@
                                             <th>Material Name </th>
                                             <th>Brand Name </th>
                                             <th>Material Qty </th>
-                                            <th>Material Unit </th>
+                                            {{-- <th>Material Unit </th> --}}
                                             <th>Warehouse </th>
-                                            <th>Available Material</th>
+                                            {{-- <th>Available Material</th> --}}
                                             <th>Issue Material </th>
                                             <th>Remaining Material </th>
                                             <th>Remark</th>
@@ -120,9 +120,9 @@
                                                 <td>{{ $material->material_name->material }}</td>
                                                 <td>{{ $material->brand_name->brand }}</td>
                                                 <td>{{ $material->requested_material_quantity }}</td>
-                                                <td>{{ $material->unit_type->unit_type }}</td>
+                                                {{-- <td>{{ $material->unit_type->unit_type }}</td> --}}
                                                 <td>{{ $material->warehouse_name->warehouse_name }}</td>
-                                                <td>{{ $material->available_material }}</td>
+                                                {{-- <td>{{ $material->available_material }}</td> --}}
                                                 <td>{{ $material->issue_material }}</td>
                                                 <td>{{ $material->remaining_material }}</td>
                                                 <td>
@@ -136,18 +136,13 @@
                                                 </td>
 
                                                 <td>
-                                                    {{-- <button data-bs-toggle="modal1" data-bs-target="#service-area-view"
-                                            style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                            type="button" class="btn btn-info" data-toggle="tooltip"
-                                            data-placement="top" title="Edit"><i class="fa fa-edit"
-                                                style="margin-left:5px;"></i></button> --}}
-                                                    <button data-bs-toggle="modal" data-bs-target="#service-area-edit"
-                                                        style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                        type="button" class="btn btn-info serviceareaedit"
-                                                       data-toggle="tooltip" data-id="{{ $material->id }}"
-                                                        data-placement="top" title="Edit">
-                                                        <i class="fa fa-edit" style="margin-left:5px;"></i>
-                                                    </button>
+                                                    <button data-bs-toggle="modal" data-bs-target="#non_consumable_service-area-edit"
+                                                    style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                    type="button" class="btn btn-info serviceareaedit"
+                                                   data-toggle="tooltip" data-id="{{ $material->id }}"
+                                                    data-placement="top" title="Edit">
+                                                    <i class="fa fa-edit" style="margin-left:5px;"></i>
+                                                </button>
                                                 </td>
 
 
@@ -187,25 +182,26 @@
 
     <!-- PAGE CONTENT WRAPPER -->
 
-    <div class="modal" id="service-area-edit" tabindex="-1" role="dialog" aria-labelledby="largeModalHead"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span
-                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="H3">Additional Details</h4>
-            </div>
-            <div class="modal-body" id="appendbodyserviceareaview11">
 
-                <!-- Your content here -->
-
-            </div>
-        </div>
-    </div>
-</div>
     </div>
     <!-- END PAGE CONTENT -->
+    </div>
+    <div class="modal" id="non_consumable_service-area-edit" tabindex="-1" role="dialog" aria-labelledby="largeModalHead"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="H3">Additional Details</h4>
+                </div>
+                <div class="modal-body" id="appendbodyserviceareaview11">
+
+                    <!-- Your content here -->
+
+                </div>
+            </div>
+        </div>
     </div>
     <!-- END PAGE CONTAINER -->
     <div class="modal" id="service-area-view" tabindex="-1" role="dialog" aria-labelledby="largeModalHead"
@@ -224,11 +220,7 @@
                 </div>
             </div>
         </div>
-
-       
     </div>
-
-
 
 @stop
 @section('js')
@@ -244,7 +236,7 @@
             var site_id = $(this).data('site_id'); // Assuming you have a data attribute for site_id
             $("#appendbodyserviceareaview").empty();
             $.ajax({
-                url: 'viewservicearea',
+                url: 'non_consumable_viewservicearea',
                 type: 'get',
                 data: {
                     // entry_id: entry_id
@@ -267,7 +259,7 @@
 <script>
     $(document).on('click', '.serviceareaedit', function() {
         console.log(1);
-        $("#service-area-edit").modal({
+        $("#non_consumable_service-area-edit").modal({
             backdrop: "static",
             keyboard: false,
         });
@@ -276,7 +268,7 @@
 
         $("#appendbodyserviceareaview11").empty();
         $.ajax({
-            url: 'viewservicearea_edit',
+            url: 'non_consumable_viewservicearea_edit',
             type: 'get',
             data: {
                 // entry_id: entry_id
@@ -291,7 +283,7 @@
     });
 
 
-    $('#service-area-edit').on('hidden.bs.modal', function() {
+    $('#non_consumable_service-area-edit').on('hidden.bs.modal', function() {
         location.reload();
     });
 </script>

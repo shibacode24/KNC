@@ -71,6 +71,23 @@ Route::get('unit-type-destroy/{id}', [DashboardController::class, 'unitTypeDestr
 Route::get('unit-type-edit/{id}', [DashboardController::class, 'unitTypeEdit'])->name('unit-type-edit');
 Route::post('unit-type-update', [DashboardController::class, 'unitTypeUpdate'])->name('unit-type-update');
 
+//non consumable 
+
+Route::get('non_consumable_unit_type', [DashboardController::class, 'non_consumable_unit_type'])->name('non_consumable_unit_type');
+Route::post('non_consumable_unit_type_store', [DashboardController::class, 'non_consumable_unit_type_store'])->name('non_consumable_unit_type_store');
+Route::get('non_consumable_unit_type_delete/{id}', [DashboardController::class, 'non_consumable_unit_type_delete'])->name('non_consumable_unit_type_delete');
+Route::get('non_consumable_unit_type_edit/{id}', [DashboardController::class, 'non_consumable_unit_type_edit'])->name('non_consumable_unit_type_edit');
+Route::post('non_consumable_unit_type_update', [DashboardController::class, 'non_consumable_unit_type_update'])->name('non_consumable_unit_type_update');
+
+//non consumable brand
+Route::get('non_consumablebrand', [DashboardController::class, 'non_consumablebrand'])->name('non_consumable_brand');
+Route::post('non_consumable_brand_store', [DashboardController::class, 'non_consumablebrandstore'])->name('non_consumable_brand_store');
+Route::get('non_consumablebrand-destroy/{id}', [DashboardController::class, 'non_consumablebrandDestroy'])->name('non_consumable_brand_destroy');
+Route::get('non_consumablebrand-edit/{id}', [DashboardController::class, 'non_consumablebrandEdit'])->name('non_consumable_brand_edit');
+Route::post('non_consumablebrand-update', [DashboardController::class, 'non_consumablebrandUpdate'])->name('non_consumable_brand_update');
+
+//end non brand
+
 Route::get('/material', [DashboardController::class, 'material'])->name('material');
 Route::get('material-destroy/{id}', [DashboardController::class, 'materialDestroy'])->name('material-destroy');
 Route::get('material-edit/{id}', [DashboardController::class, 'materialEdit'])->name('material-edit');
@@ -200,11 +217,39 @@ Route::post('update-direct-issue-material', [InventoryManagementController::clas
 
 
 Route::get('/site-material', [InventoryManagementController::class, 'site_material'])->name('site_material');
+Route::get('viewservicearea_edit', [InventoryManagementController::class, 'viewservicearea_edit'])->name('viewservicearea_edit');
+
+Route::post('update_site_material', [InventoryManagementController::class, 'update_site_material'])->name('update_site_material');
+
 Route::get('/viewservicearea', [InventoryManagementController::class, 'viewservicearea'])->name('viewservicearea');
 Route::post('/get-available-material', [InventoryManagementController::class, 'getAvailableMaterial'])->name('get-available-material');
 Route::post('/add-issued-material', [InventoryManagementController::class, 'addIssuedMaterial'])->name('add-issued-material');
 
+//non consumable
 Route::get('/site-non-consumed-material', [InventoryManagementController::class, 'site_non_consumed_material'])->name('site-non-consumed-material');
+
+Route::get('non_consumable_viewservicearea', [InventoryManagementController::class, 'non_consumable_viewservicearea'])->name('non_consumable_viewservicearea');
+
+Route::post('nonConsumable_addIssuedMaterial', [InventoryManagementController::class, 'nonConsumable_addIssuedMaterial'])->name('nonConsumable_addIssuedMaterial');
+
+Route::post('/get-non-consumable-available-material', [InventoryManagementController::class, 'getNonConsumable_AvailableMaterial'])->name('get-non-consumable-available-material');
+
+Route::get('non_consumable_viewservicearea_edit', [InventoryManagementController::class, 'non_consumable_viewservicearea_edit'])->name('non_consumable_viewservicearea_edit');
+
+Route::post('update_non_consumable_site_material', [InventoryManagementController::class, 'update_non_consumable_site_material'])->name('update_non_consumable_site_material');
+
+
+Route::get('getNonConsumableMaterialBrands', [InventoryManagementController::class, 'getNonConsumableMaterialBrands'])->name('getNonConsumableMaterialBrands');
+Route::post('addNonConsumableMaterialstore', [InventoryManagementController::class, 'addNonConsumableMaterialstore'])->name('addNonConsumableMaterialstore');
+Route::get('non_consumable_add_material', [InventoryManagementController::class, 'non_consumable_add_material'])->name('non_consumable_add_material');
+Route::get('non_consumable_direct_issue_material', [InventoryManagementController::class, 'Nonconsumable_directIssueMaterial'])->name('non_consumable_direct_issue_material');
+Route::post('non_consumable_direct_issue_material_store', [InventoryManagementController::class, 'Nonconsumable_addDirectIssueMaterial'])->name('non_consumable_direct_issue_material_store');
+
+Route::get('non_consumable_direct_issue_material_edit/{id}', [InventoryManagementController::class, 'Nonconsumable_DirectIssueMaterial_edit'])->name('non_consumable_direct_issue_material_edit');
+
+Route::post('non_consumable_direct_issue_material_update', [InventoryManagementController::class, 'Nonconsumable_DirectIssueMaterial_update'])->name('non_consumable_direct_issue_material_update');
+
+
 
 //WarehouseController
 Route::get('/grn', [WarehouseController::class, 'grn'])->name('grn');
