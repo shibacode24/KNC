@@ -54,16 +54,17 @@ class DashboardController extends Controller
     {
         $site = Site::all();
         $supervisor = supervisor::all();
-        $assign = AssignSite::with('sitename')->get();
+        $assignSite = AssignSite::all();
         $role = PanelRoles::all();
         $user = User::whereNotNull('panel_role')->get();
-        return view('adminpanel.assign_site', compact('site', 'assign', 'supervisor', 'role', 'user'));
+        return view('adminpanel.assign_site', compact('site', 'assignSite', 'supervisor', 'role', 'user'));
     }
 
     public function getUsersByRole(Request $request)
     {
         $roleId = $request->get('role_id');
-        $users = User::where('panel_role', $roleId)->get();
+        $users = User::where('panel_role', $roleId)
+        ->where('name', '<>', 'admin')->get();
         return response()->json($users);
     }
 
@@ -96,16 +97,20 @@ class DashboardController extends Controller
         $assignSiteEdit = AssignSite::find($id);
         $site = Site::all();
         $supervisor = supervisor::all();
-        return view('adminpanel.assign_site_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+        $assignSite = AssignSite::all();
+        $role = PanelRoles::all();
+        $user = User::whereNotNull('panel_role')->get();
+        return view('adminpanel.assign_site_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor', 'role', 'user'));
     }
 
     public function assignSiteUpdate(Request $request)
     {
-        $assignSite = AssignSite::find($request->id);
-        $assignSite->date = $request->date;
-        $assignSite->supervisor = $request->supervisor_id;
-        $assignSite->site_assign = $request->site_id;
-        $assignSite->save();
+        $assign = AssignSite::find($request->id);
+        $assign->date = $request->date;
+        $assign->site_assign = $request->site;
+        $assign->role_id = $request->role;
+        $assign->user_id = $request->assign_to;
+        $assign->save();
 
 
         return redirect(route('assign_site'))->with('success', 'Successfully Updated !');
@@ -1092,6 +1097,7 @@ public function non_consumable_unit_type_update(Request $request)
     $user = new User();
     $user->name = $request->supervisor_name;
     $user->email = $request->email;
+    $user->contact = $request->mobile_number;
     $user->password = bcrypt($request->password); // Hash the password
     $user->role = 'Supervisor'; // Set the role to supervisor
     $user->save();
@@ -1191,8 +1197,9 @@ public function non_consumable_unit_type_update(Request $request)
         $user = new User();
         $user->name = $request->employee_name;
         $user->email = $request->email;
+        $user->contact = $request->mobile_number;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'employee';
+        $user->role = 'Employee';
         $user->save();
 
 

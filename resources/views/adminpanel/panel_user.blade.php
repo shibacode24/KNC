@@ -124,19 +124,19 @@
                                         <td>{{$supervisor->role}}</td>
 
 
-                                        @if($supervisor->role == 'supervisor')
-                                        <td>{{ $supervisor->supervisor->supervisor_name ?? '' }}</td>
-                                        <td>{{ $supervisor->supervisor->mobile_number ?? ''}}</td>
-                                        <td>{{ $supervisor->supervisor->email ?? '' }}</td>
+                                        @if(strtolower($supervisor->role) == 'supervisor')
+                                        <td>{{ $supervisor->name ?? Null }}</td>
+                                        <td>{{ $supervisor->contact ?? Null}}</td>
+                                        <td>{{ $supervisor->email ?? Null }}</td>
 
-                                    @elseif($supervisor->role == 'employee')
-                                        <td>{{ $supervisor->employee->employee_name ?? '' }}</td>
-                                        <td>{{ $supervisor->employee->mobile_number ?? '' }}</td>
-                                        <td>{{ $supervisor->employee->email ?? ''}}</td>
+                                    @elseif(strtolower($supervisor->role) == 'employee')
+                                        <td>{{ $supervisor->name ?? '' }}</td>
+                                        <td>{{ $supervisor->contact ?? '' }}</td>
+                                        <td>{{ $supervisor->email ?? ''}}</td>
                                     @elseif($supervisor->role == 'Other')
-                                        <td>{{ $supervisor->name }}</td>
-                                        <td>{{ $supervisor->contact }}</td>
-                                        <td>{{ $supervisor->email }}</td>
+                                        <td>{{ $supervisor->name ?? ''}}</td>
+                                        <td>{{ $supervisor->contact ?? ''}}</td>
+                                        <td>{{ $supervisor->email ?? ''}}</td>
 
                                     @else
                                         <td>N/A</td> <!-- Fallback in case role is not recognized -->

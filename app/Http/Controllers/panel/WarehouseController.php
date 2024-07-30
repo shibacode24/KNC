@@ -26,13 +26,25 @@ class WarehouseController extends Controller
 {
     // Get orders that are pending and not yet included in GRN
     $order = MaterialRequestList::where('status', 'Pending')
+        ->whereNotNull('add_material_id')
+        ->whereNotIn('id', function($query) {
+            $query->select('material_req_list_id')->from('grn');
+        })->get();
+
+        $directOrder = MaterialRequestList::where('status', 'Pending')
+        ->whereNull('add_material_id')
         ->whereNotIn('id', function($query) {
             $query->select('material_req_list_id')->from('grn');
         })->get();
 
     // Get orders that are completed and not yet included in GRN
     $completeOrder = MaterialRequestList::where('status', 'Completed')
+    ->whereNotNull('add_material_id')
        ->get();
+
+       $directCompleteOrder = MaterialRequestList::where('status', 'Completed')
+       ->whereNull('add_material_id')
+          ->get();
 
 
         // dd($completeOrder);
@@ -43,7 +55,8 @@ class WarehouseController extends Controller
     $rawmaterial = RawMaterial::all();
     $warehouse = Warehouse::all();
 
-    return view('adminpanel.grn', compact('vendor', 'brand', 'material', 'unit', 'order', 'completeOrder', 'rawmaterial', 'warehouse'));
+    return view('adminpanel.grn', compact('vendor', 'brand', 'material', 'unit', 'order', 'directOrder', 'completeOrder',
+    'directCompleteOrder', 'rawmaterial', 'warehouse'));
 }
 
 
@@ -83,12 +96,13 @@ public function viewgrn(Request $request)
         // Update the existing available material
         $addMaterialStatus->status = 'Completed';
         $addMaterialStatus->save();
-    } else {
+    } elseif ($addMaterialStatus) {
         // Create a new available material entry
         $addMaterialStatus->status = 'Pending';
         $addMaterialStatus->save();
+    } else {
+        // Handle the case where $addMaterialStatus is neither true nor false
     }
-
     $orderDetails = MaterialRequestList::where('id', $materialRequest->id)
     ->first();
 
@@ -131,11 +145,13 @@ public function viewgrn(Request $request)
 }
     public function issue_material(Request $request)
     {
-        $issueMaterial = IssueMaterialByInventory::all();
+        $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')->get();
+        $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')->get();
+
         $statusID = Status::all();
         $existingMaterials = IssueMaterialByWarehouse::all()->keyBy('issue_material_by_inventory_id');
 
-        return view('adminpanel.issue_material', compact('issueMaterial', 'statusID', 'existingMaterials'));
+        return view('adminpanel.issue_material', compact('issueMaterial', 'directIssueMaterial', 'statusID', 'existingMaterials'));
     }
 
     public function addIssuedMaterialByWarehouse2(Request $request)

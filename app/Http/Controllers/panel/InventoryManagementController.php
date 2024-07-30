@@ -16,18 +16,17 @@ use App\Models\Inventory\NonConsumableDirectIssueMaterial;
 
 class InventoryManagementController extends Controller
 {
-    public function site_material()
+       public function site_material()
 {
      // Fetch all requested materials where status is null and group by date and site_id
-     $requestedMaterial = RequestedMaterial::where('material_type', 'Consumable')
-     ->whereNull('status')
+     $requestedMaterial = RequestedMaterial::whereNull('status')
      ->orderBy('created_at', 'desc')
      ->get()
      ->groupBy(function($item) {
          return $item->created_at->format('Y-m-d') . '_' . $item->site_id;
      });
 
-    $issueMaterial = IssueMaterialByInventory::where('material_type', 'Non-Consumable')->get();
+    $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')->get();
     // // Fetch all requested materials and group by date and site_id
     // $requestedMaterial = RequestedMaterial::all()->groupBy(function($item) {
     //     return $item->created_at->format('Y-m-d') . '_' . $item->site_id;
@@ -579,28 +578,72 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         $warehouse = Warehouse::all();
         $site = Site::all();
         $supervisor = Supervisor::all();
-        $issue = DirectIssueMaterial::all();
+        $issue = IssueMaterialByInventory::all();
+
         return view('adminpanel.direct_issue_material', compact('issue', 'site', 'warehouse', 'material', 'brand', 'unit', 'addMaterial', 'rawmaterial', 'supervisor'));
     }
 
     public function addDirectIssueMaterial(Request $request)
     {
-        $material = new DirectIssueMaterial();
-        $material->date = $request->date;
-        $material->time = $request->time;
+        $material = new IssueMaterialByInventory();
+        $material->requested_material_date = $request->date;
+        // $material->time = $request->time;
         $material->site_id = $request->site;
-        $material->supervisor_id = $request->supervisor;
-        $material->warehouse_id = $request->warehouse;
+        // $material->supervisor_id = $request->supervisor;
+        $material->selected_warehouse_id = $request->warehouse;
         $material->material_id = $request->material;
         $material->brand_id = $request->brand;
-        $material->unit_id = $request->unit_type;
+        $material->material_unit_id = $request->unit_type;
         $material->raw_material_id = $request->raw_material;
-        $material->quantity = $request->quantity;
+        $material->requested_material_quantity = $request->quantity;
         $material->remark = $request->remark;
+        $material->issue_type = 'Direct Issue';
 
         $material->save();
         return redirect()->route('direct-issue-material')->with('success', 'Request added successfully!');
     }
+
+
+    public function editDirectIssueMaterial($id)
+    {
+        $issueEdit = IssueMaterialByInventory::find($id);
+        $issueUpdate = IssueMaterialByInventory::all();
+        $material = Material::all();
+        $brand = Brand::all();
+        $unit = UnitType::all();
+        $addMaterial = AddMaterial::all();
+        $rawmaterial = RawMaterial::all();
+        $warehouse = Warehouse::all();
+        $site = Site::all();
+        $supervisor = Supervisor::all();
+        $issue = DirectIssueMaterial::all();
+
+        return view('adminpanel.direct_issue_material_edit', compact('issueEdit', 'issueUpdate', 'issue', 'site', 'warehouse', 'material', 'brand', 'unit', 'addMaterial', 'rawmaterial', 'supervisor'));
+
+    }
+
+    public function updateDirectIssueMaterial(Request $request)
+    {
+        $material = IssueMaterialByInventory::find($request->id);
+        if (!$material) {
+            return redirect()->back()->with('error', 'Material not found');
+        }
+        $material->requested_material_date = $request->date;
+        $material->site_id = $request->site;
+        $material->selected_warehouse_id = $request->warehouse;
+        $material->material_id = $request->material;
+        $material->brand_id = $request->brand;
+        $material->material_unit_id = $request->unit_type;
+        $material->raw_material_id = $request->raw_material;
+        $material->requested_material_quantity = $request->quantity;
+        $material->remark = $request->remark;
+        $material->issue_type = 'Direct Issue';
+
+        $material->save();
+
+        return redirect(route('direct-issue-material'))->with('success', 'Successfully Updated !');
+    }
+
 
 
 }

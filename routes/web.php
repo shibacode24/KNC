@@ -212,6 +212,8 @@ Route::get('/material/getRawMaterial', [InventoryManagementController::class, 'g
 
 Route::get('/direct-issue-material', [InventoryManagementController::class, 'directIssueMaterial'])->name('direct-issue-material');
 Route::post('add-direct-issue-material', [InventoryManagementController::class, 'addDirectIssueMaterial'])->name('direct-issue-material.store');
+Route::get('/edit-direct-issue-material/{id}', [InventoryManagementController::class, 'editDirectIssueMaterial'])->name('edit-direct-issue-material');
+Route::post('update-direct-issue-material', [InventoryManagementController::class, 'updateDirectIssueMaterial'])->name('update-direct-issue-material');
 
 
 Route::get('/site-material', [InventoryManagementController::class, 'site_material'])->name('site_material');
@@ -265,6 +267,9 @@ Route::get('/feedback', [PurchaseDepartmentController::class, 'feedback'])->name
 Route::post('/add-invoice', [PurchaseDepartmentController::class, 'addInvoice'])->name('add-invoice');
 // direct po
 Route::get('/direct-po-list', [PurchaseDepartmentController::class, 'directPoList'])->name('direct-po-list');
+Route::post('/store-direct-po-list', [PurchaseDepartmentController::class, 'storeDirectPoList'])->name('store-direct-po-list');
+Route::get('/edit-direct-po-list/{id}', [PurchaseDepartmentController::class, 'editDirectPoList'])->name('edit-direct-po-list');
+Route::post('update-direct-po-list', [PurchaseDepartmentController::class, 'updateDirectPoList'])->name('update-direct-po-list');
 
 Route::post('/citystore', [DashboardController::class, 'citystore'])->name('city.store');
 Route::post('/firmstore', [DashboardController::class, 'firmstore'])->name('firm.store');
