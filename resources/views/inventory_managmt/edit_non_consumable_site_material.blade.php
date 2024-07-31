@@ -47,7 +47,7 @@
                             {{ $data->material_name->material }}
                         </td>
                         <td style="padding:5px;" align="center">
-                            <input type="hidden" name="data[{{ $loop->index }}][raw_material_id]" value="{{ $data->raw_material_id }}">
+                            <input type="hidden" name="data[{{ $loop->index }}][raw_material]" value="{{ $data->raw_material_id }}">
                             {{ $data->raw_material_name->raw_material_name }}
                         </td>
                         <td style="padding:5px;" align="center">

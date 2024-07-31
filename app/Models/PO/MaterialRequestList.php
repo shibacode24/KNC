@@ -8,6 +8,7 @@ use App\Models\Material; // Correctly import the Material model
 use App\Models\UnitType; // Ensure you also import other related models
 use App\Models\Brand;
 use App\Models\{Vendor, RawMaterial, Warehouse};
+use App\Models\{NonConsumableCategoryMaterial,NonConsumableCategory,NonConsumableBrand,NonConsumableUnitType};
 
 
 class MaterialRequestList extends Model
@@ -16,6 +17,7 @@ class MaterialRequestList extends Model
     protected $table = 'material_request_list';
 
     protected $fillable = [
+        'type',
         'date',
         'add_material_id',
         'warehouse_id',
@@ -60,6 +62,29 @@ class MaterialRequestList extends Model
     public function vendor_name()
     {
         return $this->hasOne(Vendor::class, 'id', 'vendor_id');
+    }
+
+
+
+    public function non_consumable_material_name()
+    {
+        return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'raw_material_id');
+    }
+
+    public function non_consumable_category_name()
+    {
+        return $this->hasOne(NonConsumableCategory::class, 'id', 'material_id');
+    }
+
+
+    public function non_consumable_unit_type()
+    {
+        return $this->hasOne(NonConsumableUnitType::class, 'id', 'material_unit_id');
+    }
+
+    public function non_consumable_brand_name()
+    {
+        return $this->hasOne(NonConsumableBrand::class, 'id', 'brand_id');
     }
 
 }
