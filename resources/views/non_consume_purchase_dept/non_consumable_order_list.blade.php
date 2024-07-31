@@ -54,10 +54,10 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$orderDetails->order_id}}</td>
 
-                                        <td>{{$orderDetails->date}}</td>
-                                        <td>{{$orderDetails->material_name->material}}</td>
-                                        <td>{{$orderDetails->brand_name->brand}}</td>
-                                        <td>{{$orderDetails->unit_type->unit_type}}</td>
+                                        <td>{{date('d-m-Y',strtotime($orderDetails->date))}}</td>
+                                        <td>{{$orderDetails->non_consumable_material_name->material ?? ''}}</td>
+                                        <td>{{$orderDetails->non_consumable_brand_name->brand ?? ''}}</td>
+                                        <td>{{$orderDetails->non_consumable_unit_type->unit_type ?? ''}}</td>
                                         <td>{{$orderDetails->quantity}}</td>
 
                                         <td>{{$orderDetails->vendor_name->vendor_name ?? ''}}</td>
@@ -132,10 +132,10 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$orderDetails->order_id}}</td>
 
-                                        <td>{{$orderDetails->date}}</td>
-                                        <td>{{$orderDetails->material_name->material}}</td>
-                                        <td>{{$orderDetails->brand_name->brand}}</td>
-                                        <td>{{$orderDetails->unit_type->unit_type}}</td>
+                                        <td>{{date('d-m-Y',strtotime($orderDetails->date))}}</td>
+                                        <td>{{$orderDetails->non_consumable_material_name->material}}</td>
+                                        <td>{{$orderDetails->non_consumable_brand_name->brand}}</td>
+                                        <td>{{$orderDetails->non_consumable_unit_type->unit_type}}</td>
                                         <td>{{$orderDetails->quantity}}</td>
 
                                         <td>{{$orderDetails->vendor_name->vendor_name}}</td>
@@ -214,7 +214,7 @@
                 <div class="col-md-12">
                     <h3>Order
                     </h3>
-                    <form action="{{route('add-invoice')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('non_consumable_addInvoice')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="order_id" id="order_id">
 

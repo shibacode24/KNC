@@ -44,13 +44,13 @@
                         @csrf
                         <div class="col-md-12" style="margin-top:10px;">
                             <!-- <div class="col-md-4"></div>
-                                                -->
-                            <div class="col-md-2" style="margin-left: 5px;">
+                                                    -->
+                            <div class="col-md-2">
                                 <label class="control-label">Date<font color="#FF0000">*</font></label>
                                 <input type="date" name="date" id="date" class="form-control">
                             </div>
 
-                            <div class="col-md-2" style="margin-left: 5px;">
+                            <div class="col-md-2">
                                 <label class="control-label">Time<font color="#FF0000">*</font></label>
                                 <input type="time" name="time" id="time" class="form-control">
                             </div>
@@ -89,13 +89,25 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2" style="margin-top: 15px; margin-left:10px">
-                                <label>Select Materials</label>
-                                <select class="form-control select" data-live-search="true" name="material" id="material">
+                            <div class="col-md-2">
+                                <label>Select Category</label>
+                                <select class="form-control select" data-live-search="true" name="material" id="category">
                                     <option value="">--Select--</option>
                                     @foreach ($material as $material)
-                                        <option value="{{ $material->id }}">{{ $material->material }}</option>
+                                        <option value="{{ $material->id }}">{{ $material->category }}</option>
                                     @endforeach
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-2" style="margin-top: 15px; margin-left:10px">
+                                <label>Select Sub Category</label>
+                                <select class="form-control select" data-live-search="true" name="raw_material_id"
+                                    id="sub_category">
+                                    <option value="">--Select--</option>
+                                    {{-- @foreach ($material as $material)
+                                        <option value="{{ $material->id }}">{{ $material->material }}</option>
+                                    @endforeach --}}
 
                                 </select>
                             </div>
@@ -272,7 +284,7 @@
             var today = new Date().toISOString().split('T')[0];
             $('#date').val(today);
 
-            $('#material').change(function() {
+            $('#sub_category').change(function() {
                 var material_id = $(this).val();
                 $.ajax({
                     url: '{{ route('getNonConsumableMaterialBrands') }}',
@@ -284,7 +296,7 @@
                         console.log('Response:', response); // Check response in browser console
                         $('#brand').empty(); // Clear current options
                         $('#brand').append(
-                        '<option value="">--Select--</option>'); // Add default option
+                            '<option value="">--Select--</option>'); // Add default option
 
                         $.each(response, function(index, brand) {
                             $('#brand').append('<option value="' + brand.id + '">' +
@@ -312,13 +324,38 @@
                         console.log('Response:', response); // Check response in browser console
                         $('#rawmaterial').empty(); // Clear current options
                         $('#rawmaterial').append(
-                        '<option value="">--Select--</option>'); // Add default option
+                            '<option value="">--Select--</option>'); // Add default option
                         $.each(response, function(index, rawmaterial) {
                             $('#rawmaterial').append('<option value="' + rawmaterial
                                 .id + '">' + rawmaterial.raw_material_name +
                                 '</option>');
                         });
                         $('#rawmaterial').selectpicker('refresh'); // Refresh Bootstrap Select
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching raw materials:', error);
+                    }
+                });
+            });
+
+            $('#category').change(function() {
+                var category_id = $(this).val();
+                $.ajax({
+                    url: '{{ route('getsubcategory') }}',
+                    type: 'GET',
+                    data: {
+                        category_id: category_id
+                    },
+                    success: function(response) {
+                        console.log('Response:', response); // Check response in browser console
+                        $('#sub_category').empty(); // Clear current options
+                        $('#sub_category').append(
+                        '<option value="">--Select--</option>'); // Add default option
+                        $.each(response, function(index, sub_category) {
+                            $('#sub_category').append('<option value="' + sub_category
+                                .id + '">' + sub_category.material + '</option>');
+                        });
+                        $('#sub_category').selectpicker('refresh'); // Refresh Bootstrap Select
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching raw materials:', error);

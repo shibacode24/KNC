@@ -5,6 +5,28 @@
     <div class="row">
         <div class="col-md-12">
 
+
+               @if ($errors->any())
+            <div class="alert alert-danger mt-2">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
             <div class="panel-body" style="padding:1px 5px 2px 5px;">
 
 
@@ -13,27 +35,34 @@
                         <h5 class="panel-title"
                             style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                             align="center">
-                            <i class="fa fa-plus"></i> &nbsp;Add Materials
+                            <i class="fa fa-plus"></i> &nbsp;Order Materials
                         </h5>
                     </div>
                 </div>
 
-                <form action="{{ route('addNonConsumableMaterialstore') }}" method="post">
+                <form action="{{ route('non_consumable_storeDirectPOList') }}" method="post">
                     @csrf
                 <div class="col-md-12" style="margin-top:10px;">
                     <!-- <div class="col-md-4"></div>
                                             -->
-                    <div class="col-md-2">
+                    <div class="col-md-2" >
                         <label class="control-label">Date<font color="#FF0000">*</font></label>
                        <input type="date" name="date" id="date" class="form-control" >
                     </div>
 
+                    {{-- <div class="col-md-2" style="margin-left: 5px;">
+                        <label class="control-label">Time<font color="#FF0000">*</font></label>
+                       <input type="time" name="time" id="time" class="form-control" >
+                    </div> --}}
+
                     <div class="col-md-2">
                         <label>Select Warehouse</label>
                         <select class="form-control select" data-live-search="true" name="warehouse" id="warehouse">
-                            <option value="">--Select--</option>
+                          <option value="">--Select--</option>
                             @foreach ($warehouse as $warehouse)
+
                             <option value="{{$warehouse->id}}">{{$warehouse->warehouse_name}}</option>
+
                             @endforeach
 
                         </select>
@@ -44,7 +73,7 @@
                         <select class="form-control select" data-live-search="true" name="material" id="category">
                             <option value="">--Select--</option>
                             @foreach ($material as $material)
-                            <option value="{{$material->id}}">{{$material->category_name->category}}</option>
+                            <option value="{{$material->id}}">{{$material->category}}</option>
                             @endforeach
 
                         </select>
@@ -53,8 +82,8 @@
                     <div class="col-md-2">
                         <label>Select Sub Category</label>
                         <select class="form-control select" data-live-search="true" name="raw_material" id="sub_category">
-                            <option value="">--Select--</option>
-                            {{-- @foreach ($material as $material)
+                            {{-- <option value="">--Select--</option>
+                            @foreach ($material as $material)
                             <option value="{{$material->id}}">{{$material->material}}</option>
                             @endforeach --}}
 
@@ -74,24 +103,44 @@
                         </select>
                     </div>
 
+                    {{-- <div class="col-md-2"  >
+                        <label>Select Raw Materials</label>
+                        <select class="form-control select" data-live-search="true" name="raw_material" id="rawmaterial">
+                            <option value="">--Select--</option>
+                            @foreach ($rawmaterial as $raw_material)
+                            <option value="{{$raw_material->id}}">{{$raw_material->raw_material_name}}</option>
+                            @endforeach
 
-                    <div class="col-md-2">
+                        </select>
+                    </div> --}}
+
+                    <div class="col-md-2" >
                         <label>Select Unit</label>
                         <select class="form-control select" data-live-search="true" name="unit_type">
-                          <option value="">--Select--</option>
                            @foreach ($unit as $unit)
                             <option value="{{$unit->id}}">{{$unit->unit_type}}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="col-md-2"  style="margin-top: 15px">
+                    <div class="col-md-2"  style="margin-top: 20px">
                         <label class="control-label">Material Qty<font color="#FF0000">*</font></label>
                         <input type="number" class="form-control" name="quantity" placeholder="" />
                     </div>
 
 
-                    <div class="col-md-1" style="margin-top:30px;">
+                    <div class="col-md-2" style="margin-top: 20px">
+                        <label>Select Vendor</label>
+                        <select class="form-control select" data-live-search="true" name="vendor" id="vendor">
+                            <option value="">--Select--</option>
+                            @foreach ($vendor as $vendor)
+                            <option value="{{$vendor->id}}">{{$vendor->vendor_name}}</option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-1" style="margin-top:35px;">
                         <button id="on" type="submit" class="btn mjks" style="color:#FFFFFF; height:30px; width:auto;">
                             <i class="fa fa-file"></i>Submit</button>
 
@@ -107,7 +156,7 @@
                             <h5 class="panel-title"
                                 style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                                 align="center">
-                                <i class="fa fa-plus"></i> &nbsp;Added Materials
+                                <i class="fa fa-plus"></i> &nbsp;Direct Order list
 
                             </h5>
 
@@ -129,32 +178,43 @@
                                         <th>Sr. No.</th>
                                         <th>Date</th>
                                         <th>Warehouse Name</th>
-                                        <th>Category</th>
-                                        <th>Sub Category</th>
+                                        <th>Material Name</th>
                                         <th>Brand Name</th>
-                                        {{-- <th>Raw Material Name</th> --}}
+                                        <th>Raw Material Name</th>
                                         <th>Material Unit</th>
                                         <th>Material Qty</th>
-                                        {{-- <th>Remark</th> --}}
+                                        <th>Vendor Name</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                    @foreach ($addMaterial->sortByDesc('created_at')  as $addMaterial)
+                                    @foreach ($reqMaterial->sortByDesc('created_at')  as $reqMaterial)
                                         <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{date('d-m-Y',strtotime($addMaterial->date))}}</td>
-                                        <td>{{$addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
-                                        <td>{{$addMaterial->category_name->category ?? ''}}</td>
-                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
-                                        <td>{{$addMaterial->material_name->material ?? ''}}</td>
-                                        <td>{{$addMaterial->unit_type->unit_type ?? ''}}</td>
-                                        <td>{{$addMaterial->quantity}}</td>
-                                        {{-- <td>Urgent Requirement</td> --}}
-                                        {{-- <td><span style="color: red;font-weight: bold;">{{$addMaterial->status}}</span></td> --}}
-                                        <td style="font-weight: bold; color: {{ $addMaterial->status == 'Completed' ? 'green' : 'red' }}">
-                                            {{ $addMaterial->status }}
+                                        <td>{{ (date('d-m-Y',strtotime($reqMaterial->date))) }}</td>
+                                        <td>{{$reqMaterial->warehouse_name->warehouse_name}}</td>
+                                        <td>{{$reqMaterial->non_consumable_category_name->category ?? ''}}</td>
+                                        <td>{{$reqMaterial->non_consumable_brand_name->brand ?? ''}}</td>
+                                        <td>{{$reqMaterial->non_consumable_material_name->material ?? ''}}</td>
+                                        <td>{{$reqMaterial->non_consumable_unit_type->unit_type ?? ''}}</td>
+                                        <td>{{$reqMaterial->quantity}}</td>
+                                        <td>{{$reqMaterial->vendor_name->vendor_name}}</td>
+                                        {{-- <td><span style="color: red;font-weight: bold;">{{$reqMaterial->status}}</span></td> --}}
+                                        <td style="font-weight: bold; color: {{ $reqMaterial->status == 'Completed' ? 'green' : 'red' }}">
+                                            {{ $reqMaterial->status }}
+                                        </td>
+                                        <td>
+
+                                            <a href="{{route('edit_non_consumable_directPoList', $reqMaterial->id)}}">
+                                            <button
+                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                type="button" class="btn btn-info" data-toggle="tooltip"
+                                                data-placement="top" title="Edit"><i class="fa fa-edit"
+                                                    style="margin-left:5px;"></i></button>
+                                                </a>
+
                                         </td>
                                     </tr>
 
@@ -199,7 +259,6 @@
 
 @stop
 @section('js')
-
 
 <script>
     $(document).ready(function () {
@@ -252,7 +311,6 @@
             });
         });
 
-        
         $('#category').change(function () {
             var category_id = $(this).val();
             $.ajax({
@@ -273,7 +331,6 @@
                 }
             });
         });
-
     });
 </script>
 @stop

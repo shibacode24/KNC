@@ -5,6 +5,28 @@
     <div class="row">
         <div class="col-md-12">
 
+
+               @if ($errors->any())
+            <div class="alert alert-danger mt-2">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
             <div class="panel-body" style="padding:1px 5px 2px 5px;">
 
 
@@ -13,27 +35,36 @@
                         <h5 class="panel-title"
                             style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                             align="center">
-                            <i class="fa fa-plus"></i> &nbsp;Add Materials
+                            <i class="fa fa-plus"></i> &nbsp;Order Materials
                         </h5>
                     </div>
                 </div>
 
-                <form action="{{ route('addNonConsumableMaterialstore') }}" method="post">
+                <form action="{{ route('update_non_consumable_directPoList') }}" method="post">
                     @csrf
+                    <input type="hidden" name="id" value="{{$issueEdit->id}}">
+
                 <div class="col-md-12" style="margin-top:10px;">
                     <!-- <div class="col-md-4"></div>
                                             -->
-                    <div class="col-md-2">
+                    <div class="col-md-2" >
                         <label class="control-label">Date<font color="#FF0000">*</font></label>
-                       <input type="date" name="date" id="date" class="form-control" >
+                       <input type="date" name="date" id="date" class="form-control" value="{{$issueEdit->date}}">
                     </div>
+
+                    {{-- <div class="col-md-2" style="margin-left: 5px;">
+                        <label class="control-label">Time<font color="#FF0000">*</font></label>
+                       <input type="time" name="time" id="time" class="form-control" >
+                    </div> --}}
 
                     <div class="col-md-2">
                         <label>Select Warehouse</label>
                         <select class="form-control select" data-live-search="true" name="warehouse" id="warehouse">
-                            <option value="">--Select--</option>
+                          <option value="">--Select--</option>
                             @foreach ($warehouse as $warehouse)
-                            <option value="{{$warehouse->id}}">{{$warehouse->warehouse_name}}</option>
+
+                            <option value="{{ $warehouse->id }}" {{ old('warehouse', $issueEdit->warehouse_id) == $warehouse->id ? 'selected' : '' }}>{{$warehouse->warehouse_name}}</option>
+
                             @endforeach
 
                         </select>
@@ -44,7 +75,8 @@
                         <select class="form-control select" data-live-search="true" name="material" id="category">
                             <option value="">--Select--</option>
                             @foreach ($material as $material)
-                            <option value="{{$material->id}}">{{$material->category_name->category}}</option>
+                            <option value="{{$material->id}}" @if ($issueEdit->material_id == $material->id) selected        
+                            @endif>{{$material->category}}</option>
                             @endforeach
 
                         </select>
@@ -54,9 +86,10 @@
                         <label>Select Sub Category</label>
                         <select class="form-control select" data-live-search="true" name="raw_material" id="sub_category">
                             <option value="">--Select--</option>
-                            {{-- @foreach ($material as $material)
-                            <option value="{{$material->id}}">{{$material->material}}</option>
-                            @endforeach --}}
+                            @foreach ($rawmaterial as $rawmaterials)
+                            <option value="{{$rawmaterials->id}}" @if ($issueEdit->raw_material_id == $rawmaterials->id) selected        
+                                @endif>{{$rawmaterials->material}}</option>
+                            @endforeach
 
                         </select>
                     </div>
@@ -67,109 +100,60 @@
                           <option value="">--Select--</option>
                             @foreach ($brand as $brand)
 
-                            <option value="{{$brand->id}}">{{$brand->brand}}</option>
+                            <option value="{{ $brand->id }}" {{ old('brand', $issueEdit->brand_id) == $brand->id ? 'selected' : '' }}>{{$brand->brand}}</option>
 
                             @endforeach
 
                         </select>
                     </div>
 
+                    {{-- <div class="col-md-2"  >
+                        <label>Select Raw Materials</label>
+                        <select class="form-control select" data-live-search="true" name="raw_material" id="rawmaterial">
+                            <option value="">--Select--</option>
+                            @foreach ($rawmaterial as $raw_material)
+                            <option value="{{ $raw_material->id }}" {{ old('raw_material', $issueEdit->raw_material_id) == $raw_material->id ? 'selected' : '' }}>{{$raw_material->raw_material_name}}</option>
+                            @endforeach
+
+                        </select>
+                    </div> --}}
 
                     <div class="col-md-2">
                         <label>Select Unit</label>
                         <select class="form-control select" data-live-search="true" name="unit_type">
-                          <option value="">--Select--</option>
                            @foreach ($unit as $unit)
-                            <option value="{{$unit->id}}">{{$unit->unit_type}}</option>
-                            @endforeach
+                           <option value="{{$unit->id}}" {{ old('unit_type', $issueEdit->material_unit_id) == $unit->id ? 'selected' : '' }}>{{$unit->unit_type}}</option>
+                           @endforeach
                         </select>
                     </div>
 
-                    <div class="col-md-2"  style="margin-top: 15px">
+                    <div class="col-md-2"  style="margin-top: 20px">
                         <label class="control-label">Material Qty<font color="#FF0000">*</font></label>
-                        <input type="number" class="form-control" name="quantity" placeholder="" />
+                        <input type="number" class="form-control" name="quantity" placeholder="" value="{{$issueEdit->quantity}}"/>
                     </div>
 
 
-                    <div class="col-md-1" style="margin-top:30px;">
+                    <div class="col-md-2" style="margin-top: 20px">
+                        <label>Select Vendor</label>
+                        <select class="form-control select" data-live-search="true" name="vendor" id="vendor">
+                            <option value="">--Select--</option>
+                            @foreach ($vendor as $vendor)
+                            <option value="{{$vendor->id}}" {{ old('vendor', $issueEdit->vendor_id) == $vendor->id ? 'selected' : '' }}>{{$vendor->vendor_name}}</option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-1" style="margin-top:35px;">
                         <button id="on" type="submit" class="btn mjks" style="color:#FFFFFF; height:30px; width:auto;">
-                            <i class="fa fa-file"></i>Submit</button>
+                            <i class="fa fa-file"></i>Update</button>
 
                     </div>
 
                 </div>
 
                 </form>
-                <div class="row">
 
-                    <div class="col-md-12" style="margin-top:15px;">
-                        <div class="panel panel-default">
-                            <h5 class="panel-title"
-                                style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
-                                align="center">
-                                <i class="fa fa-plus"></i> &nbsp;Added Materials
-
-                            </h5>
-
-
-
-                        </div>
-                    </div>
-
-                    <div class="col-md-12" style="margin-top:15px;">
-
-                        <!-- START DEFAULT DATATABLE -->
-
-                        <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                        <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
-                            <table class="table datatable">
-                                <thead>
-
-                                    <tr>
-                                        <th>Sr. No.</th>
-                                        <th>Date</th>
-                                        <th>Warehouse Name</th>
-                                        <th>Category</th>
-                                        <th>Sub Category</th>
-                                        <th>Brand Name</th>
-                                        {{-- <th>Raw Material Name</th> --}}
-                                        <th>Material Unit</th>
-                                        <th>Material Qty</th>
-                                        {{-- <th>Remark</th> --}}
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach ($addMaterial->sortByDesc('created_at')  as $addMaterial)
-                                        <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{date('d-m-Y',strtotime($addMaterial->date))}}</td>
-                                        <td>{{$addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
-                                        <td>{{$addMaterial->category_name->category ?? ''}}</td>
-                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
-                                        <td>{{$addMaterial->material_name->material ?? ''}}</td>
-                                        <td>{{$addMaterial->unit_type->unit_type ?? ''}}</td>
-                                        <td>{{$addMaterial->quantity}}</td>
-                                        {{-- <td>Urgent Requirement</td> --}}
-                                        {{-- <td><span style="color: red;font-weight: bold;">{{$addMaterial->status}}</span></td> --}}
-                                        <td style="font-weight: bold; color: {{ $addMaterial->status == 'Completed' ? 'green' : 'red' }}">
-                                            {{ $addMaterial->status }}
-                                        </td>
-                                    </tr>
-
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- END DEFAULT DATATABLE -->
-
-
-                    </div>
-                    <div class="col-md-2" style="margin-top:15px;"></div>
-                </div>
             </div>
         </div>
     </div>
@@ -199,7 +183,6 @@
 
 @stop
 @section('js')
-
 
 <script>
     $(document).ready(function () {
@@ -252,7 +235,6 @@
             });
         });
 
-        
         $('#category').change(function () {
             var category_id = $(this).val();
             $.ajax({

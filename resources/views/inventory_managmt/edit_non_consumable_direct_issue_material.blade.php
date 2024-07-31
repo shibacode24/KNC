@@ -46,12 +46,12 @@
                             <!-- <div class="col-md-4"></div>
                                                 -->
                             <input type="hidden" name="id" value="{{ $edit_material->id }}">
-                            <div class="col-md-2" style="margin-left: 5px;">
+                            <div class="col-md-2" >
                                 <label class="control-label">Date<font color="#FF0000">*</font></label>
                                 <input type="date" name="date" id="date" value="{{ $edit_material->name }}" class="form-control">
                             </div>
 
-                            <div class="col-md-2" style="margin-left: 5px;">
+                            <div class="col-md-2" >
                                 <label class="control-label">Time<font color="#FF0000">*</font></label>
                                 <input type="time" name="time" id="time" value="{{ $edit_material->time }}" class="form-control">
                             </div>
@@ -96,9 +96,22 @@
                                 </select>
                             </div>
 
+                            <div class="col-md-2" >
+                                <label>Select Category</label>
+                                <select class="form-control select" data-live-search="true" name="material" id="category">
+                                    <option value="">--Select--</option>
+                                    @foreach ($category as $categorys)
+                                        <option value="{{ $categorys->id }}" @if ($edit_material->material_id == $categorys->id)
+                                            selected
+                                        @endif>{{ $categorys->category }}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+
                             <div class="col-md-2" style="margin-top: 15px; margin-left:10px">
-                                <label>Select Materials</label>
-                                <select class="form-control select" data-live-search="true" name="material" id="material">
+                                <label>Select Sub Category</label>
+                                <select class="form-control select" data-live-search="true" ame="raw_material_id" id="sub_category">
                                     <option value="">--Select--</option>
                                     @foreach ($materials as $materials)
                                         <option value="{{ $materials->id }}" @if ($edit_material->material_id == $materials->id)
@@ -199,7 +212,7 @@
             var today = new Date().toISOString().split('T')[0];
             $('#date').val(today);
 
-            $('#material').change(function() {
+            $('#sub_category').change(function() {
                 var material_id = $(this).val();
                 $.ajax({
                     url: '{{ route('getNonConsumableMaterialBrands') }}',
@@ -252,6 +265,27 @@
                     }
                 });
             });
+
+            $('#category').change(function () {
+            var category_id = $(this).val();
+            $.ajax({
+                url: '{{ route('getsubcategory') }}',
+                type: 'GET',
+                data: { category_id: category_id },
+                success: function (response) {
+                    console.log('Response:', response); // Check response in browser console
+                    $('#sub_category').empty(); // Clear current options
+                    $('#sub_category').append('<option value="">--Select--</option>'); // Add default option
+                    $.each(response, function (index, sub_category) {
+                        $('#sub_category').append('<option value="' + sub_category.id + '">' + sub_category.material + '</option>');
+                    });
+                    $('#sub_category').selectpicker('refresh'); // Refresh Bootstrap Select
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching raw materials:', error);
+                }
+            });
+        });
         });
     </script>
 @stop

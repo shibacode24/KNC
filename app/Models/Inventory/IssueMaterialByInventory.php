@@ -8,6 +8,7 @@ use App\Models\Material;
 use App\Models\UnitType;
 use App\Models\Brand;
 use App\Models\{Warehouse, RawMaterial, Status};
+use App\Models\{NonConsumableCategoryMaterial, NonConsumableCategory, NonConsumableUnitType, NonConsumableBrand};
 use App\Models\Site;
 
 class IssueMaterialByInventory extends Model
@@ -68,6 +69,25 @@ class IssueMaterialByInventory extends Model
     }
 
 
+//non consumable
+public function non_consumable_material_name()
+{
+    return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'material_id');
+}
 
+public function non_consumable_raw_material_name()
+{
+    return $this->hasOne(NonConsumableCategory::class, 'id', 'raw_material_id');
+}
+
+public function non_consumable_unit_type()
+{
+    return $this->hasOne(NonConsumableUnitType::class, 'id', 'material_unit_type_id');
+}
+
+public function non_consumable_brand_name()
+{
+    return $this->hasOne(NonConsumableBrand::class, 'id', 'brand_id');
+}
 
 }
