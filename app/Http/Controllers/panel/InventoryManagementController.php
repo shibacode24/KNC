@@ -482,7 +482,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
     {
         $material = new NonConsumableDirectIssueMaterial();
         $material->date = $request->date;
-        $material->time = $request->time;
+        // $material->time = $request->time;
         $material->site_id = $request->site;
         $material->supervisor_id = $request->supervisor;
         $material->warehouse_id = $request->warehouse;
@@ -517,7 +517,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
     {
         $material = NonConsumableDirectIssueMaterial::find($request->id);
         $material->date = $request->date;
-        $material->time = $request->time;
+        // $material->time = $request->time;
         $material->site_id = $request->site;
         $material->supervisor_id = $request->supervisor;
         $material->warehouse_id = $request->warehouse;

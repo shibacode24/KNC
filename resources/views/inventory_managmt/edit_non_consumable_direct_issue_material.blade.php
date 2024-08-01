@@ -51,10 +51,10 @@
                                 <input type="date" name="date" id="date" value="{{ $edit_material->name }}" class="form-control">
                             </div>
 
-                            <div class="col-md-2" >
+                            {{-- <div class="col-md-2" >
                                 <label class="control-label">Time<font color="#FF0000">*</font></label>
                                 <input type="time" name="time" id="time" value="{{ $edit_material->time }}" class="form-control">
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-2">
                                 <label>Select Site</label>
@@ -109,7 +109,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2" style="margin-top: 15px; margin-left:10px">
+                            <div class="col-md-2" >
                                 <label>Select Sub Category</label>
                                 <select class="form-control select" data-live-search="true" ame="raw_material_id" id="sub_category">
                                     <option value="">--Select--</option>
