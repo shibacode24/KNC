@@ -240,6 +240,9 @@ Route::post('update_non_consumable_site_material', [InventoryManagementControlle
 
 
 Route::get('getNonConsumableMaterialBrands', [InventoryManagementController::class, 'getNonConsumableMaterialBrands'])->name('getNonConsumableMaterialBrands');
+Route::get('getsubcategory', [InventoryManagementController::class, 'getsubcategory'])->name('getsubcategory');
+
+
 Route::post('addNonConsumableMaterialstore', [InventoryManagementController::class, 'addNonConsumableMaterialstore'])->name('addNonConsumableMaterialstore');
 Route::get('non_consumable_add_material', [InventoryManagementController::class, 'non_consumable_add_material'])->name('non_consumable_add_material');
 Route::get('non_consumable_direct_issue_material', [InventoryManagementController::class, 'Nonconsumable_directIssueMaterial'])->name('non_consumable_direct_issue_material');
@@ -270,6 +273,19 @@ Route::post('/store-order', [PurchaseDepartmentController::class, 'storeOrder'])
 Route::get('/order-details', [PurchaseDepartmentController::class, 'order_details'])->name('order_details');
 Route::get('/feedback', [PurchaseDepartmentController::class, 'feedback'])->name('feedback');
 Route::post('/add-invoice', [PurchaseDepartmentController::class, 'addInvoice'])->name('add-invoice');
+
+//non consumable material order req
+Route::get('non_consume_req-material', [PurchaseDepartmentController::class, 'non_consume_req_material'])->name('non_consume_req_material');
+Route::post('non_consume_store-order', [PurchaseDepartmentController::class, 'non_consume_storeOrder'])->name('non_consume_storeOrder');
+Route::get('non_consumable_order_list', [PurchaseDepartmentController::class, 'non_consumable_order_list'])->name('non_consumable_order_list');
+Route::post('non_consumable_addInvoice', [PurchaseDepartmentController::class, 'non_consumable_addInvoice'])->name('non_consumable_addInvoice');
+Route::get('non_consumable_directPoList', [PurchaseDepartmentController::class, 'non_consumable_directPoList'])->name('non_consumable_directPoList');
+Route::post('non_consumable_storeDirectPOList', [PurchaseDepartmentController::class, 'non_consumable_storeDirectPOList'])->name('non_consumable_storeDirectPOList');
+Route::get('edit_non_consumable_directPoList/{id}', [PurchaseDepartmentController::class, 'non_consumable_editDirectPoList'])->name('edit_non_consumable_directPoList');
+Route::post('update_non_consumable_directPoList', [PurchaseDepartmentController::class, 'non_consumable_updateDirectPoList'])->name('update_non_consumable_directPoList');
+
+
+
 // direct po
 Route::get('/direct-po-list', [PurchaseDepartmentController::class, 'directPoList'])->name('direct-po-list');
 Route::post('/store-direct-po-list', [PurchaseDepartmentController::class, 'storeDirectPoList'])->name('store-direct-po-list');

@@ -67,17 +67,17 @@
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][material]"
                                 value="{{ $data->material_id }}">
-                            {{ $data->material_name->material }}
+                            {{ $data->non_consumable_material_name->material }}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][raw_material]"
                                 value="{{ $data->raw_material_id }}">
-                            {{ $data->raw_material_name->raw_material_name }}
+                            {{ $data->non_consumable_raw_material_name->category ?? '' }}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][brand]" class="brand_id"
                                 value="{{ $data->brand_id }}">
-                            {{ $data->brand_name->brand }}
+                            {{ $data->non_consumable_brand_name->brand }}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][quantity]"

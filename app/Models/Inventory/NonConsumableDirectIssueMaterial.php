@@ -23,6 +23,7 @@ class NonConsumableDirectIssueMaterial extends Model
         'unit_id',
         'quantity',
         'remark',
+        'issue_type'
     ];
 
     public function warehouse_name()

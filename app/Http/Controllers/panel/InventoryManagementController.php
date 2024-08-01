@@ -8,7 +8,7 @@ use App\Models\RequestedMaterial;
 use App\Models\Material;
 use App\Models\Brand;
 use App\Models\UnitType;
-use App\Models\{Warehouse, AvailableMaterial, NonConsumableBrand, NonConsumableCategoryMaterial, NonConsumableUnitType, RawMaterial, Status, Site, Supervisor};
+use App\Models\{Warehouse, AvailableMaterial, NonConsumableBrand, NonConsumableCategoryMaterial,NonConsumableCategory, NonConsumableUnitType, RawMaterial, Status, Site, Supervisor};
 use App\Models\Inventory\{AddMaterial, DirectIssueMaterial};
 use App\Models\Inventory\IssueMaterialByInventory;
 use App\Models\Inventory\NonConsumableMaterial;
@@ -284,6 +284,7 @@ public function nonConsumable_addIssuedMaterial(Request $request)
                 $material->remaining_material = $item['remaining_material'];
                 $material->remark = $remark; // Assign the remark
                 $material->app_status = $item['status'];
+                $material->issue_type = 'Direct Issue';
                 $material->save();
                 // Update the status of the requested material to 'Submitted'
                 $requestedMaterial->update(['status' => 'Submitted']);
@@ -295,12 +296,15 @@ public function nonConsumable_addIssuedMaterial(Request $request)
         //     ->where('type', 'Non-Consumable')
         //     ->first();
 
+
         // // If available material is found, update the quantity
         // if ($availableMaterial) {
         //     $availableMaterial->available_quantity = $item['remaining_material'];
         //     // $availableMaterial->save();
 
-        // }
+
+    
+     
     }
 }
     return redirect()->back()->with('success', 'Requests added successfully!');
@@ -395,6 +399,7 @@ public function update_non_consumable_site_material(Request $request)
             $material->remaining_material =$data[0]['remaining_material'];
             $material->remark =$data[0]['remark']; // Assign the remar
             $material->app_status =$data[0]['status'];
+            $material->issue_type = 'Direct Issue';
             // echo json_encode($material);
             // exit();
             $material->save();
@@ -439,6 +444,15 @@ public function getNonConsumableMaterialBrands(Request $request)
     return response()->json($brands);
 }
 
+public function getsubcategory(Request $request)
+{
+    $category_id = $request->get('category_id');
+    $category_name = NonConsumableCategoryMaterial::where('category_id', $category_id)->get();
+
+    return response()->json($category_name);
+}
+
+
 public function addNonConsumableMaterialstore(Request $request)
 {
     // dd($request->all());
@@ -449,6 +463,8 @@ public function addNonConsumableMaterialstore(Request $request)
     $material->brand_id = $request->brand;
     $material->material_unit_id = $request->unit_type;
     $material->quantity = $request->quantity;
+    $material->raw_material_id = $request->raw_material_id;
+    $material->issue_type = 'Indirect Issue';
 // dump( $material);
     $material->save();
     return redirect()->route('non_consumable_add_material')->with('success', 'Request added successfully!');
@@ -456,7 +472,7 @@ public function addNonConsumableMaterialstore(Request $request)
 
 public function Nonconsumable_directIssueMaterial(Request $request)
     {
-        $material = NonConsumableCategoryMaterial::all();
+        $material = NonConsumableCategory::all();
         $brand = NonConsumableBrand::all();
         $unit = NonConsumableUnitType::all();
         $addMaterial = NonConsumableMaterial::all();
@@ -482,6 +498,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         // $material->raw_material_id = $request->raw_material;
         $material->quantity = $request->quantity;
         $material->remark = $request->remark;
+        $material->issue_type = 'Direct Issue';
 
         $material->save();
         return redirect()->route('non_consumable_direct_issue_material')->with('success', 'Request added successfully!');
@@ -490,6 +507,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
     public function Nonconsumable_directIssueMaterial_edit(Request $request)
     {
         $materials = NonConsumableCategoryMaterial::all();
+        $category = NonConsumableCategory::all();
         $brand = NonConsumableBrand::all();
         $unit = NonConsumableUnitType::all();
         $addMaterial = NonConsumableMaterial::all();
@@ -498,7 +516,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         $site = Site::all();
         $supervisor = Supervisor::all();
         $edit_material = NonConsumableDirectIssueMaterial::find($request->id);
-        return view('inventory_managmt.edit_non_consumable_direct_issue_material', compact('edit_material', 'site', 'warehouse', 'materials', 'brand', 'unit', 'addMaterial','supervisor'));
+        return view('inventory_managmt.edit_non_consumable_direct_issue_material', compact('edit_material', 'site', 'warehouse', 'materials', 'brand', 'unit', 'addMaterial','supervisor','category'));
     }
 
     public function Nonconsumable_DirectIssueMaterial_update(Request $request)
@@ -515,7 +533,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         // $material->raw_material_id = $request->raw_material;
         $material->quantity = $request->quantity;
         $material->remark = $request->remark;
-
+        $material->issue_type = 'Direct Issue';
         $material->save();
         return redirect()->route('non_consumable_direct_issue_material')->with('success', 'Request added successfully!');
     }

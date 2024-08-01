@@ -235,11 +235,11 @@
 
 
 
-
-                                @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href="{{ route('non_consumable_unit_type') }}"><span class="fa fa-plus"></span>Add Unit Type</a>
-                                </li>
-                               @endif
+                                        @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                            <li><a href="{{ route('non_consumable_unit_type') }}"><span
+                                                        class="fa fa-plus"></span>Add Unit Type</a>
+                                            </li>
+                                        @endif
 
 
 
@@ -251,13 +251,14 @@
 
                                         @if (Auth::user()->panel_role == 1 || in_array('non-consumable-category-material', $permission))
                                             <li><a href="{{ route('non-consumable-category-material') }}"><span
-                                                        class="fa fa-plus"></span>Add Category Material</a>
+                                                        class="fa fa-plus"></span>Add Sub Category</a>
                                             </li>
                                         @endif
 
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                            <li><a href="{{route('non_consumable_brand')}}"><span class="fa fa-plus"></span>Add Brand</a></li>
-                        @endif
+                                        @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                            <li><a href="{{ route('non_consumable_brand') }}"><span
+                                                        class="fa fa-plus"></span>Add Brand</a></li>
+                                        @endif
 
                                     </ul>
                                 </li>
@@ -404,20 +405,27 @@
                                 <ul>
 
 
-                            @if (Auth::user()->panel_role == 1 || in_array('site-non-consumed-material', $permission))
-                                <li><a href="{{ route('site-non-consumed-material') }}"><span
-                                            class="fa fa-plus"></span>Non Consumeble Site Material Request List</a>
-                                </li>
-                            @endif
 
-                            @if (Auth::user()->panel_role == 1 || in_array('non_consumable_add_material', $permission))
-                            <li><a href="{{ route('non_consumable_add_material') }}"><span
-                                        class="fa fa-plus"></span>Non Consumable Add Material</a>
-                            </li>
-                        @endif
-                        @if (Auth::user()->panel_role == 1 || in_array('non_consumable_direct_issue_material', $permission))
-                                <li><a href="non_consumable_direct_issue_material"><span class="fa fa-plus"></span>Non Consumable Direct Issue Material</a></li>
-                            @endif
+                          
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('site-non-consumed-material', $permission))
+                                        <li><a href="{{ route('site-non-consumed-material') }}"><span
+                                                    class="fa fa-plus"></span>Non Consumeble Site Material Request
+                                                List</a>
+                                        </li>
+                                    @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('non_consumable_add_material', $permission))
+                                        <li><a href="{{ route('non_consumable_add_material') }}"><span
+                                                    class="fa fa-plus"></span>Non Consumable Add Material</a>
+                                        </li>
+                                    @endif
+                                    @if (Auth::user()->panel_role == 1 || in_array('non_consumable_direct_issue_material', $permission))
+                                        <li><a href="non_consumable_direct_issue_material"><span
+                                                    class="fa fa-plus"></span>Non Consumable Direct Issue Material</a>
+                                        </li>
+                                    @endif
+
 
 
                                 </ul>
@@ -428,10 +436,7 @@
                 @endif
 
 
-                @if (Auth::user()->panel_role == 1 ||
-                        in_array('req_material', $permission) ||
-                        in_array('order_details', $permission) ||
-                        in_array('direct-po-list', $permission))
+                {{-- @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission) || in_array('order_details', $permission) || in_array('direct-po-list', $permission))
 
                     <li>
                         <a href="#" title="Purchase Department"><span class="fa fa-money"> </span>Purchase
@@ -459,6 +464,69 @@
                                 </li>
                             @endif --}}
 
+                {{-- </ul>
+                    </li>
+                @endif --}}
+
+                @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission) || in_array('order_details', $permission))
+
+                    <li>
+                        <a href="#" title="Purchase Department"><span class="fa fa-exchange"> </span>Purchase
+                            Department</a>
+                        <ul>
+
+                            <li>
+                                <a href="#" title="Consumable Purchase"><span class="fa fa-bars">
+                                    </span>Consumable Purchase</a>
+                                <ul>
+                                    @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission))
+                                        <li><a href="{{ route('req_material') }}"><span
+                                                    class="fa fa-plus"></span>Material
+                                                Request
+                                                List</a></li>
+                                    @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('order_details', $permission))
+                                        <li><a href="{{ route('order_details') }}"><span
+                                                    class="fa fa-plus"></span>Order
+                                                Details
+                                                List</a></li>
+                                    @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('direct-po-list', $permission))
+                                        <li><a href="direct-po-list"><span class="fa fa-plus"></span>Direct PO
+                                                List</a></li>
+                                    @endif
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" title="Non Consumable Purchase"><span class="fa fa-bars">
+                                    </span>Non Consumable Purchase</a>
+                                <ul>
+
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('non_consume_req_material', $permission))
+                                        <li><a href="{{ route('non_consume_req_material') }}"><span
+                                                    class="fa fa-plus"></span>Material
+                                                Request
+                                                List</a></li>
+                                    @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('order_details', $permission))
+                                        <li><a href="{{ route('non_consumable_order_list') }}"><span
+                                                    class="fa fa-plus"></span>Order
+                                                Details
+                                                List</a></li>
+                                    @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('non_consumable_directPoList', $permission))
+                                        <li><a href="{{route('non_consumable_directPoList')}}"><span class="fa fa-plus"></span>Direct PO
+                                                List</a></li>
+                                    @endif
+                                </ul>
+                            </li>
+                            {{-- @endif --}}
                         </ul>
                     </li>
                 @endif
@@ -493,12 +561,14 @@
                                         Out</a></li>
                             @endif
 
+
                             @if (Auth::user()->panel_role == 1 || in_array('', $permission))
                                 <li><a href=""><span class="fa fa-plus"></span>Direct GRN
                                         Out</a></li>
                             @endif
                                 </ul>
                             </li>
+
                         </ul>
                     </li>
                 @endif

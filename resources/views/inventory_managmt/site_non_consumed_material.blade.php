@@ -114,14 +114,16 @@
                                         @foreach ($issueMaterial as $material)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $material->requested_material_date }}</td>
-                                                <td>{{ $material->site_name->site_name }}</td>
+                                                <td>{{ date('d-m-Y',strtotime($material->requested_material_date)) }}</td>
+                                                <td>{{ $material->site_name->site_name ?? ''}}</td>
                                                 <td>{{ $material->requested_material_id }}</td>
-                                                <td>{{ $material->material_name->material }}</td>
-                                                <td>{{ $material->brand_name->brand }}</td>
+                                                <td>{{ $material->non_consumable_material_name->material ?? '' }}</td>
+                                                <td>{{ $material->non_consumable_brand_name->brand ?? '' }}</td>
                                                 <td>{{ $material->requested_material_quantity }}</td>
                                                 {{-- <td>{{ $material->unit_type->unit_type }}</td> --}}
+
                                                 <td>{{ $material->warehouse_name->warehouse_name ?? '' }}</td>
+
                                                 {{-- <td>{{ $material->available_material }}</td> --}}
                                                 <td>{{ $material->issue_material }}</td>
                                                 <td>{{ $material->remaining_material }}</td>
