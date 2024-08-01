@@ -50,33 +50,10 @@
                                 <input type="date" name="date" id="date" class="form-control">
                             </div>
 
-                            <div class="col-md-2">
+                            {{-- <div class="col-md-2">
                                 <label class="control-label">Time<font color="#FF0000">*</font></label>
                                 <input type="time" name="time" id="time" class="form-control">
-                            </div>
-
-                            <div class="col-md-2">
-                                <label>Select Site</label>
-                                <select class="form-control select" data-live-search="true" name="site" id="site">
-                                    <option value="">--Select--</option>
-                                    @foreach ($site as $site)
-                                        <option value="{{ $site->id }}">{{ $site->site_name }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label>Select Supervisor</label>
-                                <select class="form-control select" data-live-search="true" name="supervisor"
-                                    id="supervisor">
-                                    <option value="">--Select--</option>
-                                    @foreach ($supervisor as $supervisor)
-                                        <option value="{{ $supervisor->id }}">{{ $supervisor->supervisor_name }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-2">
                                 <label>Select Warehouse</label>
@@ -90,6 +67,31 @@
                             </div>
 
                             <div class="col-md-2">
+                                <label>Select Site</label>
+                                <select class="form-control select" data-live-search="true" name="site" id="site">
+                                    <option value="">--Select--</option>
+                                    @foreach ($site as $site)
+                                        <option value="{{ $site->id }}">{{ $site->site_name }}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+                            {{-- <div class="col-md-2">
+                                <label>Select Supervisor</label>
+                                <select class="form-control select" data-live-search="true" name="supervisor"
+                                    id="supervisor">
+                                    <option value="">--Select--</option>
+                                    @foreach ($supervisor as $supervisor)
+                                        <option value="{{ $supervisor->id }}">{{ $supervisor->supervisor_name }}</option>
+                                    @endforeach
+
+                                </select>
+                            </div> --}}
+
+                            
+
+                            <div class="col-md-2">
                                 <label>Select Category</label>
                                 <select class="form-control select" data-live-search="true" name="material" id="category">
                                     <option value="">--Select--</option>
@@ -100,7 +102,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2" style="margin-top: 15px; margin-left:10px">
+                            <div class="col-md-2">
                                 <label>Select Sub Category</label>
                                 <select class="form-control select" data-live-search="true" name="raw_material_id"
                                     id="sub_category">
@@ -112,7 +114,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2" style="margin-top: 15px">
+                            <div class="col-md-2" >
                                 <label>Select Brand</label>
                                 <select class="form-control select" data-live-search="true" name="brand" id="brand">
                                     <option value="">--Select--</option>
@@ -133,9 +135,10 @@
                         </select>
                     </div> --}}
 
-                            <div class="col-md-2" style="margin-top: 15px">
+                            <div class="col-md-2" style="margin-top: 20px">
                                 <label>Select Unit</label>
                                 <select class="form-control select" data-live-search="true" name="unit_type">
+                                    <option value="">--Select--</option>
                                     @foreach ($unit as $unit)
                                         <option value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
                                     @endforeach
