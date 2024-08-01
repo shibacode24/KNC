@@ -26,7 +26,8 @@ class InventoryManagementController extends Controller
          return $item->created_at->format('Y-m-d') . '_' . $item->site_id;
      });
 
-    $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')->get();
+    $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')
+    ->where('material_type', 'Consumable')->get();
     // // Fetch all requested materials and group by date and site_id
     // $requestedMaterial = RequestedMaterial::all()->groupBy(function($item) {
     //     return $item->created_at->format('Y-m-d') . '_' . $item->site_id;
@@ -164,7 +165,7 @@ public function update_site_material(Request $request)
 // echo json_encode( $data );
 // echo json_encode( $material );
 // echo json_encode( $requested_material_date );
-// exit(); 
+// exit();
     if ($material) {
     //     // Create a new instance of IssueMaterialByInventory
         // $material = new IssueMaterialByInventory();
@@ -176,6 +177,7 @@ public function update_site_material(Request $request)
         $material->material_id = $data[0]['material_id'];
         $material->raw_material_id =$data[0]['raw_material_id'];
         $material->brand_id =$data[0]['brand_id'];
+        $material->material_unit_id = $data[0]['unit_type'];
         $material->requested_material_quantity =$data[0]['requested_material_quantity'];
         $material->selected_warehouse_id =$data[0]['selected_warehouse_id'];
         $material->available_material =$data[0]['available_material'];
@@ -275,7 +277,7 @@ public function nonConsumable_addIssuedMaterial(Request $request)
                 $material->raw_material_id = $item['raw_material'];
                 $material->brand_id = $item['brand'];
                 $material->requested_material_quantity = $item['quantity'];
-                // $material->material_unit_id = $item['unit_type'];
+                $material->material_unit_id = $item['unit_type'];
                 $material->selected_warehouse_id = $item['warehouse'];
                 $material->available_material = $item['available_material'];
                 $material->issue_material = $item['issue_material'];
@@ -293,13 +295,16 @@ public function nonConsumable_addIssuedMaterial(Request $request)
         //     ->orwhere('raw_material_id',$item['raw_material'])
         //     ->where('type', 'Non-Consumable')
         //     ->first();
-    
+
+
         // // If available material is found, update the quantity
         // if ($availableMaterial) {
         //     $availableMaterial->available_quantity = $item['remaining_material'];
-        //     $availableMaterial->save();
+        //     // $availableMaterial->save();
+
+
     
-        // }
+     
     }
 }
     return redirect()->back()->with('success', 'Requests added successfully!');
@@ -367,14 +372,14 @@ public function update_non_consumable_site_material(Request $request)
     {
     // dd($request->input('data'));
         $data = $request->input('data');
-    
+
         $id = $data[0]['id'];
        $requested_material_date =  $data[0]['raw_material_id'];
         $material = IssueMaterialByInventory::where('id',$id)->first();
     // echo json_encode( $data );
     // echo json_encode( $material );
     // echo json_encode( $requested_material_date );
-    // exit(); 
+    // exit();
         if ($material) {
         //     // Create a new instance of IssueMaterialByInventory
             // $material = new IssueMaterialByInventory();
@@ -386,6 +391,7 @@ public function update_non_consumable_site_material(Request $request)
             $material->material_id = $data[0]['material_id'];
             $material->raw_material_id =$data[0]['raw_material_id'];
             $material->brand_id =$data[0]['brand_id'];
+            $material->material_unit_id = $data[0]['unit_type'];
             $material->requested_material_quantity =$data[0]['requested_material_quantity'];
             $material->selected_warehouse_id =$data[0]['selected_warehouse_id'];
             $material->available_material =$data[0]['available_material'];
@@ -397,7 +403,7 @@ public function update_non_consumable_site_material(Request $request)
             // echo json_encode($material);
             // exit();
             $material->save();
-    
+
         }
 
     //     $availableMaterial = AvailableMaterial::where('warehouse_id', $data[0]['selected_warehouse_id'])
@@ -415,7 +421,7 @@ public function update_non_consumable_site_material(Request $request)
     // }
         return back()->with('success','record update successfully');
     }
-    
+
 
 public function non_consumable_add_material(Request $request)
 {
@@ -531,10 +537,10 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         $material->save();
         return redirect()->route('non_consumable_direct_issue_material')->with('success', 'Request added successfully!');
     }
-    
 
 
-    
+
+
 // ---------------------------------------------------------------------------------------------------
 
 

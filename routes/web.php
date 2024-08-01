@@ -71,7 +71,7 @@ Route::get('unit-type-destroy/{id}', [DashboardController::class, 'unitTypeDestr
 Route::get('unit-type-edit/{id}', [DashboardController::class, 'unitTypeEdit'])->name('unit-type-edit');
 Route::post('unit-type-update', [DashboardController::class, 'unitTypeUpdate'])->name('unit-type-update');
 
-//non consumable 
+//non consumable
 
 Route::get('non_consumable_unit_type', [DashboardController::class, 'non_consumable_unit_type'])->name('non_consumable_unit_type');
 Route::post('non_consumable_unit_type_store', [DashboardController::class, 'non_consumable_unit_type_store'])->name('non_consumable_unit_type_store');
@@ -261,6 +261,11 @@ Route::post('/add-issued-material-by-warehouse', [WarehouseController::class, 'a
 // GRN Out
 Route::get('/issue-material', [WarehouseController::class, 'issue_material'])->name('issue_material');
 Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
+
+// Direct GRN In
+Route::get('/direct-grn-in', [WarehouseController::class, 'direct_grn_in'])->name('direct-grn-in');
+Route::get('/viewDirectGrnIn', [WarehouseController::class, 'viewDirectGrnIn'])->name('viewDirectGrnIn');
+Route::post('direct-grn-in-store', [WarehouseController::class, 'directGrnInStore'])->name('direct-grn-in-store');
 
 //PurchaseDepartmentController
 Route::get('/req-material', [PurchaseDepartmentController::class, 'req_material'])->name('req_material');

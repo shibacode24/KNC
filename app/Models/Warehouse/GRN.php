@@ -35,6 +35,7 @@ class GRN extends Model
         'warehouse_id',
         'received_by',
         'received_quantity',
+        'grn_type',
 
     ];
 

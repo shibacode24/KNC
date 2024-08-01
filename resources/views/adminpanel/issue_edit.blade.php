@@ -12,7 +12,7 @@
                             <h5 class="panel-title"
                                 style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                                 align="center">
-                                <i class="fa fa-plus"></i> &nbsp;Add Issue
+                                <i class="fa fa-plus"></i> &nbsp;Add Issues
                             </h5>
 
 
@@ -28,7 +28,7 @@
                             <div class="col-md-4"></div>
 
                             <div class="col-md-2">
-                                <label class="control-label">Add Issue<font color="#FF0000">*</font></label>
+                                <label class="control-label">Add Issues<font color="#FF0000">*</font></label>
                                 <input type="text" class="form-control" name="issue" placeholder="" value="{{$issueEdit->issue}}"required />
                             </div>
                             <div class="col-md-2" style="margin-top:15px;" align="left">
