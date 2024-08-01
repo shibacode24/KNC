@@ -70,10 +70,10 @@
                             <input type="hidden" name="data[{{ $loop->index }}][quantity]" value="{{ $data->requested_quantity }}">
                             {{ $data->requested_quantity }}
                         </td>
-                      {{--  <td style="padding:5px;" align="center">
+                       <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][unit_type]" value="{{ $data->material_unit_type_id }}">
                             {{ $data->unit_type->unit_type }}
-                        </td>--}}
+                        </td>
                         <td style="padding:10px;" align="center">
                             <select class="form-control select" data-live-search="true" name="data[{{ $loop->index }}][warehouse]" data-loop-index="{{ $loop->index }}" required>
                                 <option align="center">Select</option>

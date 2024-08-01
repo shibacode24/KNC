@@ -204,13 +204,13 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $addMaterial->date }}</td>
-                                                <td>{{ $addMaterial->warehouse_name->warehouse_name }}</td>
+                                                <td>{{ $addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
                                                 <td>{{ $addMaterial->site_name->site_name }}</td>
                                                 {{-- <td>{{ $addMaterial->supervisor_name->supervisor_name }}</td> --}}
                                                 <td>{{ $addMaterial->material_name->material }}</td>
                                                 <td>{{ $addMaterial->brand_name->brand }}</td>
                                                 <td>{{ $addMaterial->raw_material_name->raw_material_name }}</td>
-                                                <td>{{ $addMaterial->unit_type->unit_type }}</td>
+                                                <td>{{ $addMaterial->unit_type->unit_type ?? ''}}</td>
                                                 <td>{{ $addMaterial->requested_material_quantity }}</td>
                                                 <td>{{ $addMaterial->remark }}</td>
 

@@ -25,7 +25,7 @@
                             <div class="col-md-4"></div>
 
                             <div class="col-md-2">
-                                <label class="control-label">Add Issue<font color="#FF0000">*</font></label>
+                                <label class="control-label">Add Issues<font color="#FF0000">*</font></label>
                                 <input type="text" class="form-control" name="issue" placeholder="" required />
                             </div>
                             <div class="col-md-2" style="margin-top:15px;" align="left">
@@ -61,7 +61,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sr. No.</th>
-                                            <th>Issue</th>
+                                            <th>Issues</th>
 
                                             <th>Action</th>
                                         </tr>

@@ -120,8 +120,8 @@
                                                 <td>{{ $material->material_name->material }}</td>
                                                 <td>{{ $material->brand_name->brand }}</td>
                                                 <td>{{ $material->requested_material_quantity }}</td>
-                                                <td>{{ $material->unit_type->unit_type }}</td>
-                                                <td>{{ $material->warehouse_name->warehouse_name }}</td>
+                                                <td>{{ $material->unit_type->unit_type ?? ''}}</td>
+                                                <td>{{ $material->warehouse_name->warehouse_name ?? ''}}</td>
                                                 <td>{{ $material->available_material }}</td>
                                                 <td>{{ $material->issue_material }}</td>
                                                 <td>{{ $material->remaining_material }}</td>
@@ -225,7 +225,7 @@
             </div>
         </div>
 
-       
+
     </div>
 
 
