@@ -44,7 +44,7 @@
                         <select class="form-control select" data-live-search="true" name="material" id="category">
                             <option value="">--Select--</option>
                             @foreach ($material as $material)
-                            <option value="{{$material->id}}">{{$material->category_name->category}}</option>
+                            <option value="{{$material->id}}">{{$material->category}}</option>
                             @endforeach
 
                         </select>

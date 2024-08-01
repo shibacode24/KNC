@@ -55,9 +55,9 @@
                                         <td>{{$orderDetails->order_id}}</td>
 
                                         <td>{{$orderDetails->date}}</td>
-                                        <td>{{$orderDetails->material_name->material}}</td>
-                                        <td>{{$orderDetails->brand_name->brand}}</td>
-                                        <td>{{$orderDetails->unit_type->unit_type}}</td>
+                                        <td>{{$orderDetails->material_name->material ?? ''}}</td>
+                                        <td>{{$orderDetails->brand_name->brand ?? ''}}</td>
+                                        <td>{{$orderDetails->unit_type->unit_type ?? ''}}</td>
                                         <td>{{$orderDetails->quantity}}</td>
 
                                         <td>{{$orderDetails->vendor_name->vendor_name ?? ''}}</td>
