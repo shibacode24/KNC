@@ -52,7 +52,7 @@
 
                     <div class="col-md-2">
                         <label>Select Sub Category</label>
-                        <select class="form-control select" data-live-search="true" name="raw_material_id" id="sub_category">
+                        <select class="form-control select" data-live-search="true" name="raw_material" id="sub_category">
                             <option value="">--Select--</option>
                             {{-- @foreach ($material as $material)
                             <option value="{{$material->id}}">{{$material->material}}</option>
@@ -132,7 +132,7 @@
                                         <th>Category</th>
                                         <th>Sub Category</th>
                                         <th>Brand Name</th>
-                                        <th>Raw Material Name</th>
+                                        {{-- <th>Raw Material Name</th> --}}
                                         <th>Material Unit</th>
                                         <th>Material Qty</th>
                                         {{-- <th>Remark</th> --}}
@@ -147,9 +147,10 @@
                                         <td>{{date('d-m-Y',strtotime($addMaterial->date))}}</td>
                                         <td>{{$addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
                                         <td>{{$addMaterial->category_name->category ?? ''}}</td>
+                                        <td>{{$addMaterial->material_name->material ?? ''}}</td>
+
                                         <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
-                                        <td>{{$addMaterial->material_name->material ?? ''}}</td>
-                                        <td>{{$addMaterial->material_name->material ?? ''}}</td>
+                                        {{-- <td>{{$addMaterial->material_name->material ?? ''}}</td> --}}
                                         <td>{{$addMaterial->unit_type->unit_type ?? ''}}</td>
                                         <td>{{$addMaterial->quantity}}</td>
                                         {{-- <td>Urgent Requirement</td> --}}

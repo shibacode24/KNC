@@ -455,7 +455,7 @@ public function getsubcategory(Request $request)
 
 public function addNonConsumableMaterialstore(Request $request)
 {
-    dd($request->all());
+    // dd($request->all());
     $material = new NonConsumableMaterial();
     $material->date = $request->date;
     $material->warehouse_id = $request->warehouse;
