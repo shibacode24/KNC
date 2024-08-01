@@ -51,9 +51,22 @@
                                 <input type="date" name="date" id="date" value="{{ $edit_material->name }}" class="form-control">
                             </div>
 
-                            <div class="col-md-2" >
+                            {{-- <div class="col-md-2" >
                                 <label class="control-label">Time<font color="#FF0000">*</font></label>
                                 <input type="time" name="time" id="time" value="{{ $edit_material->time }}" class="form-control">
+                            </div> --}}
+
+                            <div class="col-md-2">
+                                <label>Select Warehouse</label>
+                                <select class="form-control select" data-live-search="true" name="warehouse" id="warehouse">
+                                    <option value="">--Select--</option>
+                                    @foreach ($warehouse as $warehouse)
+                                        <option value="{{ $warehouse->id }}" @if ($edit_material->warehouse_id == $warehouse->id)
+                                            selected
+                                        @endif>{{ $warehouse->warehouse_name }}</option>
+                                    @endforeach
+
+                                </select>
                             </div>
 
                             <div class="col-md-2">
@@ -69,7 +82,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            {{-- <div class="col-md-2">
                                 <label>Select Supervisor</label>
                                 <select class="form-control select" data-live-search="true" name="supervisor"
                                     id="supervisor">
@@ -81,20 +94,9 @@
                                     @endforeach
 
                                 </select>
-                            </div>
+                            </div> --}}
 
-                            <div class="col-md-2">
-                                <label>Select Warehouse</label>
-                                <select class="form-control select" data-live-search="true" name="warehouse" id="warehouse">
-                                    <option value="">--Select--</option>
-                                    @foreach ($warehouse as $warehouse)
-                                        <option value="{{ $warehouse->id }}" @if ($edit_material->warehouse_id == $warehouse->id)
-                                            selected
-                                        @endif>{{ $warehouse->warehouse_name }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div>
+                           
 
                             <div class="col-md-2" >
                                 <label>Select Category</label>
@@ -109,7 +111,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2" style="margin-top: 15px; margin-left:10px">
+                            <div class="col-md-2" >
                                 <label>Select Sub Category</label>
                                 <select class="form-control select" data-live-search="true" ame="raw_material_id" id="sub_category">
                                     <option value="">--Select--</option>
@@ -122,7 +124,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2" style="margin-top: 15px">
+                            <div class="col-md-2" >
                                 <label>Select Brand</label>
                                 <select class="form-control select" data-live-search="true" name="brand" id="brand">
                                     <option value="">--Select--</option>
@@ -145,9 +147,10 @@
                         </select>
                     </div> --}}
 
-                            <div class="col-md-2" style="margin-top: 15px">
+                            <div class="col-md-2" style="margin-top: 20px">
                                 <label>Select Unit</label>
                                 <select class="form-control select" data-live-search="true" name="unit_type">
+                                    <option value="">--Select--</option>
                                     @foreach ($unit as $unit)
                                         <option value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
                                     @endforeach
