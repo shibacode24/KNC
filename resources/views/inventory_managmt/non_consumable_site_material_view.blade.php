@@ -35,7 +35,7 @@
                     <th width="5%" style="text-align:center">Raw Material</th>
                     <th width="5%" style="text-align:center">Brand</th>
                     <th width="5%" style="text-align:center">Req. Quantity</th>
-                    {{--  <th width="6%" style="text-align:center">Material Unit</th> --}}
+                     <th width="6%" style="text-align:center">Material Unit</th>
                     <th width="11%" style="text-align:center">Select Warehouse<strong>
                             <font color="#FF0000">*</font>
                         </strong></th>
@@ -67,7 +67,7 @@
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][material]"
                                 value="{{ $data->material_id }}">
-                            {{ $data->non_consumable_material_name->material }}
+                            {{ $data->non_consumable_material_name->material ?? ''}}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][raw_material]"
@@ -77,7 +77,7 @@
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][brand]" class="brand_id"
                                 value="{{ $data->brand_id }}">
-                            {{ $data->non_consumable_brand_name->brand }}
+                            {{ $data->non_consumable_brand_name->brand ?? ''}}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][quantity]"

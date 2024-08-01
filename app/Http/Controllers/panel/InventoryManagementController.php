@@ -284,7 +284,7 @@ public function nonConsumable_addIssuedMaterial(Request $request)
                 $material->remaining_material = $item['remaining_material'];
                 $material->remark = $remark; // Assign the remark
                 $material->app_status = $item['status'];
-                $material->issue_type = 'Direct Issue';
+                //$material->issue_type = 'Direct Issue';
                 $material->save();
                 // Update the status of the requested material to 'Submitted'
                 $requestedMaterial->update(['status' => 'Submitted']);
@@ -303,8 +303,8 @@ public function nonConsumable_addIssuedMaterial(Request $request)
         //     // $availableMaterial->save();
 
 
-    
-     
+
+
     }
 }
     return redirect()->back()->with('success', 'Requests added successfully!');
@@ -455,7 +455,7 @@ public function getsubcategory(Request $request)
 
 public function addNonConsumableMaterialstore(Request $request)
 {
-    // dd($request->all());
+    dd($request->all());
     $material = new NonConsumableMaterial();
     $material->date = $request->date;
     $material->warehouse_id = $request->warehouse;

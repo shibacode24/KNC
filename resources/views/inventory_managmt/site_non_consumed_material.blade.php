@@ -46,7 +46,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $firstMaterial->created_at->format('d/m/Y') }}</td>
-                                            <td>{{ $firstMaterial->site_name->site_name }}</td>
+                                            <td>{{ $firstMaterial->site_name->site_name ?? ''}}</td>
                                             <td>{{ $firstMaterial->supervisor_name->supervisor_name ?? '' }}</td>
                                             <td>
                                                 <button data-bs-toggle="modal" data-bs-target="#service-area-view"
