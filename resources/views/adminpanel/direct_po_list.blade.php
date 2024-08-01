@@ -184,10 +184,10 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$reqMaterial->date}}</td>
                                         <td>{{$reqMaterial->warehouse_name->warehouse_name}}</td>
-                                        <td>{{$reqMaterial->material_name->material}}</td>
-                                        <td>{{$reqMaterial->brand_name->brand}}</td>
-                                        <td>{{$reqMaterial->raw_material_name->raw_material_name}}</td>
-                                        <td>{{$reqMaterial->unit_type->unit_type}}</td>
+                                        <td>{{$reqMaterial->material_name->material ?? ''}}</td>
+                                        <td>{{$reqMaterial->brand_name->brand ?? ''}}</td>
+                                        <td>{{$reqMaterial->raw_material_name->raw_material_name ?? ''}}</td>
+                                        <td>{{$reqMaterial->unit_type->unit_type ?? ''}}</td>
                                         <td>{{$reqMaterial->quantity}}</td>
                                         <td>{{$reqMaterial->vendor_name->vendor_name}}</td>
                                         {{-- <td><span style="color: red;font-weight: bold;">{{$reqMaterial->status}}</span></td> --}}

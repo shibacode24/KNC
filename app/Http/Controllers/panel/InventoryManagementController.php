@@ -425,7 +425,7 @@ public function update_non_consumable_site_material(Request $request)
 
 public function non_consumable_add_material(Request $request)
 {
-    $material = NonConsumableCategoryMaterial::all();
+    $material = NonConsumableCategory::all();
     $brand = NonConsumableBrand::all();
     $unit = NonConsumableUnitType::all();
     $addMaterial = NonConsumableMaterial::all();
@@ -463,7 +463,7 @@ public function addNonConsumableMaterialstore(Request $request)
     $material->brand_id = $request->brand;
     $material->material_unit_id = $request->unit_type;
     $material->quantity = $request->quantity;
-    $material->raw_material_id = $request->raw_material_id;
+    $material->raw_material_id = $request->raw_material;
     $material->issue_type = 'Indirect Issue';
 // dump( $material);
     $material->save();
