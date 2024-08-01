@@ -148,13 +148,8 @@
                                         <td>{{$addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
                                         <td>{{$addMaterial->category_name->category ?? ''}}</td>
                                         <td>{{$addMaterial->material_name->material ?? ''}}</td>
-<<<<<<< HEAD
+                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
 
-                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
-                                        {{-- <td>{{$addMaterial->material_name->material ?? ''}}</td> --}}
-=======
-                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
->>>>>>> a927241096553a24e392c241f4b0f426812ed4b1
                                         <td>{{$addMaterial->unit_type->unit_type ?? ''}}</td>
                                         <td>{{$addMaterial->quantity}}</td>
                                         {{-- <td>Urgent Requirement</td> --}}
