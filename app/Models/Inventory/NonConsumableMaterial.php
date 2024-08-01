@@ -29,12 +29,12 @@ class NonConsumableMaterial extends Model
 
     public function material_name()
     {
-        return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'material_id');
+        return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'raw_material_id');
     }
 
     public function category_name()
     {
-        return $this->hasOne(NonConsumableCategory::class, 'id', 'raw_material_id');
+        return $this->hasOne(NonConsumableCategory::class, 'id', 'material_id');
     }
 
 
