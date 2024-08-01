@@ -147,8 +147,8 @@
                                         <td>{{date('d-m-Y',strtotime($addMaterial->date))}}</td>
                                         <td>{{$addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
                                         <td>{{$addMaterial->category_name->category ?? ''}}</td>
-                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
                                         <td>{{$addMaterial->material_name->material ?? ''}}</td>
+                                        <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
                                         <td>{{$addMaterial->unit_type->unit_type ?? ''}}</td>
                                         <td>{{$addMaterial->quantity}}</td>
                                         {{-- <td>Urgent Requirement</td> --}}
