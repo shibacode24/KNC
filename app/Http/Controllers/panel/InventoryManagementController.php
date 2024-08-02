@@ -93,7 +93,7 @@ public function getAvailableMaterial(Request $request)
 {
     $warehouseId = $request->warehouse_id;
 
-    // Fetch available material based on the warehouse_id
+    // Fetch available material based on the warehouse_id from
     $availableMaterial = AvailableMaterial::where('warehouse_id', $warehouseId)->first();
 
     if ($availableMaterial) {
