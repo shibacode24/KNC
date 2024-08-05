@@ -22,6 +22,7 @@ class AddMaterial extends Model
         'brand_id',
         'material_unit_id',
         'quantity',
+        'order_status',
     ];
 
     public function warehouse_name()

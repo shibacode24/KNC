@@ -258,14 +258,26 @@ Route::post('non_consumable_direct_issue_material_update', [InventoryManagementC
 Route::get('/grn', [WarehouseController::class, 'grn'])->name('grn');
 Route::post('grn-store', [WarehouseController::class, 'grnStore'])->name('grn-store');
 Route::post('/add-issued-material-by-warehouse', [WarehouseController::class, 'addIssuedMaterialByWarehouse'])->name('add-issued-material-by-warehouse');
+
 // GRN Out
 Route::get('/issue-material', [WarehouseController::class, 'issue_material'])->name('issue_material');
 Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
+
+// Direct GRN Out
+// Route::get('/issue-material', [WarehouseController::class, 'issue_material'])->name('issue_material');
+// Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
+
 
 // Direct GRN In
 Route::get('/direct-grn-in', [WarehouseController::class, 'direct_grn_in'])->name('direct-grn-in');
 Route::get('/viewDirectGrnIn', [WarehouseController::class, 'viewDirectGrnIn'])->name('viewDirectGrnIn');
 Route::post('direct-grn-in-store', [WarehouseController::class, 'directGrnInStore'])->name('direct-grn-in-store');
+
+// Direct GRN Out
+// Route::get('/direct-grn-out', [WarehouseController::class, 'issue_material'])->name('issue_material');
+// Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
+
+
 
 //PurchaseDepartmentController
 Route::get('/req-material', [PurchaseDepartmentController::class, 'req_material'])->name('req_material');

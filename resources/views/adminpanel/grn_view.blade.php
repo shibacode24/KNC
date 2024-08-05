@@ -22,11 +22,11 @@
         <div class="col-md-2" style="margin:7px">
             <label class="control-label">Received Date<font color="#FF0000">*</font></label>
 
-            <input type="date" class="form-control" name="received_date" placeholder="" required />
+            <input type="date" class="form-control" name="received_date" id="date" placeholder="" required />
         </div>
         <div class="col-md-2" style="margin:7px">
             <label class="control-label">Time<font color="#FF0000">*</font></label>
-            <input type="time" class="form-control" name="received_time" placeholder="" required />
+            <input type="time" class="form-control" name="received_time" id="timepicker" placeholder="" required />
         </div>
 
         <div class="col-md-2" style="margin:7px">
@@ -67,6 +67,17 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
+
+           // Set current date in date input field
+    var today = new Date().toISOString().split('T')[0];
+    $('#date').val(today);
+
+     // Initialize datetimepicker
+        $('#timepicker').datetimepicker({
+            format: 'hh:mm A', // 12-hour format
+            stepping: 30 // Set the step interval (30 minutes in this example)
+        });
+
         $('.select').change(function() {
             var warehouseId = $(this).val();
             var loopIndex = $(this).data('loop-index');

@@ -50,7 +50,7 @@
         <div class="panel-body tab-content">
             <div class="tab-pane active" id="tab8">
                 <!-- <div class="panel-body" style="margin-bottom:15px;"> -->
-                    <form action="{{ route('add-issued-material-by-warehouse') }}" method="POST">
+                    <form action="{{ route('add-direct-issued-material-by-warehouse') }}" method="POST">
                         @csrf
                     <table class="table datatable">
                         <thead>
@@ -115,7 +115,7 @@
                 <!-- </div> -->
             </div>
             <div class="tab-pane" id="tab9">
-                <form action="{{ route('add-issued-material-by-warehouse') }}" method="POST">
+                <form action="{{ route('add-direct-issued-material-by-warehouse') }}" method="POST">
                     @csrf
                 <table class="table datatable">
                     <thead>
@@ -179,7 +179,7 @@
                 </form>
             </div>
             <div class="tab-pane" id="tab10">
-                <form action="{{ route('add-issued-material-by-warehouse') }}" method="POST">
+                <form action="{{ route('add-direct-issued-material-by-warehouse') }}" method="POST">
                     @csrf
                 <table class="table datatable">
                     <thead>
@@ -239,7 +239,7 @@
                 </form>
             </div>
             <div class="tab-pane" id="tab11">
-                <form action="{{ route('add-issued-material-by-warehouse') }}" method="POST">
+                <form action="{{ route('add-direct-issued-material-by-warehouse') }}" method="POST">
                     @csrf
                 <table class="table datatable">
                     <thead>

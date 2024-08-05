@@ -133,6 +133,7 @@ public function viewgrn(Request $request)
         ->where('material_id', $materialRequest->material_id)
         ->where('brand_id', $materialRequest->brand_id)
         ->where('raw_material_id', $materialRequest->raw_material_id)
+        ->where('type', 'Consumable')
         ->first();
 
     if ($availableMaterial) {

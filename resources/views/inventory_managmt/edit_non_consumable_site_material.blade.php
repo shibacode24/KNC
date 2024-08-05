@@ -23,7 +23,7 @@
                     <th width="5%" style="text-align:center">Raw Material</th>
                     <th width="5%" style="text-align:center">Brand</th>
                     <th width="5%" style="text-align:center">Req. Quantity</th>
-                   {{--  <th width="6%" style="text-align:center">Material Unit</th>--}}
+                   {{--  <th width="6%" style="text-align   :center">Material Unit</th>--}}
                     <th width="11%" style="text-align:center">Select Warehouse<strong><font color="#FF0000">*</font></strong></th>
                     <th width="10%" style="text-align:center">Available Material<strong><font color="#FF0000">*</font></strong></th>
                     <th width="10%" style="text-align:center">Issue Material<strong><font color="#FF0000">*</font></strong></th>
@@ -44,11 +44,11 @@
                         {{-- </td> --}}
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][material_id]" value="{{ $data->material_id }}">
-                            {{ $data->material_name->material }}
+                            {{ $data->material_name->material ?? ''}}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][raw_material]" value="{{ $data->raw_material_id }}">
-                            {{ $data->raw_material_name->raw_material_name }}
+                            {{ $data->raw_material_name->raw_material_name ?? ''}}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][brand_id]" value="{{ $data->brand_id }}">
@@ -73,7 +73,7 @@
                             </select>
                         </td>
                         <td style="padding:5px;" align="center">
-                            <input type="text" class="form-control available-material" name="data[{{ $loop->index }}][available_material]" placeholder="" style="color: #707B7C;" value="{{$availableMaterial->available_quantity}}" readonly/>
+                            <input type="text" class="form-control available-material" name="data[{{ $loop->index }}][available_material]" placeholder="" style="color: #707B7C;" value="{{$availableMaterial->available_quantity ?? ''}}" readonly/>
                             </td>
                         <td style="padding:10px;" align="center">
                             <input type="text" class="form-control issue-material" name="data[{{ $loop->index }}][issue_material]" data-loop-index="{{ $loop->index }}" value="{{$data->issue_material}}" placeholder="" />
@@ -117,7 +117,7 @@
 <script>
     $(document).ready(function() {
 
-        
+
         $('.select').change(function() {
             var warehouseId = $(this).val();
             var loopIndex = $(this).data('loop-index');
@@ -129,7 +129,7 @@
             var rawmaterialId = $('input[name="data[' + loopIndex + '][raw_material]"]').val();
 
             var availableMaterialField = $('input[name="data[' + loopIndex + '][available_material]"]');
-            
+
             if (warehouseId) {
                 $.ajax({
                     url: '{{ route('get-non-consumable-available-material') }}',

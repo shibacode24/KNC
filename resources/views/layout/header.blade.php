@@ -320,7 +320,7 @@
                 @endif
 
                 @if (Auth::user()->panel_role == 1 || in_array('engg', $permission))
-                <li><a href="{{ route('engg') }}"><span class="fa fa-plus"></span>Add Engineers</a>
+                <li><a href="{{ route('engg') }}"><span class="fa fa-plus"></span>Add Engineer</a>
                 </li>
             @endif
                             @if (Auth::user()->panel_role == 1 || in_array('contractor', $permission))
@@ -406,7 +406,7 @@
 
 
 
-                          
+
 
                                     @if (Auth::user()->panel_role == 1 || in_array('site-non-consumed-material', $permission))
                                         <li><a href="{{ route('site-non-consumed-material') }}"><span
@@ -538,6 +538,11 @@
                         <ul>
 
                             <li>
+                                <a href="#" title="Consumable GRN"><span class="fa fa-exchange"> </span>Consumable GRN</a>
+                                <ul>
+
+
+                            <li>
                                 <a href="#" title="GRN In"><span class="fa fa-exchange"> </span>GRN In</a>
                                 <ul>
                             @if (Auth::user()->panel_role == 1 || in_array('grn', $permission))
@@ -566,6 +571,50 @@
                                 <li><a href=""><span class="fa fa-plus"></span>Direct GRN
                                         Out</a></li>
                             @endif
+                                </ul>
+                            </li>
+
+                                </ul>
+                            </li>
+
+
+                            <li>
+                                <a href="#" title="Non Consumable GRN"><span class="fa fa-exchange"> </span>Non Consumable GRN</a>
+                                <ul>
+
+
+                            <li>
+                                <a href="#" title="GRN In"><span class="fa fa-exchange"> </span>Direct GRN In</a>
+                                <ul>
+                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                <li><a href=""><span class="fa fa-plus"></span>GRN In</a>
+                                </li>
+                            @endif
+
+                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            <li><a href=""><span class="fa fa-plus"></span>Direct GRN In</a>
+                            </li>
+                        @endif
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="#" title="GRN Out"><span class="fa fa-exchange"> </span>GRN Out</a>
+                                <ul>
+
+                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                <li><a href=""><span class="fa fa-plus"></span>GRN
+                                        Out</a></li>
+                            @endif
+
+
+                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                <li><a href=""><span class="fa fa-plus"></span>Direct GRN
+                                        Out</a></li>
+                            @endif
+                                </ul>
+                            </li>
+
                                 </ul>
                             </li>
 

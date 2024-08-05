@@ -97,7 +97,7 @@
                                             <th>Material Name </th>
                                             <th>Brand Name </th>
                                             <th>Material Qty </th>
-                                            {{-- <th>Material Unit </th> --}}
+                                            <th>Material Unit </th>
                                             <th>Warehouse </th>
                                             <th>Available Material</th>
                                             <th>Issue Material </th>

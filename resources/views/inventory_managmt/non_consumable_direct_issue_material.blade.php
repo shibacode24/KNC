@@ -89,7 +89,7 @@
                                 </select>
                             </div> --}}
 
-                            
+
 
                             <div class="col-md-2">
                                 <label>Select Category</label>
@@ -194,9 +194,9 @@
                                         <tr>
                                             <th>Sr. No.</th>
                                             <th>Date</th>
-                                            <th>Time</th>
+                                            {{-- <th>Time</th> --}}
                                             <th>Site Name</th>
-                                            <th>Supervisor Name</th>
+                                            {{-- <th>Supervisor Name</th> --}}
                                             <th>Warehouse Name</th>
                                             <th>Material Name</th>
                                             {{-- <th>Raw Material Name</th> --}}
@@ -213,17 +213,17 @@
                                         @foreach ($issue->sortByDesc('created_at') as $addMaterial)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $addMaterial->date }}</td>
-                                                <td>{{ $addMaterial->time }}</td>
-                                                <td>{{ $addMaterial->site_name->site_name }}</td>
-                                                <td>{{ $addMaterial->supervisor_name->supervisor_name }}</td>
-                                                <td>{{ $addMaterial->warehouse_name->warehouse_name }}</td>
-                                                <td>{{ $addMaterial->material_name->material }}</td>
+                                                <td>{{date('d-m-Y',strtotime($addMaterial->date))}}</td>
+                                                {{-- <td>{{ $addMaterial->time }}</td> --}}
+                                                <td>{{ $addMaterial->site_name->site_name ?? ''}}</td>
+                                                {{-- <td>{{ $addMaterial->supervisor_name->supervisor_name ?? ''}}</td> --}}
+                                                <td>{{ $addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
+                                                <td>{{ $addMaterial->material_name->material ?? ''}}</td>
                                                 {{-- <td>{{$addMaterial->raw_material_name->raw_material_name}}</td> --}}
-                                                <td>{{ $addMaterial->brand_name->brand }}</td>
-                                                <td>{{ $addMaterial->unit_type->unit_type }}</td>
-                                                <td>{{ $addMaterial->quantity }}</td>
-                                                <td>{{ $addMaterial->remark }}</td>
+                                                <td>{{ $addMaterial->brand_name->brand ?? ''}}</td>
+                                                <td>{{ $addMaterial->unit_type->unit_type ?? ''}}</td>
+                                                <td>{{ $addMaterial->quantity ?? ''}}</td>
+                                                <td>{{ $addMaterial->remark ?? ''}}</td>
 
 
 
