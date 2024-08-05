@@ -17,7 +17,7 @@ class PurchaseDepartmentController extends Controller
     public function req_material(Request $request)
     {
 
-        $reqMaterial = AddMaterial::get();
+        $reqMaterial = AddMaterial::where('order_status', 'Pending')->get();
         $vendor = Vendor::all();
         return view('adminpanel.req_material', compact('reqMaterial', 'vendor'));
     }
@@ -43,7 +43,11 @@ class PurchaseDepartmentController extends Controller
                     'vendor_id' => $material['vendor_id'],
                     'order_id' => $orderId, // Add the generated order_id here
 
+
                 ]);
+                $order_status = AddMaterial::where('id',$material['add_material_id'])->update([
+                    'order_status'=>'Ordered',
+    ]);
         }
 
         return redirect()->back()->with('success', 'Order placed successfully!');
@@ -54,10 +58,10 @@ class PurchaseDepartmentController extends Controller
     {
 
         $orderDetails = MaterialRequestList::whereNull('invoice_number')
-        ->where('type','consumed')
+        ->where('type','consumable')
         ->get();
         $order = MaterialRequestList::whereNotNull('invoice_number')
-        ->where('type','consumed')
+        ->where('type','consumable')
         ->get();
 
         return view('adminpanel.order_details', compact('orderDetails', 'order'));
@@ -200,7 +204,7 @@ class PurchaseDepartmentController extends Controller
                     'brand_id' => $material['brand_id'],
                     'vendor_id' => $material['vendor_id'],
                     'order_id' => $orderId, // Add the generated order_id here
-                    'type' => 'non-consumable', 
+                    'type' => 'non-consumable',
                 ]);
 
                 $order_status = NonConsumableMaterial::where('id',$material['add_material_id'])->update([

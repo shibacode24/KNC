@@ -19,18 +19,14 @@ use App\Models\AssignedTask;
 use App\Models\AssignedTaskIssues;
 use App\Models\Issues;
 use App\Models\Brand;
-use App\Models\{UnitType, RawMaterial, LostMaterial, ApplyLeave, WorkPlace};
+use App\Models\{UnitType, RawMaterial, LostMaterial, ApplyLeave, WorkPlace, TransferWorkPlaceMaterial, NonConsumableCategory, NonConsumableCategoryMaterial, MaterialConsumed, RepairingAndMaintenance, Warehouse};
 use App\Models\Inventory\IssueMaterialByInventory;
 use App\Models\Warehouse\IssueMaterialByWareHouse;
-
 use App\Models\Attendance\AttendanceSupervisor;
 use Illuminate\Support\Facades\File;
-
 use App\Models\Contractor;
-
-
+use Carbon\Carbon;
 use DB;
-
 use Illuminate\Support\Facades\Hash;
 
 
@@ -153,7 +149,7 @@ class ApiController extends Controller
 
 
 // retrieve all working task against site id
-	public function getTask(Request $request){
+	public function getTask222(Request $request){
 		$task = Task::
 		leftJoin('task_category', 'task_category.id', '=', 'task.task_category_id')
 		->where('site_id', $request->site_id)
@@ -166,6 +162,134 @@ class ApiController extends Controller
         return response()->json(['status' => true, 'data' => $task]);
     }
 	}
+
+
+	public function getTask333(Request $request) {
+    // Get the tasks along with aggregated assigned task counts and statuses
+    $tasks = Task::leftJoin('task_category', 'task_category.id', '=', 'task.task_category_id')
+        ->leftJoin(DB::raw('(SELECT task_id,
+                               COUNT(*) as total_assigned,
+                               SUM(CASE WHEN status = "Pending" THEN 1 ELSE 0 END) as pending_count,
+                               SUM(CASE WHEN status = "Inprogress" THEN 1 ELSE 0 END) as in_progress_count,
+                               SUM(CASE WHEN status = "Delayed" THEN 1 ELSE 0 END) as delayed_count,
+							   SUM(CASE WHEN status = "Completed" THEN 1 ELSE 0 END) as completed_count
+                           FROM assigned_task
+                           GROUP BY task_id) as aggregated_assigned_task'),
+            'aggregated_assigned_task.task_id', '=', 'task.id')
+        ->where('site_id', $request->site_id)
+        ->where('workplace_id', $request->workplace_id)
+        ->select(
+            'task.*',
+            'task_category.category_name',
+            'aggregated_assigned_task.total_assigned',
+            'aggregated_assigned_task.pending_count',
+            'aggregated_assigned_task.in_progress_count',
+            'aggregated_assigned_task.delayed_count',
+		    'aggregated_assigned_task.completed_count',
+        )
+        ->get();
+
+    if ($tasks->isEmpty()) {
+        return response()->json(['status' => false, 'message' => 'No tasks found']);
+    }
+
+    // Process tasks to include status aggregation
+    $tasks->each(function($task) {
+         if ($task->total_assigned == 0) {
+            // No assigned tasks
+            $task->status_summary = ['No Assigned Task' => 0];
+        } else {
+			 $status_summary = [];
+        if ($task->pending_count > 0) {
+            $status_summary['Pending'] = $task->pending_count;
+        }
+        if ($task->in_progress_count > 0) {
+            $status_summary['Inprogress'] = $task->in_progress_count;
+        }
+        if ($task->delayed_count > 0) {
+            $status_summary['Delayed'] = $task->delayed_count;
+        }
+		 if ($task->completed_count > 0) {
+            $status_summary['Completed'] = $task->completed_count;
+        }
+        $task->status_summary = $status_summary;
+		 }
+        // Remove the individual count fields from the response if not needed
+        unset($task->pending_count);
+        unset($task->in_progress_count);
+        unset($task->delayed_count);
+		unset($task->completed_count);
+
+    });
+
+    return response()->json(['status' => true, 'data' => $tasks]);
+}
+
+	public function getTask(Request $request) {
+    // Get the tasks along with aggregated assigned task counts and statuses
+    $tasks = Task::leftJoin('task_category', 'task_category.id', '=', 'task.task_category_id')
+        ->leftJoin(DB::raw('(SELECT task_id,
+                               COUNT(*) as total_assigned,
+                               SUM(CASE WHEN status = "Pending" THEN 1 ELSE 0 END) as pending_count,
+                               SUM(CASE WHEN status = "Inprogress" THEN 1 ELSE 0 END) as in_progress_count,
+                               SUM(CASE WHEN status = "Delayed" THEN 1 ELSE 0 END) as delayed_count,
+							   SUM(CASE WHEN status = "Completed" THEN 1 ELSE 0 END) as completed_count,
+                               SUM(CASE WHEN status = "Completed" THEN weightage ELSE 0 END) as total_completed_weightage
+                           FROM assigned_task
+                           GROUP BY task_id) as aggregated_assigned_task'),
+            'aggregated_assigned_task.task_id', '=', 'task.id')
+        ->where('site_id', $request->site_id)
+        ->where('workplace_id', $request->workplace_id)
+        ->select(
+            'task.*',
+            'task_category.category_name',
+            'aggregated_assigned_task.total_assigned',
+            'aggregated_assigned_task.pending_count',
+            'aggregated_assigned_task.in_progress_count',
+            'aggregated_assigned_task.delayed_count',
+            'aggregated_assigned_task.completed_count',
+            'aggregated_assigned_task.total_completed_weightage',
+        )
+        ->get();
+
+    if ($tasks->isEmpty()) {
+        return response()->json(['status' => false, 'message' => 'No tasks found']);
+    }
+
+    // Process tasks to include status aggregation
+    $tasks->each(function($task) {
+        if ($task->total_assigned == 0) {
+            // No assigned tasks
+            $task->status_summary = ['No Assigned Task' => 0];
+        } else {
+            $status_summary = [];
+            if ($task->pending_count > 0) {
+                $status_summary['Pending'] = $task->pending_count;
+            }
+            if ($task->in_progress_count > 0) {
+                $status_summary['Inprogress'] = $task->in_progress_count;
+            }
+            if ($task->delayed_count > 0) {
+                $status_summary['Delayed'] = $task->delayed_count;
+            }
+            if ($task->completed_count > 0) {
+                $status_summary['Completed'] = $task->completed_count;
+            }
+            $task->status_summary = $status_summary;
+        }
+
+        // Remove the individual count fields from the response if not needed
+        unset($task->pending_count);
+        unset($task->in_progress_count);
+        unset($task->delayed_count);
+        unset($task->completed_count);
+    });
+
+    return response()->json([
+        'status' => true,
+        'data' => $tasks,
+    ]);
+}
 
 	//To retrieve all sub category of a task like in construction category the subcategory is ceiling work.
 	public function getTaskSubCategory(Request $request)
@@ -203,75 +327,197 @@ public function getWorkingUnitType(){
 
 
 //Assign particular task sub category to particular contractor of a particular category of a site
-	public function postAssignedTask(Request $request)
-	{
-		$task = AssignedTask::create([
-		'site_id' => $request->input('site_id'),
-		'task_id' => $request->input('task_id'),
-		'task_category_id' => $request->input('task_category_id'),
-		'task_subcategory_id' => $request->input('task_subcategory_id'),
-		'contractor_id' => $request->input('contractor_id'),
-		'start_date' => $request->input('start_date'),
-		'end_date' => $request->input('end_date'),
-		'total_work' => $request->input('total_work'),
-		'work_unit_type_id' => $request->input('work_unit_type_id'),
-		]);
 
-		if($task){
-			return response()->json(['status'=>true, 'data'=>$task]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
-	}
+	  public function postAssignedTask(Request $request)
+    {
+        $currentDate = Carbon::now()->startOfDay(); // Ensure the current date has no time component
+        $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+        $endDate = Carbon::parse($request->input('end_date'))->startOfDay();
 
-// get all assigned task based on task id, the task id of  task which is created by app
-	public function getAssignedTask(Request $request){
-		$contractor = AssignedTask::
-		leftJoin('sites', 'sites.id', '=', 'assigned_task.site_id')
-		->leftJoin('task', 'task.id', '=', 'assigned_task.task_id')
-		->leftJoin('task_category', 'task_category.id', '=', 'assigned_task.task_category_id')
-		->leftJoin('task_subcategory', 'task_subcategory.id', '=', 'assigned_task.task_subcategory_id')
-		->leftJoin('contractor', 'contractor.id', '=', 'assigned_task.contractor_id')
-		->leftJoin('working_unit_type', 'working_unit_type.id', '=', 'assigned_task.work_unit_type_id')
+        // Determine the status
+        if ($currentDate->gt($endDate)) {
+            $status = 'Delayed';
+        } elseif ($currentDate->gte($startDate) && $currentDate->lte($endDate)) {
+            $status = 'Inprogress';
+        } elseif ($currentDate->lt($startDate)) {
+            $status = 'Pending';
+        } else {
+            $status = 'Unknown'; // Fallback status if needed
+        }
 
- ->where('assigned_task.task_id', $request->task_id)
-->where('assigned_task.site_id', $request->site_id)
-->select( 'assigned_task.task_id', 'sites.site_name', 'task_category.category_name', 'task_subcategory.subcategory_name', 'contractor.contractor_name', 'working_unit_type.working_unit_type', 'assigned_task.start_date', 'assigned_task.end_date', 'assigned_task.total_work')
-->get();
-		if($contractor){
-			return response()->json(['status'=>true, 'data'=>$contractor]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
+        $task = AssignedTask::create([
+            'site_id' => $request->input('site_id'),
+            'task_id' => $request->input('task_id'),
+            'task_category_id' => $request->input('task_category_id'),
+            'task_subcategory_id' => $request->input('task_subcategory_id'),
+            'contractor_id' => $request->input('contractor_id'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'total_work' => $request->input('total_work'),
+            'work_unit_type_id' => $request->input('work_unit_type_id'),
+            'status' => $status, // Store the determined status
+        ]);
 
-	}
+        if ($task) {
+            return response()->json(['status' => true, 'data' => $task]);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Something Error Occurred']);
+        }
+    }
 
 
-//Add issue of that assigned task
-	public function postAssignedTaskIssues2(Request $request)
-	{
-		$task = AssignedTaskIssues::create([
-		'assigned_task_id' => $request->input('assigned_task_id'),
-		'issue_id' => $request->input('issue_id'),
-		]);
 
-		if($task){
-			return response()->json(['status'=>true, 'data'=>$task]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
-	}
+	public function getAssignedTask222(Request $request)
+{
+    $tasks = AssignedTask::
+        leftJoin('sites', 'sites.id', '=', 'assigned_task.site_id')
+        ->leftJoin('task', 'task.id', '=', 'assigned_task.task_id')
+        ->leftJoin('task_category', 'task_category.id', '=', 'assigned_task.task_category_id')
+        ->leftJoin('task_subcategory', 'task_subcategory.id', '=', 'assigned_task.task_subcategory_id')
+        ->leftJoin('contractor', 'contractor.id', '=', 'assigned_task.contractor_id')
+        ->leftJoin('working_unit_type', 'working_unit_type.id', '=', 'assigned_task.work_unit_type_id')
+        ->where('assigned_task.task_id', $request->task_id)
+        ->where('assigned_task.site_id', $request->site_id)
+        ->select(
+            'assigned_task.id',
+            'assigned_task.task_id',
+            'sites.site_name',
+            'task_category.category_name',
+            'task_subcategory.subcategory_name',
+            'contractor.contractor_name',
+            'working_unit_type.working_unit_type',
+            'assigned_task.start_date',
+            'assigned_task.end_date',
+            'assigned_task.total_work',
+            'assigned_task.status'
+        )
+        ->get();
 
-//Get that issues based on task
-	public function getAssignedTaskIssues2(){
-		$contractor = AssignedTaskIssues::where('assigned_task_id', $request->assigned_task_id)->get();
-		if($contractor){
-			return response()->json(['status'=>true, 'data'=>$contractor]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
+    // Count the number of tasks for the given task_id
+    $taskCount = $tasks->count();
 
-	}
+    // Calculate weightage for each task
+    $weightage = $taskCount > 0 ? 100 / $taskCount : 0;
+
+    // Update statuses and weightages
+    $currentDate = Carbon::now()->startOfDay();
+    foreach ($tasks as $task) {
+        $startDate = Carbon::parse($task->start_date)->startOfDay();
+        $endDate = Carbon::parse($task->end_date)->startOfDay();
+
+        if ($currentDate->gt($endDate)) {
+            $task->status = 'Delayed';
+        } elseif ($currentDate->gte($startDate) && $currentDate->lte($endDate)) {
+            $task->status = 'Inprogress';
+        } elseif ($currentDate->lt($startDate)) {
+            $task->status = 'Pending';
+        }
+
+        // Assign weightage
+        $task->weightage = $weightage;
+
+        // Save the updated status and weightage
+        $task->save();
+    }
+
+    if ($tasks->isNotEmpty()) {
+        return response()->json(['status' => true, 'data' => $tasks]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No tasks found for the given criteria.']);
+    }
+}
+
+
+
+public function getAssignedTask(Request $request)
+{
+    $tasks = AssignedTask::
+        leftJoin('sites', 'sites.id', '=', 'assigned_task.site_id')
+        ->leftJoin('task', 'task.id', '=', 'assigned_task.task_id')
+        ->leftJoin('task_category', 'task_category.id', '=', 'assigned_task.task_category_id')
+        ->leftJoin('task_subcategory', 'task_subcategory.id', '=', 'assigned_task.task_subcategory_id')
+        ->leftJoin('contractor', 'contractor.id', '=', 'assigned_task.contractor_id')
+        ->leftJoin('working_unit_type', 'working_unit_type.id', '=', 'assigned_task.work_unit_type_id')
+        ->where('assigned_task.task_id', $request->task_id)
+        ->where('assigned_task.site_id', $request->site_id)
+        ->select(
+            'assigned_task.id',
+            'assigned_task.task_id',
+            'sites.site_name',
+            'task_category.category_name',
+            'task_subcategory.subcategory_name',
+            'contractor.contractor_name',
+            'working_unit_type.working_unit_type',
+            'assigned_task.start_date',
+            'assigned_task.end_date',
+            'assigned_task.total_work',
+            'assigned_task.status'
+        )
+        ->get();
+
+    // Count the number of tasks for the given task_id
+    $taskCount = $tasks->count();
+
+    // Calculate weightage for each task
+    $weightage = $taskCount > 0 ? 100 / $taskCount : 0;
+
+    // Update statuses and weightages
+    $currentDate = Carbon::now()->startOfDay();
+    foreach ($tasks as $task) {
+        if ($task->status === 'Completed') {
+            // Skip tasks that are already completed
+            continue;
+        }
+
+        $startDate = Carbon::parse($task->start_date)->startOfDay();
+        $endDate = Carbon::parse($task->end_date)->startOfDay();
+
+        if ($currentDate->gt($endDate)) {
+            $task->status = 'Delayed';
+        } elseif ($currentDate->gte($startDate) && $currentDate->lte($endDate)) {
+            $task->status = 'Inprogress';
+        } elseif ($currentDate->lt($startDate)) {
+            $task->status = 'Pending';
+        }
+
+        // Assign weightage
+        $task->weightage = $weightage;
+
+        // Save the updated status and weightage
+        $task->save();
+    }
+
+    if ($tasks->isNotEmpty()) {
+        return response()->json(['status' => true, 'data' => $tasks]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No tasks found for the given criteria.']);
+    }
+}
+
+	 public function postCompleteAssignedTask(Request $request){
+                $complete_task = AssignedTask::where('id', $request->assigned_task_id)->first();
+                if ($complete_task->id) {
+                    $complete_task->update([
+
+                         'status'=>'Completed',
+                    ]);
+                    return response()->json(['status' => true, 'message' => 'Data Updated Successfully']);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Something Error Occure At Server']);
+                }
+            }
+	public function updateAssignedTaskWeightage(Request $request){
+                $complete_task = AssignedTask::where('id', $request->assigned_task_id)->first();
+                if ($complete_task->id) {
+                    $complete_task->update([
+
+                        'weightage'=>$request->weightage,
+                    ]);
+                    return response()->json(['status' => true, 'message' => 'Data Updated Successfully']);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Something Error Occure At Server']);
+                }
+            }
 
 
 	public function addTeamContact(Request $request)
@@ -347,7 +593,6 @@ public function getWorkingUnitType(){
 		'raw_material_id' => $request->input('raw_material_id'),
 		'brand_id' => $request->input('brand_id'),
 		'requested_quantity' => $request->input('requested_quantity'),
-		'material_unit_type_id' => $request->input('unit_id'),
 
 		]);
 
@@ -366,7 +611,7 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 ->leftJoin('raw_material', 'raw_material.id', '=', 'requested_material.raw_material_id')
 ->leftJoin('brand', 'brand.id', '=', 'requested_material.brand_id')
 ->leftJoin('users', 'users.id', '=', 'requested_material.supervisor_id')
-->leftJoin('unit_type', 'unit_type.id', '=', 'requested_material.material_unit_type_id')
+->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
 ->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
 ->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
  ->where('requested_material.site_id', $request->site_id)
@@ -398,31 +643,6 @@ $issue = Issues::all();
 
 
 //Add issue of that assigned task
-	public function postAssignedTaskIssues33(Request $request)
-	{
-
-		 // Store the uploaded file
-    if ($request->hasFile('photo')) {
-        $file = $request->file('photo');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('photo'), $fileName);
-        $photoPath = '' . $fileName;
-    } else {
-        $photoPath = null;
-    }
-		$task = AssignedTaskIssues::create([
-		'assigned_task_id' => $request->input('assigned_task_id'),
-		'issue_id' => $request->input('issue_id'),
-		'photo' => $photoPath,
-		]);
-
-		if($task){
-			return response()->json(['status'=>true, 'data'=>$task]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
-	}
-
 
 public function postAssignedTaskIssues(Request $request)
 {
@@ -442,6 +662,8 @@ public function postAssignedTaskIssues(Request $request)
         'assigned_task_id' => $request->input('assigned_task_id'),
         'issue_id' => $request->input('issue_id'),
         'photo' => $photoPath,
+		'latitude' => $request->input('latitude'),
+		'longitude' => $request->input('longitude'),
     ]);
 
     if ($task) {
@@ -450,20 +672,32 @@ public function postAssignedTaskIssues(Request $request)
         return response()->json(['status' => false, 'message' => 'Something Error Occured']);
     }
 }
+
 	public function getAssignedTaskIssues(Request $request)
-	{
-		$task = AssignedTaskIssues::where('assigned_task_id', $request->assigned_task_id)
-			->leftJoin('issues', 'issues.id', '=', 'assigned_task_issues.issue_id')
-			->select('assigned_task_issues.*', 'issues.issue')
-			->get();
+{
+    // Retrieve the assigned task issues
+    $taskIssues = AssignedTaskIssues::where('assigned_task_id', $request->assigned_task_id)->get();
 
-		if($task){
-			return response()->json(['status'=>true, 'data'=>$task]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
+    if ($taskIssues->isEmpty()) {
+        return response()->json(['status' => false, 'message' => 'No tasks found']);
+    }
 
-	}
+    // Collect all issue IDs from the task issues
+    $issueIds = $taskIssues->pluck('issue_id')->flatten()->unique()->toArray();
+
+    // Retrieve the issues
+    $issues = Issues::whereIn('id', $issueIds)->get()->keyBy('id');
+
+    // Append issue details to each task issue
+    $taskIssues->each(function ($taskIssue) use ($issues) {
+        $taskIssue->issue_details = collect($taskIssue->issue_id)->map(function ($id) use ($issues) {
+            return $issues->get($id);
+        });
+    });
+
+    return response()->json(['status' => true, 'data' => $taskIssues]);
+}
+
 
 	public function getAllMaterialBrands(Request $request)
 	{
@@ -535,17 +769,35 @@ public function postAssignedTaskIssues(Request $request)
 }
 
 
-		public function getReceivedMaterial(Request $request)
+		public function getReceivedMaterial33(Request $request)
 	{
 		$material = RequestedMaterial::
 leftJoin('material', 'material.id', '=', 'requested_material.material_id')
-->leftJoin('brand', 'brand.id', '=', 'requested_material.brand_id')
-->leftJoin('unit_type', 'unit_type.id', '=', 'requested_material.material_unit_type_id')
+->leftJoin('raw_material', 'raw_material.id', '=', 'requested_material.raw_material_id')
+->leftJoin('brand', 'brand.id', '=', 'raw_material.brand_id')
+->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
 ->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
 ->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
 ->where('requested_material.site_id', $request->site_id)
 ->whereNotNull('requested_material.received_quantity')
-->select( 'material.material', 'requested_material.id', 'requested_material.received_remark','requested_material.requested_quantity', 'unit_type.unit_type', 'brand.brand', 'requested_material.received_quantity', 'requested_material.remaining_quantity', 'requested_material.created_at', 'issue_material_by_inventory.app_status', 'status.status' )
+//->select( 'material.material', 'raw_material.raw_material_name', 'requested_material.id', 'requested_material.received_remark','requested_material.requested_quantity', 'unit_type.unit_type', 'brand.brand', 'requested_material.received_quantity', 'requested_material.remaining_quantity', 'requested_material.created_at', 'issue_material_by_inventory.app_status', 'status.status' )
+
+	   ->selectRaw(
+            'material.material,
+            raw_material.raw_material_name,
+            requested_material.id,
+            requested_material.received_remark,
+            SUM(requested_material.requested_quantity) as requested_quantity,
+            unit_type.unit_type,
+            brand.brand,
+            SUM(requested_material.received_quantity) as received_quantity,
+            SUM(requested_material.remaining_quantity) as remaining_quantity,
+            requested_material.created_at,
+            issue_material_by_inventory.app_status,
+            status.status'
+        )
+	        ->groupBy('material.material', 'raw_material.raw_material_name', 'requested_material.id', 'requested_material.received_remark', 'unit_type.unit_type', 'brand.brand', 'requested_material.created_at', 'issue_material_by_inventory.app_status', 'status.status')
+
 //->groupBy('material.material', 'requested_material.*')
 ->get()
 	  ->groupBy(function ($item) {
@@ -557,6 +809,55 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
 		}
 	}
+
+	public function getReceivedMaterial(Request $request)
+{
+    $material = RequestedMaterial::
+        leftJoin('material', 'material.id', '=', 'requested_material.material_id')
+        ->leftJoin('raw_material', 'raw_material.id', '=', 'requested_material.raw_material_id')
+        ->leftJoin('brand', 'brand.id', '=', 'raw_material.brand_id')
+        ->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
+        ->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
+        ->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
+        ->where('requested_material.site_id', $request->site_id)
+        ->whereNotNull('requested_material.received_quantity')
+        ->selectRaw(
+            'material.material,
+            raw_material.raw_material_name,
+            requested_material.material_id,
+            requested_material.raw_material_id,
+            SUM(requested_material.requested_quantity) as requested_quantity,
+            unit_type.unit_type,
+            brand.brand,
+            SUM(requested_material.received_quantity) as received_quantity,
+            SUM(requested_material.remaining_quantity) as remaining_quantity,
+            DATE(requested_material.created_at) as date,
+            issue_material_by_inventory.app_status,
+            status.status'
+        )
+        ->groupBy(
+            'material.material',
+            'raw_material.raw_material_name',
+            'requested_material.material_id',
+            'requested_material.raw_material_id',
+            'unit_type.unit_type',
+            'brand.brand',
+            'date', // Group by the formatted date
+            'issue_material_by_inventory.app_status',
+            'status.status'
+        )
+        ->get()
+        ->groupBy('date'); // Group by the formatted date part
+
+    if ($material) {
+        return response()->json(['status' => true, 'data' => $material]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'Something Error Occured']);
+    }
+}
+
+
+
 
 	public function postLostMaterialRequest(Request $request)
 	{
@@ -753,4 +1054,132 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
 		}
 	}
+
+
+		public function postTransferWorkplaceMaterial(Request $request)
+	{
+		$workplace = TransferWorkPlaceMaterial::create([
+		'site_id' => $request -> input('site_id'),
+		'source_workplace_id' => $request -> input('source_workplace_id'),
+		'target_workplace_id' => $request -> input('target_workplace_id'),
+		'material_id' => $request -> input('material_id'),
+		'quantity' => $request -> input('quantity'),
+		]);
+
+		if($workplace){
+			return response()->json(['status'=>true, 'data'=>$workplace]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+		public function getTransferWorkplaceMaterial(Request $request)
+	{
+		$workplace = TransferWorkPlaceMaterial::where('site_id', $request->site_id)->get();
+		if($workplace){
+			return response()->json(['status'=>true, 'data'=>$workplace]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+	public function getNonConsumableCategories(Request $request)
+	{
+		$category = NonConsumableCategory::all();
+		if($category){
+			return response()->json(['status'=>true, 'data'=>$category]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+	public function getNonConsumableCategoryMaterial(Request $request)
+	{
+		$category = NonConsumableCategoryMaterial::where('category_id', $request->non_consumable_category_id)->get();
+		if($category){
+			return response()->json(['status'=>true, 'data'=>$category]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+
+	public function postMaterialConsumed(Request $request)
+	{
+		$material = MaterialConsumed::create([
+		'site_id' => $request -> input('site_id'),
+		'workplace_id' => $request -> input('workplace_id'),
+		'material_id' => $request -> input('material_id'),
+		'raw_material_id' => $request -> input('raw_material_id'),
+		'consumed_quantity' => $request -> input('consumed_quantity'),
+		]);
+
+		if($material){
+			return response()->json(['status'=>true, 'data'=>$material]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+
+		public function getMaterialConsumed(Request $request)
+	{
+		$material = MaterialConsumed::
+leftJoin('material', 'material.id', '=', 'material_consumed.material_id')
+->leftJoin('raw_material', 'raw_material.id', '=', 'material_consumed.raw_material_id')
+->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
+->leftJoin('brand', 'brand.id', '=', 'raw_material.brand_id')
+->where('workplace_id', $request->workplace_id)
+->select( 'material.material', 'raw_material.raw_material_name', 'unit_type.unit_type', 'brand.brand', 'material_consumed.consumed_quantity', 'material_consumed.created_at')
+//->groupBy('material.material', 'requested_material.*')
+->get()
+	  ->groupBy(function ($item) {
+            return $item->created_at->format('Y-m-d');
+        });
+		if($material){
+			return response()->json(['status'=>true, 'data'=>$material]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+
+public function getAllWarehouse(){
+ $warehouse = Warehouse::all();
+	if($warehouse){
+			return response()->json(['status'=>true, 'data'=>$warehouse]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+}
+
+		public function postRepairingAndMaintenance(Request $request)
+	{
+		$material = RepairingAndMaintenance::create([
+		'site_id' => $request -> input('site_id'),
+		'warehouse_id' => $request -> input('warehouse_id'),
+		'non_consumable_category_id' => $request -> input('non_consumable_category_id'),
+		'non_consumable_material_id' => $request -> input('non_consumable_material_id'),
+		'quantity' => $request -> input('quantity'),
+		'remark' => $request -> input('remark'),
+		]);
+
+		if($material){
+			return response()->json(['status'=>true, 'data'=>$material]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+public function getRepairingAndMaintenance(Request $request){
+ $repairing = RepairingAndMaintenance::where('site_id', $request->site_id)->get();
+	if($repairing){
+			return response()->json(['status'=>true, 'data'=>$repairing]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+}
+
+
+
 }

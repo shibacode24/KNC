@@ -51,7 +51,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <label>Select Role</label>
                             <select class="form-control select" data-live-search="true" name="role" id="role">
                                 @foreach($role as $role)
@@ -60,6 +60,20 @@
                                         {{ $role->role }}
                                     </option>
                                 @endforeach
+                            </select>
+                        </div> --}}
+
+                        <div class="col-md-2">
+                            <label>Select Role</label>
+                            <select class="form-control select" data-live-search="true" name="role" id="role">
+                                <option value="">--Select--</option>
+                                {{-- @foreach($role as $role)
+                                <option value="{{ $role->id }}">{{ $role->role }}</option>
+                                @endforeach --}}
+                                <option value="site-manager">Site Manager</option>
+                                <option value="site-incharge">Site Incharge</option>
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Engineer">Engineer</option>
                             </select>
                         </div>
 

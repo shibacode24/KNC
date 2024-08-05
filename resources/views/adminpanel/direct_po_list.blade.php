@@ -182,7 +182,7 @@
                                     @foreach ($reqMaterial->sortByDesc('created_at')  as $reqMaterial)
                                         <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$reqMaterial->date}}</td>
+                                        <td>{{ \Carbon\Carbon::parse($reqMaterial->date)->format('d-m-Y') }}</td>
                                         <td>{{$reqMaterial->warehouse_name->warehouse_name}}</td>
                                         <td>{{$reqMaterial->material_name->material ?? ''}}</td>
                                         <td>{{$reqMaterial->brand_name->brand ?? ''}}</td>

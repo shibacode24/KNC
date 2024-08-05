@@ -63,7 +63,7 @@ class DashboardController extends Controller
     public function getUsersByRole(Request $request)
     {
         $roleId = $request->get('role_id');
-        $users = User::where('panel_role', $roleId)
+        $users = User::where('role', $roleId)
         ->where('name', '<>', 'admin')->get();
         return response()->json($users);
     }
@@ -822,14 +822,14 @@ public function non_consumable_unit_type_update(Request $request)
 
     public function warehousestore(Request $request)
     {
-        $request->validate([
-            'warehouse_name' => 'required|',
-            'incharge_name' => 'required|',
-            'incharge_contact' => 'required|',
-            'latitude' => 'required|regex:/^-?\d{1,2}(?:\.\d{1,9})?$/',
-            'longitude' => 'required|regex:/^-?\d{1,3}(?:\.\d{1,9})?$/',
-            'city_id' => 'required|',
-        ]);
+        // $request->validate([
+        //     'warehouse_name' => 'required|',
+        //     'incharge_name' => 'required|',
+        //     'incharge_contact' => 'required|',
+        //     'latitude' => 'required|regex:/^-?\d{1,2}(?:\.\d{1,9})?$/',
+        //     'longitude' => 'required|regex:/^-?\d{1,3}(?:\.\d{1,9})?$/',
+        //     'city_id' => 'required|',
+        // ]);
 
         Warehouse::create([
             'warehouse_name' => $request->warehouse_name,
@@ -1779,7 +1779,7 @@ public function non_consumable_unit_type_update(Request $request)
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'engineer';
+        $user->role = 'Engineer';
         $user->save();
 
         $employee = new Engineer();
@@ -1827,7 +1827,7 @@ public function non_consumable_unit_type_update(Request $request)
             $user->name = $request->employee_name;
             $user->email = $request->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'engineer';
+            $user->role = 'Engineer';
             $user->save();
 
             $employee->employee_name = $request->employee_name;
@@ -1882,7 +1882,7 @@ public function non_consumable_unit_type_update(Request $request)
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'site_manager';
+        $user->role = 'site-manager';
         $user->save();
 
 
@@ -1931,7 +1931,7 @@ public function non_consumable_unit_type_update(Request $request)
             $user->name = $request->employee_name;
             $user->email = $request->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'site_manager';
+            $user->role = 'site-manager';
             $user->save();
 
             $employee->user_id = $user->id;
@@ -1986,7 +1986,7 @@ public function non_consumable_unit_type_update(Request $request)
         $user->name = $request->employee_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'site_incharge';
+        $user->role = 'site-incharge';
         $user->save();
 
 
@@ -2035,7 +2035,7 @@ public function non_consumable_unit_type_update(Request $request)
             $user->name = $request->employee_name;
             $user->email = $request->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'site_incharge';
+            $user->role = 'site-incharge';
             $user->save();
 
             $employee->user_id = $user->id;

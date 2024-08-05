@@ -35,6 +35,7 @@
                                                         <th>Brand Name</th>
                                                         <th>Unit Type</th>
                                                         <th>Raw Material</th>
+                                                        <th>Req. Material</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -49,6 +50,7 @@
                                                         <td>{{$order->brand_name->brand ?? null}}</td>
                                                         <td>{{$order->unit_type->unit_type ?? null }}</td>
                                                         <td>{{$order->raw_material_name->raw_material_name ?? null }}</td>
+                                                        <td>{{$order->quantity ?? null }}</td>
                                                         <td>
                                                             <button data-bs-toggle="modal" data-bs-target="#grn-view-modal"
                                                                 style="background-color: #1abc3d; border: none; max-height: 25px; margin-top: -5px; margin-bottom: -5px;"
@@ -75,6 +77,8 @@
                                                         <th>Brand Name</th>
                                                         <th>Unit Type</th>
                                                         <th>Raw Material</th>
+                                                        <th>Req. Material</th>
+
                                                         {{-- <th>Action</th> --}}
                                                     </tr>
                                                 </thead>
@@ -89,6 +93,8 @@
                                                         <td>{{$completeOrder->brand_name->brand ?? null}}</td>
                                                         <td>{{$completeOrder->unit_type->unit_type ?? null }}</td>
                                                         <td>{{$completeOrder->raw_material_name->raw_material_name ?? null }}</td>
+                                                        <td>{{$completeOrder->quantity ?? null }}</td>
+
                                                         {{-- <td>
                                                             <button data-bs-toggle="modal" data-bs-target="#grn-view-modal"
                                                                 style="background-color: #1abc3d; border: none; max-height: 25px; margin-top: -5px; margin-bottom: -5px;"

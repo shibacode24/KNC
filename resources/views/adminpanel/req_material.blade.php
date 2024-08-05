@@ -50,7 +50,7 @@
                                     </thead>
                                     <tbody>
 
-                                        @foreach ($reqMaterial->sortByDesc('created_at') as $index => $material)
+                                        @foreach ($reqMaterial as $index => $material)
 
                                         <tr>
                                             <form action="{{ route('storeOrder') }}" method="POST">

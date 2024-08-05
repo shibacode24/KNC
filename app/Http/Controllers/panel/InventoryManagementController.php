@@ -62,46 +62,60 @@ public function viewservicearea(Request $request)
 }
 
 
-public function viewservicearea_edit(Request $request)
-{
-    // dd($request->id);
-    // Ensure that 'date' and 'site_id' parameters are provided
-    if (!$request->has(['id'])) {
-        return response()->json(['html' => '<p>Invalid request parameters</p>']);
-    }
-
-    // Fetch requested materials based on the date and site ID
-    $appendData = IssueMaterialByInventory::
-                                   where('id', $request->id)
-                                   ->get();
-    $warehouseId = Warehouse::all();
-    $statusId = Status::all();
-    // echo json_encode($appendData);
-// dd($statusId);
-    // Check if no records are found
-    // if ($appendData->isEmpty()) {
-    //     return response()->json(['html' => '<p>No data found</p>', 'status' => 'error', 'message' => 'No data found']);
-    // }
-
-    $render_view = view('adminpanel.site_material_edit_view', compact('appendData', 'warehouseId', 'statusId'))->render();
-    return response()->json(['html' => $render_view, 'status' => 'success', 'message' => 'Data loaded successfully']);
-}
 
 
 // In your controller
 public function getAvailableMaterial(Request $request)
 {
-    $warehouseId = $request->warehouse_id;
+    // $warehouseId = $request->warehouse_id;
+
+    // // Fetch available material based on the warehouse_id
+    // $availableMaterial = AvailableMaterial::where('warehouse_id', $warehouseId)->first();
+
+    // if ($availableMaterial) {
+    //     return response()->json(['available_material' => $availableMaterial->available_quantity]);
+    // } else {
+    //     return response()->json(['available_material' => 0]);
+    // }
+
+    // dd($request->all());
+    $warehouseId = $request->warehouse;
+    $materialId = $request->material;
+    $brandId = $request->brand;
+    $rawmaterialId = $request->rawmaterial;
 
     // Fetch available material based on the warehouse_id
-    $availableMaterial = AvailableMaterial::where('warehouse_id', $warehouseId)->first();
-
+    $availableMaterial = AvailableMaterial::where('warehouse_id', $warehouseId)
+    ->where('material_id', $materialId)
+    ->where('brand_id', $brandId)
+    ->orwhere('raw_material_id', $rawmaterialId)
+    ->where('type','Consumable')
+    ->first();
+// echo json_encode($availableMaterial);
+// echo json_encode($warehouseId);
+// echo json_encode($materialId);
+// echo json_encode($brandId);
+// exit();
     if ($availableMaterial) {
         return response()->json(['available_material' => $availableMaterial->available_quantity]);
     } else {
         return response()->json(['available_material' => 0]);
     }
 }
+
+// public function getAvailableMaterial(Request $request)
+// {
+//     $warehouseId = $request->warehouse_id;
+
+//     // Fetch available material based on the warehouse_id
+//     $availableMaterial = AvailableMaterial::where('warehouse_id', $warehouseId)->first();
+
+//     if ($availableMaterial) {
+//         return response()->json(['available_material' => $availableMaterial->available_quantity]);
+//     } else {
+//         return response()->json(['available_material' => 0]);
+//     }
+// }
 
 
 public function addIssuedMaterial(Request $request)
@@ -152,6 +166,32 @@ public function addIssuedMaterial(Request $request)
     return redirect()->route('site_material')->with('success', 'Requests added successfully!');
 }
 
+
+
+public function viewservicearea_edit(Request $request)
+{
+    // dd($request->id);
+    // Ensure that 'date' and 'site_id' parameters are provided
+    if (!$request->has(['id'])) {
+        return response()->json(['html' => '<p>Invalid request parameters</p>']);
+    }
+
+    // Fetch requested materials based on the date and site ID
+    $appendData = IssueMaterialByInventory::with('unit_type')->
+                                   where('id', $request->id)
+                                   ->get();
+    $warehouseId = Warehouse::all();
+    $statusId = Status::all();
+    // echo json_encode($appendData);
+// dd($statusId);
+    // Check if no records are found
+    // if ($appendData->isEmpty()) {
+    //     return response()->json(['html' => '<p>No data found</p>', 'status' => 'error', 'message' => 'No data found']);
+    // }
+
+    $render_view = view('adminpanel.site_material_edit_view', compact('appendData', 'warehouseId', 'statusId'))->render();
+    return response()->json(['html' => $render_view, 'status' => 'success', 'message' => 'Data loaded successfully']);
+}
 
 
 public function update_site_material(Request $request)

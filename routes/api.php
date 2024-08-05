@@ -59,6 +59,8 @@ Route::post('postAssignedTask', [ApiController::class, 'postAssignedTask']);
 
 Route::get('getAssignedTask', [ApiController::class, 'getAssignedTask']);
 
+Route::post('postCompleteAssignedTask', [ApiController::class, 'postCompleteAssignedTask']);
+
 Route::get('getAllIssues', [ApiController::class, 'getAllIssues']);
 
 Route::post('postAssignedTaskIssues', [ApiController::class, 'postAssignedTaskIssues']);
@@ -90,3 +92,22 @@ Route::post('postWorkplace', [ApiController::class, 'postWorkplace']);
 
 Route::get('getWorkplace', [ApiController::class, 'getWorkplace']);
 
+Route::post('postTransferWorkplaceMaterial', [ApiController::class, 'postTransferWorkplaceMaterial']);
+
+Route::get('getTransferWorkplaceMaterial', [ApiController::class, 'getTransferWorkplaceMaterial']);
+
+Route::get('getNonConsumableCategories', [ApiController::class, 'getNonConsumableCategories']);
+
+Route::get('getNonConsumableCategoryMaterial', [ApiController::class, 'getNonConsumableCategoryMaterial']);
+
+Route::post('postMaterialConsumed', [ApiController::class, 'postMaterialConsumed']);
+
+Route::get('getMaterialConsumed', [ApiController::class, 'getMaterialConsumed']);
+
+Route::get('getAllWarehouse', [ApiController::class, 'getAllWarehouse']);
+
+Route::post('postRepairingAndMaintenance', [ApiController::class, 'postRepairingAndMaintenance']);
+
+Route::get('getRepairingAndMaintenance', [ApiController::class, 'getRepairingAndMaintenance']);
+
+Route::post('updateAssignedTaskWeightage', [ApiController::class, 'updateAssignedTaskWeightage']);

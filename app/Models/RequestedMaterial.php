@@ -11,6 +11,7 @@ class RequestedMaterial extends Model
     protected $table = 'requested_material';
     protected $fillable = [
         'site_id',
+        'supervisor_id',
         'material_id',
         'material_type',
         'raw_material_id',
@@ -26,7 +27,6 @@ class RequestedMaterial extends Model
     public function site_name(){
 
         return $this->hasOne(Site::class, 'id', 'site_id');
-
     }
 
     public function supervisor_name(){
