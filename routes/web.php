@@ -274,7 +274,7 @@ Route::get('/viewDirectGrnIn', [WarehouseController::class, 'viewDirectGrnIn'])-
 Route::post('direct-grn-in-store', [WarehouseController::class, 'directGrnInStore'])->name('direct-grn-in-store');
 
 // Direct GRN Out
-// Route::get('/direct-grn-out', [WarehouseController::class, 'issue_material'])->name('issue_material');
+Route::get('/direct-grn-out', [WarehouseController::class, 'directGrnOut'])->name('direct-grn-out');
 // Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
 
 

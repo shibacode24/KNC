@@ -22,6 +22,9 @@ use App\Models\Warehouse\IssueMaterialByWareHouse;
 
 class WarehouseController extends Controller
 {
+
+
+    // GRN
     public function grn(Request $request)
 {
     // Get orders that are pending and not yet included in GRN
@@ -159,6 +162,55 @@ public function viewgrn(Request $request)
         return redirect()->route('grn')->with('success', 'GRN added successfully!');
     }
 }
+
+
+
+
+
+// Direct GRN IN
+
+
+public function direct_grn_in(Request $request)
+{
+    // Get orders that are pending and not yet included in GRN
+
+        $directOrder = MaterialRequestList::where('status', 'Pending')
+        ->whereNull('add_material_id')
+        ->whereNotIn('id', function($query) {
+            $query->select('material_req_list_id')->from('grn');
+        })->get();
+
+       $directCompleteOrder = MaterialRequestList::where('status', 'Completed')
+       ->whereNull('add_material_id')
+       ->get();
+
+
+        // dd($completeOrder);
+    $vendor = Vendor::all();
+    $brand = Brand::all();
+    $material = Material::all();
+    $unit = UnitType::all();
+    $rawmaterial = RawMaterial::all();
+    $warehouse = Warehouse::all();
+
+    return view('adminpanel.direct_grn_in', compact('vendor', 'brand', 'material', 'unit', 'directOrder',
+    'directCompleteOrder', 'rawmaterial', 'warehouse'));
+}
+
+
+public function viewDirectGrnIn(Request $request)
+{
+
+    $materialReqListId = $request->input('entry_id'); // Use 'entry_id' instead of 'id' if that's what you're passing from the AJAX call
+
+    $warehouse = Warehouse::all();
+    $render_view = view('adminpanel.direct_grn_in_view', compact('warehouse', 'materialReqListId'))->render();
+    return response()->json(['html' => $render_view, 'status' => 'success', 'message' => 'Data loaded successfully']);
+}
+
+
+
+// GRN Out
     public function issue_material(Request $request)
     {
         $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')->get();
@@ -248,47 +300,20 @@ public function addIssuedMaterialByWarehouse(Request $request)
     return redirect()->route('issue_material')->with('success', 'Materials updated successfully!');
 }
 
-// Direct GRN IN
 
+// Direct GRN Out
 
-public function direct_grn_in(Request $request)
+public function directGrnOut(Request $request)
 {
-    // Get orders that are pending and not yet included in GRN
+   // $issueMaterial = IssueMaterialByInventory::where('issue_type', 'Direct Issue')->get();
+    $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')
+    ->where('material_type', 'Consumable')->get();
 
-        $directOrder = MaterialRequestList::where('status', 'Pending')
-        ->whereNull('add_material_id')
-        ->whereNotIn('id', function($query) {
-            $query->select('material_req_list_id')->from('grn');
-        })->get();
+    $statusID = Status::all();
+    $existingMaterials = IssueMaterialByWarehouse::all()->keyBy('issue_material_by_inventory_id');
 
-       $directCompleteOrder = MaterialRequestList::where('status', 'Completed')
-       ->whereNull('add_material_id')
-       ->get();
-
-
-        // dd($completeOrder);
-    $vendor = Vendor::all();
-    $brand = Brand::all();
-    $material = Material::all();
-    $unit = UnitType::all();
-    $rawmaterial = RawMaterial::all();
-    $warehouse = Warehouse::all();
-
-    return view('adminpanel.direct_grn_in', compact('vendor', 'brand', 'material', 'unit', 'directOrder',
-    'directCompleteOrder', 'rawmaterial', 'warehouse'));
+    return view('adminpanel.direct_grn_out', compact('directIssueMaterial', 'statusID', 'existingMaterials'));
 }
-
-
-public function viewDirectGrnIn(Request $request)
-{
-
-    $materialReqListId = $request->input('entry_id'); // Use 'entry_id' instead of 'id' if that's what you're passing from the AJAX call
-
-    $warehouse = Warehouse::all();
-    $render_view = view('adminpanel.direct_grn_in_view', compact('warehouse', 'materialReqListId'))->render();
-    return response()->json(['html' => $render_view, 'status' => 'success', 'message' => 'Data loaded successfully']);
-}
-
 
 
 }
