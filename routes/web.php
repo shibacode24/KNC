@@ -7,6 +7,7 @@ use App\Http\Controllers\panel\UserRolesController;
 use App\Http\Controllers\panel\WarehouseController;
 use App\Http\Controllers\panel\InventoryManagementController;
 use App\Http\Controllers\panel\AccountDepartmentController;
+use App\Http\Controllers\panel\MapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -259,6 +260,11 @@ Route::get('/grn', [WarehouseController::class, 'grn'])->name('grn');
 Route::post('grn-store', [WarehouseController::class, 'grnStore'])->name('grn-store');
 Route::post('/add-issued-material-by-warehouse', [WarehouseController::class, 'addIssuedMaterialByWarehouse'])->name('add-issued-material-by-warehouse');
 
+Route::get('non_consumable_grn', [WarehouseController::class, 'non_consumable_grn'])->name('non_consumable_grn');
+Route::post('non-consumable-grn-store', [WarehouseController::class, 'non_consumable_grnStore'])->name('non-consumable-grn-store');
+Route::get('non_consumable_viewgrn', [WarehouseController::class, 'non_consumable_viewgrn'])->name('non_consumable_viewgrn');
+Route::get('non_consumable_direct_grn_in', [WarehouseController::class, 'non_consumable_direct_grn_in'])->name('non_consumable_direct_grn_in');
+
 // GRN Out
 Route::get('/issue-material', [WarehouseController::class, 'issue_material'])->name('issue_material');
 Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
@@ -356,3 +362,4 @@ Route::get('income-billing', [AccountDepartmentController::class, 'incomeBilling
 Route::get('expense-entry', [AccountDepartmentController::class, 'expenseEntry']);
 
 
+Route::get('map', [MapController::class, 'showMap'])->name('map');

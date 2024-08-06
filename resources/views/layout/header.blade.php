@@ -584,15 +584,15 @@
 
 
                             <li>
-                                <a href="#" title="GRN In"><span class="fa fa-exchange"> </span>Direct GRN In</a>
+                                <a href="#" title="GRN In"><span class="fa fa-exchange"> </span>GRN In</a>
                                 <ul>
                             @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href=""><span class="fa fa-plus"></span>GRN In</a>
+                                <li><a href="{{route('non_consumable_grn')}}"><span class="fa fa-plus"></span>GRN In</a>
                                 </li>
                             @endif
 
                             @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                            <li><a href=""><span class="fa fa-plus"></span>Direct GRN In</a>
+                            <li><a href="{{route('non_consumable_direct_grn_in')}}"><span class="fa fa-plus"></span>Direct GRN In</a>
                             </li>
                         @endif
                                 </ul>
@@ -665,7 +665,9 @@
                     </li>
                 @endif
 
-
+                <li>
+                    <a href="{{route('map')}}" target="_blank" title="Account Department"><span class="fa fa-map-marker"> </span>Track Location</a>
+                </li>
                 @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
 
                     <li>
