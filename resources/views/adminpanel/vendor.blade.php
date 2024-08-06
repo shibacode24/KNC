@@ -198,11 +198,11 @@
 
                                         <td>
 
-                                            <button
+                                            {{-- <button
                                                 style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                 type="button" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Edit"><i class="fa fa-edit"
-                                                    style="margin-left:5px;"></i></button>
+                                                    style="margin-left:5px;"></i></button> --}}
 
                                                     {{-- <a href="{{ route('vendor-destroy', $vendor->id) }}"><button
                                                         style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
@@ -211,6 +211,14 @@
                                                         onclick="confirmDelete({{ $vendor->id }})"><i
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a> --}}
+
+                                                <a href="{{ route('vendor-edit', ['id' => $vendor->id]) }}">    <button
+                                                    style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                    type="button" class="btn btn-info" data-toggle="tooltip"
+                                                    data-placement="top" title="Edit"><i class="fa fa-edit"
+                                                        style="margin-left:5px;"></i></button>
+
+                                            </a>
 
                                                 @if($vendor->vendorn)
                                                 {{-- <a href="{{ route('vendor-edit', $vendor->vendorn->id) }}">

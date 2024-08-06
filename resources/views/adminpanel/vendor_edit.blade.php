@@ -25,33 +25,33 @@
                     {{ session('success') }}
                 </div>
                 @endif
-                <form action="{{ route('vendor.store') }}" method="post">
+                <form action="{{ route('vendor.update') }}" method="post">
                     @csrf
                     <div class="col-md-12" style="margin-top:10px;">
 
-                        <!-- <div class="col-md-4"></div>
-                                            -->
+                        <input type="hidden" name="id" value="{{$vendor_edit->id}}">
+
                         <div class="col-md-2">
                             <label class="control-label">Name<font color="#FF0000">*</font></label>
 
-                            <input type="text" class="form-control" name="vendor_name" placeholder="" />
+                            <input type="text" class="form-control" name="vendor_name" placeholder=""  value="{{$vendor_edit->vendor_name}}" />
                         </div>
                         <div class="col-md-2">
                             <label class="control-label">Email<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" name="email" placeholder="" />
+                            <input type="text" class="form-control" name="email" placeholder=""  value="{{$vendor_edit->email}}" />
                         </div>
                         <div class="col-md-2">
                             <label class="control-label">Mobile Number<font color="#FF0000">*</font></label>
-                            <input type="number" class="form-control" name="mobile_number" placeholder="" />
+                            <input type="number" class="form-control" name="mobile_number" placeholder=""  value="{{$vendor_edit->mobile_number}}" />
                         </div>
 
                         <div class="col-md-2">
                             <label class="control-label">Aadhar Number<font color="#FF0000">*</font></label>
-                            <input type="number" class="form-control" name="aadhar_number" placeholder="" />
+                            <input type="number" class="form-control" name="aadhar_number" placeholder=""  value="{{$vendor_edit->aadhar_number}}" />
                         </div>
                         <div class="col-md-2">
                             <label class="control-label">PAN Number<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" name="pan_number" placeholder="" />
+                            <input type="text" class="form-control" name="pan_number" placeholder=""  value="{{$vendor_edit->pan_number}}" />
                         </div>
                         <div class="col-md-2">
                             <label>City</label>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="col-md-2" style="margin-top: 5px;">
                             <label class="control-label">Address<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" name="city_address" placeholder="" />
+                            <input type="text" class="form-control" name="city_address" placeholder="" value="{{$vendor_edit->city_address}}"  />
                         </div>
                         <div class="col-md-2" style="margin-top: 5px;">
                             <label>Select Brand</label>
@@ -122,7 +122,30 @@
 
                                 <tbody class="add_more_purchase">
 
+                                    @foreach ($acc_details_edit as $acc_details_edits)
+                                    <tr>
+                                        <td>
+                                            <input type="text" style="border:none; width: 100%;"
+                                        name="name[]"  value="{{$acc_details_edits->account_holder}}">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="bank[]"
+                                                style="border:none; width: 100%;" value="{{$acc_details_edits->bank_name}}">
+                                        </td>
+                                        <td>
+                                            <input type="text"  style="border:none; width: 100%;"
+                                            name="ac_n[]" value="{{$acc_details_edits->account_number}}">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="ifsc[]"
+                                                style="border:none; width: 100%;" value="{{$acc_details_edits->ifsc_code}}">
+                                        </td>
 
+                                     <td style="text-align:center; color:#FF0000">
+                                            <button type="button" class="acc_delete" id="{{$acc_details_edits->id}}"><i class="fa fa-trash-o"></i></button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
 
                                 </tbody>
                             </table>
@@ -157,67 +180,6 @@
                         <!-- START DEFAULT DATATABLE -->
 
                         <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                        <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
-                            <table class="table datatable">
-                                <thead>
-                                    <tr>
-                                        <th>Sr. No.</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Mobile Number</th>
-                                        {{-- <th>WhatsApp Number</th> --}}
-                                        <th>Aadhar Number</th>
-                                        <th>PAN Number</th>
-                                        <th>Address</th>
-                                        <th>Brand</th>
-                                        <th>Material</th>
-                                        <th>Account Holder Name</th>
-                                        <th>Bank Name</th>
-                                        <th>Account Number</th>
-                                        <th>IFSC</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($ac as $index => $vendor)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $vendor->vendorn->vendor_name}}</td>
-                                        <td>{{ $vendor->vendorn->email }}</td>
-                                        <td>{{ $vendor->vendorn->mobile_number }}</td>
-                                        {{-- <td>{{ $vendor->vendor->whatsapp_number }}</td> --}}
-                                        <td>{{ $vendor->vendorn->aadhar_number }}</td>
-                                        <td>{{ $vendor->vendorn->pan_number }}</td>
-                                        <td>{{ $vendor->vendorn->cityname->city }}</td>
-                                        <td>{{ $vendor->vendorn->brandname->brand }}</td>
-                                        <td>{{ $vendor->vendorn->materialname->material }}</td>
-                                        <td>{{ $vendor->account_holder }}</td>
-                                        <td>{{ $vendor->bank_name }}</td>
-                                        <td>{{ $vendor->account_number }}</td>
-                                        <td>{{ $vendor->ifsc_code }}</td>
-
-                                        <td>
-
-                                            <button
-                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                type="button" class="btn btn-info" data-toggle="tooltip"
-                                                data-placement="top" title="Edit"><i class="fa fa-edit"
-                                                    style="margin-left:5px;"></i></button>
-
-                                                    <a href="{{ route('vendor-destroy', $vendor->id) }}"><button
-                                                        style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                        type="button" class="btn btn-info" data-toggle="tooltip"
-                                                        data-placement="top" title="Delete"
-                                                        onclick="confirmDelete({{ $vendor->id }})"><i
-                                                            class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                        </div>
 
                         <!-- END DEFAULT DATATABLE -->
 
