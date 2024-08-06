@@ -1048,25 +1048,82 @@ public function non_consumable_unit_type_update(Request $request)
     }
 
 
-    public function vendorEdit($id){
+    public function vendorEdit(Request $request, $id)
+    {
+        $acc_details_edit = AccountDetails::where('vendor_id', $request->id)->get();
+        $vendor_edit = Vendor::where('id',$request->id)->first();
+// echo json_encode($acc_details_edit);
+// echo json_encode($employee_edit);
+// exit();
+        $city = City::all();
+        $brand = Brand::all();
+        $material = Material::all();
 
-        $assignSiteAll = AssignSite::all();
-        $assignSiteEdit = AssignSite::find($id);
-        $site = Site::all();
-        $supervisor = supervisor::all();
-        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+        return view('adminpanel.vendor_edit', compact('vendor_edit', 'city','acc_details_edit', 'material', 'brand'));
     }
+
+
+    // public function delete_acc_details(Request $request)
+    //     {
+    //     $response = AccountDetails::where('id', $request->id)->delete();
+    //         return response()->json($response);
+    //     }
 
     public function vendorUpdate(Request $request)
     {
-        $assignSite = AssignSite::find($request->id);
-        $assignSite->date = $request->date;
-        $assignSite->supervisor = $request->supervisor_id;
-        $assignSite->site_assign = $request->site_id;
-        $assignSite->save();
+        //  dd($request->all());
+        $request->validate([
+            'employee_name' => 'required',
+            'email' => 'required|',
+            'mobile_number' => 'required|',
+            'aadhar_number' => 'required|',
+            'pan_number' => 'required',
+            'city_address' => 'required',
+            'city_id' => 'required',
+            'brand_id' => 'required',
+            'material_id' => 'required',
+
+        ]);
+
+        $vendor = Vendor::where('id',$request->id)->first();
 
 
-        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+        // $user = User:: where('email',$employee->email)->first();
+        // $user->name = $request->vendor_name;
+        // $user->email = $request->email;
+        // $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
+        // $user->role = 'Employee';
+        // $user->save();
+
+        // $employee = new Employee();
+
+        $vendor->vendor_name = $request->vendor_name;
+        $vendor->email = $request->email;
+        $vendor->mobile_number = $request->mobile_number;
+        $vendor->aadhar_number = $request->aadhar_number;
+        $vendor->pan_number = $request->pan_number;
+        $vendor->city_address = $request->city_address;
+        $vendor->city_id = $request->city_id;
+        $vendor->brand = $request->brand_id;
+        $vendor->materials = $request->material_id;
+
+        $vendor->save();
+
+        $delete = AccountDetails::where('vendor_id',$vendor->id)->delete();
+
+        for($i=0;$i<count($request->name); $i++){
+            if (isset($request->name[$i])){
+            $account_details = new AccountDetails();
+            $account_details->account_holder = $request->name[$i];
+            $account_details->vendor_id = $vendor->id;
+            $account_details->bank_name = $request->bank[$i];
+            $account_details->account_number = $request->ac_n[$i];
+            $account_details->ifsc_code = $request->ifsc[$i];
+            $account_details->save();
+        }
+    }
+
+        return redirect()->route('vendor')->with('success', 'Vendor and Account Details Added Successfully');
     }
 
 
@@ -1318,31 +1375,6 @@ public function non_consumable_unit_type_update(Request $request)
             return redirect()->route('employee')->with('error', 'employee not found');
         }
     }
-
-
-
-
-    public function employeeEdit($id){
-
-        $assignSiteAll = AssignSite::all();
-        $assignSiteEdit = AssignSite::find($id);
-        $site = Site::all();
-        $supervisor = supervisor::all();
-        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
-    }
-
-    public function employeeUpdate(Request $request)
-    {
-        $assignSite = AssignSite::find($request->id);
-        $assignSite->date = $request->date;
-        $assignSite->supervisor = $request->supervisor_id;
-        $assignSite->site_assign = $request->site_id;
-        $assignSite->save();
-
-
-        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
-    }
-
 
 
     public function status(){

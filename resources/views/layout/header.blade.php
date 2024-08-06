@@ -567,8 +567,8 @@
                             @endif
 
 
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href=""><span class="fa fa-plus"></span>Direct GRN
+                            @if (Auth::user()->panel_role == 1 || in_array('direct-grn-out', $permission))
+                                <li><a href="{{route('direct-grn-out')}}"><span class="fa fa-plus"></span>Direct GRN
                                         Out</a></li>
                             @endif
                                 </ul>

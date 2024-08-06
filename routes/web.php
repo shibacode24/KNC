@@ -117,8 +117,8 @@ Route::post('contractor-update', [DashboardController::class, 'contractorUpdate'
 
 Route::get('/vendors', [DashboardController::class, 'vendor'])->name('vendor');
 Route::get('vendor-destroy/{id}', [DashboardController::class, 'vendorDestroy'])->name('vendor-destroy');
-Route::get('vendors-edit/{id}', [DashboardController::class, 'vendorsEdit'])->name('vendors-edit');
-Route::post('vendors-update', [DashboardController::class, 'vendorsUpdate'])->name('vendors-update');
+Route::get('vendor-edit/{id}', [DashboardController::class, 'vendorEdit'])->name('vendor-edit');
+Route::post('vendors-update', [DashboardController::class, 'vendorsUpdate'])->name('vendor.update');
 
 Route::get('/supervisor', [DashboardController::class, 'supervisor'])->name('supervisor');
 Route::get('supervisor-destroy/{id}', [DashboardController::class, 'supervisorDestroy'])->name('supervisor-destroy');
@@ -280,7 +280,7 @@ Route::get('/viewDirectGrnIn', [WarehouseController::class, 'viewDirectGrnIn'])-
 Route::post('direct-grn-in-store', [WarehouseController::class, 'directGrnInStore'])->name('direct-grn-in-store');
 
 // Direct GRN Out
-// Route::get('/direct-grn-out', [WarehouseController::class, 'issue_material'])->name('issue_material');
+Route::get('/direct-grn-out', [WarehouseController::class, 'directGrnOut'])->name('direct-grn-out');
 // Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
 
 

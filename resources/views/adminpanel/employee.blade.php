@@ -200,11 +200,11 @@
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a> --}}
 
-                                              
+
                                                 <a href="{{ route('employee-destroy', $employee->id) }}" onclick="return confirm('Are you sure you want to delete this Employee?')">
                                                     <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a>
-                                               
+
                                         </td>
                                     </tr>
 
