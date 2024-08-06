@@ -30,24 +30,27 @@ class WarehouseController extends Controller
     // Get orders that are pending and not yet included in GRN
     $order = MaterialRequestList::where('status', 'Pending')
         ->whereNotNull('add_material_id')
+        ->where('type', 'consumable')
         ->whereNotIn('id', function($query) {
             $query->select('material_req_list_id')->from('grn');
         })->get();
 
-        $directOrder = MaterialRequestList::where('status', 'Pending')
-        ->whereNull('add_material_id')
-        ->whereNotIn('id', function($query) {
-            $query->select('material_req_list_id')->from('grn');
-        })->get();
+        // $directOrder = MaterialRequestList::where('status', 'Pending')
+        // ->whereNull('add_material_id')
+        // ->where('type', 'Consumable')
+        // ->whereNotIn('id', function($query) {
+        //     $query->select('material_req_list_id')->from('grn');
+        // })->get();
 
     // Get orders that are completed and not yet included in GRN
     $completeOrder = MaterialRequestList::where('status', 'Completed')
+    ->where('type', 'Consumable')
     ->whereNotNull('add_material_id')
-       ->get();
+    ->get();
 
-       $directCompleteOrder = MaterialRequestList::where('status', 'Completed')
-       ->whereNull('add_material_id')
-          ->get();
+    //    $directCompleteOrder = MaterialRequestList::where('status', 'Completed')
+    //    ->whereNull('add_material_id')
+    //       ->get();
 
 
         // dd($completeOrder);
@@ -58,8 +61,8 @@ class WarehouseController extends Controller
     $rawmaterial = RawMaterial::all();
     $warehouse = Warehouse::all();
 
-    return view('adminpanel.grn', compact('vendor', 'brand', 'material', 'unit', 'order', 'directOrder', 'completeOrder',
-    'directCompleteOrder', 'rawmaterial', 'warehouse'));
+    return view('adminpanel.grn', compact('vendor', 'brand', 'material', 'unit', 'order', 'completeOrder',
+    'rawmaterial', 'warehouse'));
 }
 
 
@@ -85,7 +88,7 @@ public function viewgrn(Request $request)
         $grn->material_req_list_id = $request->material_req_list_id;
         $grn->received_date = $request->received_date;
         $grn->received_time = $request->received_time;
-        $grn->warehouse_id = $request->received_location;
+        // $grn->warehouse_id = $request->received_location;
         $grn->received_quantity = $request->received_quantity;
         $grn->received_by = $request->received_by;
         $grn->add_material_id = $materialRequest->add_material_id; // Store the add_material_id
@@ -176,12 +179,15 @@ public function direct_grn_in(Request $request)
 
         $directOrder = MaterialRequestList::where('status', 'Pending')
         ->whereNull('add_material_id')
+        ->where('type','Consumable')
         ->whereNotIn('id', function($query) {
             $query->select('material_req_list_id')->from('grn');
-        })->get();
+        })
+        ->get();
 
        $directCompleteOrder = MaterialRequestList::where('status', 'Completed')
        ->whereNull('add_material_id')
+       ->where('type','Consumable')
        ->get();
 
 
@@ -213,52 +219,24 @@ public function viewDirectGrnIn(Request $request)
 // GRN Out
     public function issue_material(Request $request)
     {
-        $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')->get();
-        $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')->get();
+        $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')
+        ->where('material_type', 'Consumable')
+        ->get();
+        // $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')->get();
 
         $statusID = Status::all();
         $existingMaterials = IssueMaterialByWarehouse::all()->keyBy('issue_material_by_inventory_id');
 
-        return view('adminpanel.issue_material', compact('issueMaterial', 'directIssueMaterial', 'statusID', 'existingMaterials'));
+        return view('adminpanel.issue_material', compact('issueMaterial', 'statusID', 'existingMaterials'));
     }
 
-    public function addIssuedMaterialByWarehouse2(Request $request)
-{
-    $remarks = $request->input('remarks' ?? '');
-    $statuses = $request->input('status');
 
-    foreach ($remarks as $id => $remark) {
-          // Check if the record already exists
-          $existingRecord = IssueMaterialByWarehouse::where('issue_material_by_inventory_id', $id)->first();
-
-            if ($existingRecord) {
-                // Update existing record
-                $existingRecord->update([
-                    'remark' => $remark,
-                    // 'status_id' => $statuses[$id],
-                ]);
-            } else {
-                // Create new record
-                IssueMaterialByWarehouse::create([
-                    'issue_material_by_inventory_id' => $id,
-                    'remark' => $remark,
-                    'status_id' => $statuses[$id],
-                ]);
-            }
-              // Update the corresponding IssueMaterialByInventory record
-        $inventoryRecord = IssueMaterialByInventory::find($id);
-        if ($inventoryRecord) {
-            $inventoryRecord->update(['inventory_status' => $statuses[$id]]);
-        }
-        }
-
-    return redirect()->route('issue_material')->with('success', 'Materials updated successfully!');
-}
 
 public function addIssuedMaterialByWarehouse(Request $request)
 {
     $remarks = $request->input('remarks', []);
     $statuses = $request->input('status', []);
+    $redirectRoute = 'issue_material'; // Default redirect route
 
     foreach ($remarks as $id => $remark) {
         $status = $statuses[$id] ?? null; // Get the corresponding status for the current material ID
@@ -293,11 +271,16 @@ public function addIssuedMaterialByWarehouse(Request $request)
                     'app_status' =>6,
 
             ]);
+
+              // Check the issue_type and set the redirect route
+              if ($inventoryRecord->issue_type === 'Direct Issue') {
+                $redirectRoute = 'direct-grn-out';
+            }
             }
         }
     }
 
-    return redirect()->route('issue_material')->with('success', 'Materials updated successfully!');
+    return redirect()->route($redirectRoute)->with('success', 'Materials updated successfully!');
 }
 
 

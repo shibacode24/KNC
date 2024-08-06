@@ -116,8 +116,8 @@ Route::post('contractor-update', [DashboardController::class, 'contractorUpdate'
 
 Route::get('/vendors', [DashboardController::class, 'vendor'])->name('vendor');
 Route::get('vendor-destroy/{id}', [DashboardController::class, 'vendorDestroy'])->name('vendor-destroy');
-Route::get('vendors-edit/{id}', [DashboardController::class, 'vendorsEdit'])->name('vendors-edit');
-Route::post('vendors-update', [DashboardController::class, 'vendorsUpdate'])->name('vendors-update');
+Route::get('vendor-edit/{id}', [DashboardController::class, 'vendorEdit'])->name('vendor-edit');
+Route::post('vendors-update', [DashboardController::class, 'vendorsUpdate'])->name('vendor.update');
 
 Route::get('/supervisor', [DashboardController::class, 'supervisor'])->name('supervisor');
 Route::get('supervisor-destroy/{id}', [DashboardController::class, 'supervisorDestroy'])->name('supervisor-destroy');

@@ -119,7 +119,7 @@
                                             <td>
                                                 <input type="text" name="bank[]"
                                                     style="border:none; width: 100%;" value="{{$acc_details_edits->bank_name}}">
-                                            </td> 
+                                            </td>
                                             <td>
                                                 <input type="text"  style="border:none; width: 100%;"
                                                 name="ac_n[]" value="{{$acc_details_edits->account_number}}">
@@ -129,7 +129,7 @@
                                                     style="border:none; width: 100%;" value="{{$acc_details_edits->ifsc_code}}">
                                             </td>
 
-                                            {{-- <a href="{{route('delete_acc_details',$acc_details_edits->id)}}"> 
+                                            {{-- <a href="{{route('delete_acc_details',$acc_details_edits->id)}}">
                                                 <td style="text-align:center; color:#FF0000">
                                                    <button type="submit"><i class="fa fa-trash-o"></i></button>
                                                </td>
@@ -140,8 +140,8 @@
                                                 <button type="button" class="acc_delete" id="{{$acc_details_edits->id}}"><i class="fa fa-trash-o"></i></button>
                                             </td>
                                         {{-- </a> --}}
-                                        </tr> 
-                                        @endforeach  
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -243,7 +243,7 @@
                 $(this).parents("tr").remove();
             });
 
-           
+
 
         });
 
@@ -251,13 +251,13 @@
   <script>
     $(document).ready(function() {
         $('.acc_delete').click(function(e) {
-       
+
             var id = $(this).attr('id'); // Get the id of the clicked element
             console.log(id);
-            
+
             if (confirm('Are you sure you want to delete this record?')) {
                 $.ajax({
-                    url: '{{ route('delete_acc_details') }}', 
+                    url: '{{ route('delete_acc_details') }}',
                     type: 'POST',
                     data: {
                         id: id,
@@ -276,5 +276,5 @@
         });
     });
     </script>
-    
+
 @stop
