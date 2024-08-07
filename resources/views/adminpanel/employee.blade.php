@@ -159,6 +159,7 @@
                                         <th>PAN Number</th>
                                         <th>City</th>
                                         <th>Address</th>
+                                        <th>Status</th>
                                         {{-- <th>Account Holder Name</th>
                                         <th>Bank Name</th>
                                         <th>Account Number</th>
@@ -178,15 +179,25 @@
                                         <td>{{ $employee->pan_number }}</td>
                                         <td>{{ $employee->cityname->city ?? ''}}</td>
                                         <td>{{ $employee->city_address }}</td>
-                                        {{-- <td>{{ $employee->account_holder }}</td>
-                                        <td>{{ $employee->bank_name }}</td>
-                                        <td>{{ $employee->account_number }}</td>
-                                        <td>{{ $employee->ifsc_code }}</td> --}}
+                                        <td style="background-color: #ffffff;">
+                                            <div class="d-flex align-items-center">
 
-                                        <td>
+                                                       <?php if ($employee->status=='1'){?>
+
+                                                        <a href="{{url('/update_employee_status', $employee->id)}}"
+                                                            class="btn btn-success"> Active</a>
+
+                                                            <?php } else {?>
+                                                            <a href="{{url('/update_employee_status', $employee->id)}}"
+                                                                class="btn btn-danger">Inactive</a>
+                                                                <?php
+                                                        }?>
+                                                        </td>
+
+                                        <td >
 
                                         <a href="{{route('edit_employee',$employee->id)}}">    <button
-                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:px; margin-bottom:-5px;"
                                                 type="button" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Edit"><i class="fa fa-edit"
                                                     style="margin-left:5px;"></i></button>
@@ -201,9 +212,9 @@
                                                 </a> --}}
 
 
-                                                <a href="{{ route('employee-destroy', $employee->id) }}" onclick="return confirm('Are you sure you want to delete this Employee?')">
+                                                {{-- <a href="{{ route('employee-destroy', $employee->id) }}" onclick="return confirm('Are you sure you want to delete this Employee?')">
                                                     <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
+                                                </a> --}}
 
                                         </td>
                                     </tr>

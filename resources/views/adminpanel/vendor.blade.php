@@ -20,11 +20,27 @@
 
                     </div>
                 </div>
-                @if(session('success'))
+                @if ($errors->any())
+                <div class="alert alert-danger mt-2">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
-                @endif
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
                 <form action="{{ route('vendor.store') }}" method="post">
                     @csrf
                     <div class="col-md-12" style="margin-top:10px;">
@@ -168,33 +184,51 @@
                                         {{-- <th>WhatsApp Number</th> --}}
                                         <th>Aadhar Number</th>
                                         <th>PAN Number</th>
+                                        <th>City</th>
                                         <th>Address</th>
                                         <th>Brand</th>
                                         <th>Material</th>
-                                        <th>Account Holder Name</th>
+                                        <th>Status</th>
+                                        {{-- <th>Account Holder Name</th>
                                         <th>Bank Name</th>
                                         <th>Account Number</th>
-                                        <th>IFSC</th>
+                                        <th>IFSC</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($ac as $index => $vendor)
+                                    @foreach($vendor as $index => $vendor)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $vendor->vendorn->vendor_name}}</td>
-                                        <td>{{ $vendor->vendorn->email }}</td>
-                                        <td>{{ $vendor->vendorn->mobile_number }}</td>
+                                        <td>{{ $vendor->vendor_name}}</td>
+                                        <td>{{ $vendor->email }}</td>
+                                        <td>{{ $vendor->mobile_number }}</td>
                                         {{-- <td>{{ $vendor->vendor->whatsapp_number }}</td> --}}
-                                        <td>{{ $vendor->vendorn->aadhar_number }}</td>
-                                        <td>{{ $vendor->vendorn->pan_number }}</td>
-                                        <td>{{ $vendor->vendorn->cityname->city ?? '' }}</td>
-                                        <td>{{ $vendor->vendorn->brandname->brand ?? ''}}</td>
-                                        <td>{{ $vendor->vendorn->materialname->material }}</td>
-                                        <td>{{ $vendor->account_holder }}</td>
+                                        <td>{{ $vendor->aadhar_number }}</td>
+                                        <td>{{ $vendor->pan_number }}</td>
+                                        <td>{{ $vendor->cityname->city ?? '' }}</td>
+                                        <td>{{ $vendor->city_address ?? '' }}</td>
+                                        <td>{{ $vendor->brandname->brand ?? ''}}</td>
+                                        <td>{{ $vendor->materialname->material ?? ''}}</td>
+                                        {{-- <td>{{ $vendor->account_holder }}</td>
                                         <td>{{ $vendor->bank_name }}</td>
                                         <td>{{ $vendor->account_number }}</td>
-                                        <td>{{ $vendor->ifsc_code }}</td>
+                                        <td>{{ $vendor->ifsc_code }}</td> --}}
+                                        <td style="background-color: #ffffff;">
+                                            <div class="d-flex align-items-center">
+
+                                                       <?php if ($vendor->status=='1'){?>
+
+                                                        <a href="{{url('/update_vendor_status', $vendor->id)}}"
+                                                            class="btn btn-success"> Active</a>
+
+                                                            <?php } else {?>
+                                                            <a href="{{url('/update_vendor_status', $vendor->id)}}"
+                                                                class="btn btn-danger">Inactive</a>
+                                                                <?php
+                                                        }?>
+                                                        </td>
+
 
                                         <td>
 
@@ -212,22 +246,20 @@
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a> --}}
 
-                                                <a href="{{ route('vendor-edit', ['id' => $vendor->id]) }}">    <button
-                                                    style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                <a href="{{route('vendor-edit',$vendor->id)}}">    <button
+                                                    style="background-color:#3399ff; border:none; max-height:25px; margin-bottom:-5px;"
                                                     type="button" class="btn btn-info" data-toggle="tooltip"
                                                     data-placement="top" title="Edit"><i class="fa fa-edit"
                                                         style="margin-left:5px;"></i></button>
 
                                             </a>
 
-                                                @if($vendor->vendorn)
-                                                {{-- <a href="{{ route('vendor-edit', $vendor->vendorn->id) }}">
-                                                    <button style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit" style="margin-left:5px;"></i></button>
-                                                </a> --}}
+                                                {{-- @if($vendor->vendorn)
+
                                                 <a href="{{ route('vendor-destroy', $vendor->vendorn->id) }}" onclick="return confirm('Are you sure you want to delete this Vendor?')">
                                                     <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a>
-                                                @endif
+                                                @endif --}}
                                         </td>
                                     </tr>
                                     @endforeach
@@ -322,4 +354,17 @@
     });
 });
 </script>
+
+
+
+<script>
+    const toggleButton = document.getElementById('toggleButton');
+toggleButton.addEventListener('click', function() {
+    const currentStatus = toggleButton.getAttribute('data-status');
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    toggleButton.setAttribute('data-status', newStatus);
+    toggleButton.classList.toggle('toggled', newStatus === 'active');
+});
+</script>
+
 @stop

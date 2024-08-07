@@ -156,29 +156,40 @@
                                         <th>PAN Number</th>
                                         <th>City</th>
                                         <th>Address</th>
-                                        <th>Account Holder Name</th>
+                                        <th>Status</th>
+                                        {{-- <th>Account Holder Name</th>
                                         <th>Bank Name</th>
                                         <th>Account Number</th>
-                                        <th>IFSC</th>
+                                        <th>IFSC</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($ac as $index => $accountDetail)
+                                    @foreach($contractor as $index => $contractors)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $accountDetail->contractor->contractor_name ?? ''}}</td>
-                                        <td>{{ $accountDetail->contractor->email ?? ''}}</td>
-                                        <td>{{ $accountDetail->contractor->mobile_number ?? ''}}</td>
-                                        {{-- <td>{{ $accountDetail->contractor->whatsapp_number }}</td> --}}
-                                        <td>{{ $accountDetail->contractor->aadhar_number ?? ''}}</td>
-                                        <td>{{ $accountDetail->contractor->pan_number ?? ''}}</td>
-                                        <td>{{ $accountDetail->contractor->cityname->city ?? '' }}</td>
-                                        <td>{{ $accountDetail->contractor->city_address ?? ''}}</td>
-                                        <td>{{ $accountDetail->account_holder ?? ''}}</td>
-                                        <td>{{ $accountDetail->bank_name ?? ''}}</td>
-                                        <td>{{ $accountDetail->account_number ?? ''}}</td>
-                                        <td>{{ $accountDetail->ifsc_code ?? ''}}</td>
+                                        <td>{{ $contractors->contractor_name ?? ''}}</td>
+                                        <td>{{ $contractors->email ?? ''}}</td>
+                                        <td>{{ $contractors->mobile_number ?? ''}}</td>
+                                        {{-- <td>{{ $contractors->whatsapp_number }}</td> --}}
+                                        <td>{{ $contractors->aadhar_number ?? ''}}</td>
+                                        <td>{{ $contractors->pan_number ?? ''}}</td>
+                                        <td>{{ $contractors->cityname->city ?? '' }}</td>
+                                        <td>{{ $contractors->city_address ?? ''}}</td>
+                                        <td style="background-color: #ffffff;">
+                                            <div class="d-flex align-items-center">
+
+                                                       <?php if ($contractors->status=='1'){?>
+
+                                                        <a href="{{url('/update_contractor_status', $contractors->id)}}"
+                                                            class="btn btn-success"> Active</a>
+
+                                                            <?php } else {?>
+                                                            <a href="{{url('/update_contractor_status', $contractors->id)}}"
+                                                                class="btn btn-danger">Inactive</a>
+                                                                <?php
+                                                        }?>
+                                                        </td>
 
                                         <td>
 
@@ -195,6 +206,14 @@
                                                         onclick="confirmDelete({{ $accountDetail->id }})"><i
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a> --}}
+
+                                                <a href="{{route('contractor-edit',$contractors->id)}}"> <button
+                                                    style="background-color:#3399ff; border:none; max-height:25px;  margin-bottom:-5px;"
+                                                    type="button" class="btn btn-info" data-toggle="tooltip"
+                                                    data-placement="top" title="Edit"><i class="fa fa-edit"
+                                                        style="margin-left:5px;"></i></button></a>
+
+{{--
                                                 @if($accountDetail->contractor)
                                                 <a href="{{ route('contractor-edit', $accountDetail->contractor->id) }}">
                                                     <button style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit" style="margin-left:5px;"></i></button>
@@ -202,7 +221,7 @@
                                                 <a href="{{ route('contractor-destroy', $accountDetail->contractor->id) }}" onclick="return confirm('Are you sure you want to delete this contractor?')">
                                                     <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a>
-                                                @endif
+                                                @endif --}}
                                         </td>
                                     </tr>
 

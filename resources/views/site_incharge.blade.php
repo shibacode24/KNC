@@ -32,7 +32,7 @@
 
                             <input type="text" class="form-control" name="employee_name" placeholder="" required />
                         </div>
-                       
+
                         <div class="col-md-2">
                             <label class="control-label">Mobile Number<font color="#FF0000">*</font></label>
                             <input type="text" class="form-control" name="mobile_number" maxlength="10" placeholder="" required />
@@ -58,7 +58,7 @@
                             <label class="control-label">Address<font color="#FF0000">*</font></label>
                             <input type="text" class="form-control" name="city_address" placeholder="" required />
                         </div>
-                      
+
                         {{-- <div class="col-md-12" style="margin-top: 5px;margin-bottom: 5px;">
                             <img src="{{ asset('public/img/line.png') }}" width="100%" />
                             <!-- <h6>Bank Details</h6> -->
@@ -161,6 +161,7 @@
                                         <th>Bank Name</th>
                                         <th>Account Number</th>
                                         <th>IFSC</th>
+                                        <th>status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -180,20 +181,34 @@
                                         <td>{{ $sites->bank_name }}</td>
                                         <td>{{ $sites->account_number }}</td>
                                         <td>{{ $sites->ifsc_code }}</td>
+                                        <td style="background-color: #ffffff;">
+                                            <div class="d-flex align-items-center">
+
+                                                       <?php if ($sites->status=='1'){?>
+
+                                                        <a href="{{url('/update_site_incharge_status', $sites->id)}}"
+                                                            class="btn btn-success"> Active</a>
+
+                                                            <?php } else {?>
+                                                            <a href="{{url('/update_site_incharge_status', $sites->id)}}"
+                                                                class="btn btn-danger">Inactive</a>
+                                                                <?php
+                                                        }?>
+                                                        </td>
 
                                         <td>
 
                                         <a href="{{route('edit_site_incharge',$sites->id)}}">    <button
-                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                style="background-color:#3399ff; border:none; max-height:25px; margin-bottom:-5px;"
                                                 type="button" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Edit"><i class="fa fa-edit"
                                                     style="margin-left:5px;"></i></button>
 
                                         </a>
-                                                <a href="{{ route('delete_site_incharge', $sites->id) }}" onclick="return confirm('Are you sure you want to delete this?')">
+                                                {{-- <a href="{{ route('delete_site_incharge', $sites->id) }}" onclick="return confirm('Are you sure you want to delete this?')">
                                                     <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
-                                            
+                                                </a> --}}
+
                                         </td>
                                     </tr>
 
@@ -203,7 +218,7 @@
                         </div>
 
                         <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                
+
                         <!-- END DEFAULT DATATABLE -->
 
 
@@ -289,5 +304,16 @@
                         $(this).parents("tr").remove();
                     });
                 });
+</script>
+
+
+<script>
+    const toggleButton = document.getElementById('toggleButton');
+toggleButton.addEventListener('click', function() {
+    const currentStatus = toggleButton.getAttribute('data-status');
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    toggleButton.setAttribute('data-status', newStatus);
+    toggleButton.classList.toggle('toggled', newStatus === 'active');
+});
 </script>
 @stop

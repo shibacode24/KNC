@@ -6,7 +6,7 @@ use App\Http\Controllers\panel\DashboardController;
 use App\Http\Controllers\panel\UserRolesController;
 use App\Http\Controllers\panel\WarehouseController;
 use App\Http\Controllers\panel\InventoryManagementController;
-use App\Http\Controllers\panel\AccountDepartmentController;
+use App\Http\Controllers\panel\{AccountDepartmentController, TransferMaterialController};
 use App\Http\Controllers\panel\MapController;
 
 /*
@@ -113,23 +113,27 @@ Route::post('warehouse-update', [DashboardController::class, 'warehouseUpdate'])
 Route::get('/contractor', [DashboardController::class, 'contractor'])->name('contractor');
 Route::get('contractor-destroy/{id}', [DashboardController::class, 'contractorDestroy'])->name('contractor-destroy');
 Route::get('contractor-edit/{id}', [DashboardController::class, 'contractorEdit'])->name('contractor-edit');
-Route::post('contractor-update', [DashboardController::class, 'contractorUpdate'])->name('contractor-update');
+Route::post('contractor-update', [DashboardController::class, 'contractorUpdate'])->name('contractor.update');
+Route::get('/update_contractor_status/{id}', [DashboardController::class, 'update_contractor_status'])->name('update_contractor_status');
 
 Route::get('/vendors', [DashboardController::class, 'vendor'])->name('vendor');
 Route::get('vendor-destroy/{id}', [DashboardController::class, 'vendorDestroy'])->name('vendor-destroy');
 Route::get('vendor-edit/{id}', [DashboardController::class, 'vendorEdit'])->name('vendor-edit');
-Route::post('vendors-update', [DashboardController::class, 'vendorsUpdate'])->name('vendor.update');
+Route::post('vendors-update', [DashboardController::class, 'vendorUpdate'])->name('vendor.update');
+Route::get('/update_vendor_status/{id}', [DashboardController::class, 'update_vendor_status'])->name('update_vendor_status');
 
 Route::get('/supervisor', [DashboardController::class, 'supervisor'])->name('supervisor');
 Route::get('supervisor-destroy/{id}', [DashboardController::class, 'supervisorDestroy'])->name('supervisor-destroy');
 Route::get('supervisor-edit/{id}', [DashboardController::class, 'supervisorEdit'])->name('supervisor-edit');
-Route::post('supervisor-update', [DashboardController::class, 'supervisorUpdate'])->name('supervisor-update');
+Route::post('supervisor-update', [DashboardController::class, 'supervisorUpdate'])->name('supervisor.update');
+Route::get('/update_supervisor_status/{id}', [DashboardController::class, 'update_supervisor_status'])->name('update_supervisor_status');
 
 //employee
 Route::get('/employee', [DashboardController::class, 'employee'])->name('employee');
 Route::get('edit_employee/{id}', [DashboardController::class, 'edit_employee'])->name('edit_employee');
 Route::post('update_employee', [DashboardController::class, 'update_employee'])->name('update_employee');
 Route::post('delete_acc_details', [DashboardController::class, 'delete_acc_details'])->name('delete_acc_details');
+Route::get('/update_employee_status/{id}', [DashboardController::class, 'update_employee_status'])->name('update_employee_status');
 
 //engineer
 Route::get('engg', [DashboardController::class, 'engg'])->name('engg');
@@ -137,6 +141,7 @@ Route::post('enggstore', [DashboardController::class, 'enggstore'])->name('enggs
 Route::get('edit_engg/{id}', [DashboardController::class, 'edit_engg'])->name('edit_engg');
 Route::get('delete_engg/{id}', [DashboardController::class, 'delete_engg'])->name('delete_engg');
 Route::post('update_engg', [DashboardController::class, 'update_engg'])->name('update_engg');
+Route::get('/update_engg_status/{id}', [DashboardController::class, 'update_engg_status'])->name('update_engg_status');
 
 //site_manager
 Route::get('site_manager', [DashboardController::class, 'site_manager'])->name('site_manager');
@@ -144,6 +149,7 @@ Route::post('site_managerstore', [DashboardController::class, 'site_managerstore
 Route::get('edit_site_manager/{id}', [DashboardController::class, 'edit_site_manager'])->name('edit_site_manager');
 Route::get('delete_site_manager/{id}', [DashboardController::class, 'delete_site_manager'])->name('delete_site_manager');
 Route::post('update_site_manager', [DashboardController::class, 'update_site_manager'])->name('update_site_manager');
+Route::get('/update_site_manager_status/{id}', [DashboardController::class, 'update_site_manager_status'])->name('update_site_manager_status');
 
 //site_incharge
 Route::get('site_incharge', [DashboardController::class, 'site_incharge'])->name('site_incharge');
@@ -151,6 +157,7 @@ Route::post('site_inchargestore', [DashboardController::class, 'site_inchargesto
 Route::get('edit_site_incharge/{id}', [DashboardController::class, 'edit_site_incharge'])->name('edit_site_incharge');
 Route::get('delete_site_incharge/{id}', [DashboardController::class, 'delete_site_incharge'])->name('delete_site_incharge');
 Route::post('update_site_incharge', [DashboardController::class, 'update_site_incharge'])->name('update_site_incharge');
+Route::get('/update_site_incharge_status/{id}', [DashboardController::class, 'update_site_incharge_status'])->name('update_site_incharge_status');
 
 
 Route::get('employee-destroy/{id}', [DashboardController::class, 'employeeDestroy'])->name('employee-destroy');
@@ -363,3 +370,12 @@ Route::get('expense-entry', [AccountDepartmentController::class, 'expenseEntry']
 
 
 Route::get('map', [MapController::class, 'showMap'])->name('map');
+Route::get('/filter-employees', [MapController::class, 'filterEmployees'])->name('filterEmployees');
+
+// In your web.php
+// Route::get('/employees-by-type', [MapController::class, 'getEmployeesByType'])->name('employees.by.type');
+
+
+// Transfer Material
+Route::get('transfer-material', [TransferMaterialController::class, 'transferMaterial'])->name('transfer-material');
+Route::post('transfer-material-store', [TransferMaterialController::class, 'transferMaterialStore'])->name('transfer-material.store');

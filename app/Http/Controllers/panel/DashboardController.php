@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\panel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\City;
 use App\Models\Firm;
@@ -880,9 +881,9 @@ public function non_consumable_unit_type_update(Request $request)
     public function contractor(Request $request)
     {
         $ac = AccountDetails::where('contractor_id', '!=', NULL)->with('contractor', 'contractor.cityname')->get();
-
+        $contractor = Contractor::all();
         $city = City::all();
-        return view('adminpanel.contractor', compact('city', 'ac'));
+        return view('adminpanel.contractor', compact('contractor', 'city', 'ac'));
     }
 
     public function contractorstore(Request $request)
@@ -947,27 +948,86 @@ public function non_consumable_unit_type_update(Request $request)
     }
 
 
-    public function contractorEdit($id){
 
-        $assignSiteAll = AssignSite::all();
-        $assignSiteEdit = AssignSite::find($id);
-        $site = Site::all();
-        $supervisor = supervisor::all();
-        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+
+    public function contractorEdit(Request $request)
+    {
+
+    if (!$request->id) {
+        return redirect()->back()->with('error', 'Invalid Vendor ID');
     }
+
+    $acc_details_edit = AccountDetails::where('contractor_id', $request->id)->get();
+    $contractor_edit = Contractor::find($request->id); // Use find() for a single record
+
+    // Check if vendor_edit is null
+    if (!$contractor_edit) {
+        return redirect()->back()->with('error', 'Supervisor not found');
+    }
+
+    $city = City::all();
+    $brand = Brand::all();
+    $material = Material::all();
+
+    return view('adminpanel.contractor_edit', compact('contractor_edit', 'city', 'acc_details_edit', 'material', 'brand'));
+}
+
+
 
     public function contractorUpdate(Request $request)
     {
-        $assignSite = AssignSite::find($request->id);
-        $assignSite->date = $request->date;
-        $assignSite->supervisor = $request->supervisor_id;
-        $assignSite->site_assign = $request->site_id;
-        $assignSite->save();
+            $contractor = Contractor::where('id',$request->id)->first();
 
 
-        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
-    }
+                // $supervisor = new Supervisor();
+                $contractor->contractor_name = $request->contractor_name;
+                $contractor->email = $request->email;
+                $contractor->mobile_number = $request->mobile_number;
+                $contractor->aadhar_number = $request->aadhar_number;
+                $contractor->pan_number = $request->pan_number;
+                $contractor->city_address = $request->city_address;
+                $contractor->city_id = $request->city_id;
+                // $contractor->password = $request->password;
+                // $contractor->user_id = $user->id;
+                $contractor->save();
 
+                $delete = AccountDetails::where('contractor_id',$contractor->id)->delete();
+
+            for($i=0;$i<count($request->name); $i++){
+                if (isset($request->name[$i])){
+                $account_details = new AccountDetails();
+                $account_details->account_holder = $request->name[$i];
+                $account_details->contractor_id = $contractor->id;
+                $account_details->bank_name = $request->bank[$i];
+                $account_details->account_number = $request->ac_n[$i];
+                $account_details->ifsc_code = $request->ifsc[$i];
+                $account_details->save();
+            }
+        }
+                // dd(1);
+                return redirect()->route('contractor')->with('success', 'Contractor and Account Details Updated Successfully');
+
+        }
+
+
+
+// to update status active or inactive
+
+public function update_contractor_status($id)
+{
+    // Get the current status of the vendor
+    $contractor = DB::table('contractor')->where('id', $id)->first();
+
+    // Determine the new status
+    $newStatus = $contractor->status == '1' ? '0' : '1';
+
+    // Update the contractor's status
+    DB::table('contractor')->where('id', $id)->update(['status' => $newStatus]);
+
+    // Flash success message and redirect
+    session()->flash('success', 'contractor status has been updated successfully.');
+    return redirect()->route('contractor'); // Adjust redirect route as needed
+}
 
 
     // Vendor Master
@@ -977,13 +1037,23 @@ public function non_consumable_unit_type_update(Request $request)
 
         $ac = AccountDetails::where('vendor_id', '!=', NULL)->with('vendorn', 'vendorn.cityname', 'vendorn.brandname', 'vendorn.materialname')->get();
 
-        $Vendor = Vendor::all();
+        $vendor = Vendor::all();
+
+    //      // Retrieve all vendors
+    // $vendor = Vendor::pluck('id')->toArray();
+
+    // // Get AccountDetails where vendor_id is in the list of vendor IDs
+    // $ac = AccountDetails::whereIn('vendor_id', $vendor)
+    //     ->with('vendorn', 'vendorn.cityname', 'vendorn.brandname', 'vendorn.materialname')
+    //     ->get();
+
+
         $city = City::all();
 
         $brand = Brand::all();
         $material = Material::all();
 
-        return view('adminpanel.vendor', compact('brand', 'ac', 'Vendor', 'city', 'material'));
+        return view('adminpanel.vendor', compact('brand', 'ac', 'vendor', 'city', 'material'));
     }
     public function vendorstore(Request $request)
     {
@@ -1009,7 +1079,9 @@ public function non_consumable_unit_type_update(Request $request)
         $Vendors->mobile_number = $request->mobile_number;
         $Vendors->aadhar_number = $request->aadhar_number;
         $Vendors->pan_number = $request->pan_number;
-        $Vendors->city_address = $request->city_id;
+        $Vendors->city_address = $request->city_address;
+        $Vendors->city_id = $request->city_id;
+
         $Vendors->brand = $request->brand_id;
 
         $Vendors->materials = $request->material_id;
@@ -1048,20 +1120,34 @@ public function non_consumable_unit_type_update(Request $request)
     }
 
 
-    public function vendorEdit(Request $request, $id)
+    public function vendorEdit(Request $request)
     {
-        $acc_details_edit = AccountDetails::where('vendor_id', $request->id)->get();
-        $vendor_edit = Vendor::where('id',$request->id)->first();
-// echo json_encode($acc_details_edit);
-// echo json_encode($employee_edit);
-// exit();
-        $city = City::all();
-        $brand = Brand::all();
-        $material = Material::all();
+          // Check if ID is passed correctly
 
-        return view('adminpanel.vendor_edit', compact('vendor_edit', 'city','acc_details_edit', 'material', 'brand'));
+        //   dd($request->id);
+
+//         $vendor = Vendor::find(46);
+// dd($vendor);
+
+
+    if (!$request->id) {
+        return redirect()->back()->with('error', 'Invalid Vendor ID');
     }
 
+    $acc_details_edit = AccountDetails::where('vendor_id', $request->id)->get();
+    $vendor_edit = Vendor::find($request->id); // Use find() for a single record
+
+    // Check if vendor_edit is null
+    if (!$vendor_edit) {
+        return redirect()->back()->with('error', 'Vendor not found');
+    }
+
+    $city = City::all();
+    $brand = Brand::all();
+    $material = Material::all();
+
+    return view('adminpanel.vendor_edit', compact('vendor_edit', 'city', 'acc_details_edit', 'material', 'brand'));
+}
 
     // public function delete_acc_details(Request $request)
     //     {
@@ -1073,13 +1159,13 @@ public function non_consumable_unit_type_update(Request $request)
     {
         //  dd($request->all());
         $request->validate([
-            'employee_name' => 'required',
+            'vendor_name' => 'required',
             'email' => 'required|',
             'mobile_number' => 'required|',
             'aadhar_number' => 'required|',
             'pan_number' => 'required',
             'city_address' => 'required',
-            'city_id' => 'required',
+            // 'city_id' => 'required',
             'brand_id' => 'required',
             'material_id' => 'required',
 
@@ -1127,12 +1213,35 @@ public function non_consumable_unit_type_update(Request $request)
     }
 
 
+
+
+// to update status active or inactive
+
+public function update_vendor_status($id)
+{
+    // Get the current status of the vendor
+    $vendor = DB::table('vendor')->where('id', $id)->first();
+
+    // Determine the new status
+    $newStatus = $vendor->status == '1' ? '0' : '1';
+
+    // Update the vendor's status
+    DB::table('vendor')->where('id', $id)->update(['status' => $newStatus]);
+
+    // Flash success message and redirect
+    session()->flash('success', 'Vendor status has been updated successfully.');
+    return redirect()->route('vendor'); // Adjust redirect route as needed
+}
+
+
+
+
     // SuperVisor Master
     public function supervisor(Request $request)
     {
         $city = City::all();
         $ac = AccountDetails::where('supervisor_id', '!=', NULL)->with('supervisor')->get();
-        $supervisor = Supervisor::get();
+        $supervisor = Supervisor::all();
         return view('adminpanel.supervisor', compact('city', 'ac', 'supervisor'));
     }
 
@@ -1168,7 +1277,7 @@ public function non_consumable_unit_type_update(Request $request)
         $supervisor->pan_number = $request->pan_number;
         $supervisor->city_address = $request->city_address;
         $supervisor->city_id = $request->city_id;
-        $supervisor->password = $request->password;
+        // $supervisor->password = $request->password;
         $supervisor->user_id = $user->id;
         $supervisor->save();
 
@@ -1184,6 +1293,38 @@ public function non_consumable_unit_type_update(Request $request)
         // dd(1);
         return redirect()->back()->with('success', 'Supervisor and Account Details Added Successfully');
     }
+
+
+
+    public function supervisorEdit(Request $request)
+    {
+          // Check if ID is passed correctly
+
+        //   dd($request->id);
+
+//         $vendor = Vendor::find(46);
+// dd($vendor);
+
+
+    if (!$request->id) {
+        return redirect()->back()->with('error', 'Invalid Vendor ID');
+    }
+
+    $acc_details_edit = AccountDetails::where('supervisor_id', $request->id)->get();
+    $supervisor_edit = Supervisor::find($request->id); // Use find() for a single record
+
+    // Check if vendor_edit is null
+    if (!$supervisor_edit) {
+        return redirect()->back()->with('error', 'Supervisor not found');
+    }
+
+    $city = City::all();
+    $brand = Brand::all();
+    $material = Material::all();
+
+    return view('adminpanel.supervisor_edit', compact('supervisor_edit', 'city', 'acc_details_edit', 'material', 'brand'));
+}
+
 
 
     public function supervisorDestroy($id)
@@ -1203,26 +1344,73 @@ public function non_consumable_unit_type_update(Request $request)
         }
     }
 
-
-    public function supervisorEdit($id){
-        $assignSiteAll = AssignSite::all();
-        $assignSiteEdit = AssignSite::find($id);
-        $site = Site::all();
-        $supervisor = supervisor::all();
-        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
-    }
-
     public function supervisorUpdate(Request $request)
     {
-        $assignSite = AssignSite::find($request->id);
-        $assignSite->date = $request->date;
-        $assignSite->supervisor = $request->supervisor_id;
-        $assignSite->site_assign = $request->site_id;
-        $assignSite->save();
+        $supervisor = Supervisor::where('id',$request->id)->first();
+        $user = User:: where('id',$supervisor->user_id)->first();
+
+        // Update user Details
+        $user->name = $request->supervisor_name;
+        $user->email = $request->email;
+        $user->contact = $request->mobile_number;
+        // Update password only if a new password is provided
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password); // Hash the password
+        }
+        $user->role = 'Supervisor'; // Set the role to supervisor
+        $user->save();
 
 
-        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+            // $supervisor = new Supervisor();
+            $supervisor->supervisor_name = $request->supervisor_name;
+            $supervisor->email = $request->email;
+            $supervisor->mobile_number = $request->mobile_number;
+            $supervisor->aadhar_number = $request->aadhar_number;
+            $supervisor->pan_number = $request->pan_number;
+            $supervisor->city_address = $request->city_address;
+            $supervisor->city_id = $request->city_id;
+            // $supervisor->password = $request->password;
+            $supervisor->user_id = $user->id;
+            $supervisor->save();
+
+            $delete = AccountDetails::where('supervisor_id',$supervisor->id)->delete();
+
+        for($i=0;$i<count($request->name); $i++){
+            if (isset($request->name[$i])){
+            $account_details = new AccountDetails();
+            $account_details->account_holder = $request->name[$i];
+            $account_details->supervisor_id = $supervisor->id;
+            $account_details->bank_name = $request->bank[$i];
+            $account_details->account_number = $request->ac_n[$i];
+            $account_details->ifsc_code = $request->ifsc[$i];
+            $account_details->save();
+        }
     }
+            // dd(1);
+            return redirect()->route('supervisor')->with('success', 'Supervisor and Account Details Updated Successfully');
+
+    }
+
+
+// to update status active or inactive
+
+public function update_supervisor_status($id)
+{
+    // Get the current status of the vendor
+    $supervisor = DB::table('supervisor')->where('id', $id)->first();
+
+    // Determine the new status
+    $newStatus = $supervisor->status == '1' ? '0' : '1';
+
+    // Update the supervisor's status
+    DB::table('supervisor')->where('id', $id)->update(['status' => $newStatus]);
+
+    // Flash success message and redirect
+    session()->flash('success', 'supervisor status has been updated successfully.');
+    return redirect()->route('supervisor'); // Adjust redirect route as needed
+}
+
+
 
 
     // Employee Master
@@ -1375,6 +1563,29 @@ public function non_consumable_unit_type_update(Request $request)
             return redirect()->route('employee')->with('error', 'employee not found');
         }
     }
+
+
+// to update status active or inactive
+
+public function update_employee_status($id)
+{
+    // Get the current status of the vendor
+    $employee = DB::table('employee')->where('id', $id)->first();
+
+    // Determine the new status
+    $newStatus = $employee->status == '1' ? '0' : '1';
+
+    // Update the employee's status
+    DB::table('employee')->where('id', $id)->update(['status' => $newStatus]);
+
+    // Flash success message and redirect
+    session()->flash('success', 'employee status has been updated successfully.');
+    return redirect()->route('employee'); // Adjust redirect route as needed
+}
+
+
+
+// Status
 
 
     public function status(){
@@ -1886,6 +2097,25 @@ public function non_consumable_unit_type_update(Request $request)
             return back()->with('success','Record deleted successfully');
         }
 
+
+
+// to update status active or inactive
+
+public function update_engg_status($id)
+{
+    // Get the current status of the vendor
+    $engineer = DB::table('engineer')->where('id', $id)->first();
+
+    // Determine the new status
+    $newStatus = $engineer->status == '1' ? '0' : '1';
+
+    // Update the engineer's status
+    DB::table('engineer')->where('id', $id)->update(['status' => $newStatus]);
+
+    // Flash success message and redirect
+    session()->flash('success', 'engineer status has been updated successfully.');
+    return redirect()->route('engg'); // Adjust redirect route as needed
+}
         //site manager
 
         public function site_manager()
@@ -1990,6 +2220,27 @@ public function non_consumable_unit_type_update(Request $request)
             return back()->with('success','Record deleted successfully');
         }
 
+
+
+// to update status active or inactive
+
+public function update_site_manager_status($id)
+{
+    // Get the current status of the vendor
+    $site_manager = DB::table('site_manager')->where('id', $id)->first();
+
+    // Determine the new status
+    $newStatus = $site_manager->status == '1' ? '0' : '1';
+
+    // Update the site_manager's status
+    DB::table('site_manager')->where('id', $id)->update(['status' => $newStatus]);
+
+    // Flash success message and redirect
+    session()->flash('success', 'site_manager status has been updated successfully.');
+    return redirect()->route('site_manager'); // Adjust redirect route as needed
+}
+
+
         //site incharge
 
         public function site_incharge()
@@ -2087,6 +2338,26 @@ public function non_consumable_unit_type_update(Request $request)
 
             return redirect()->route('site_incharge')->with('success', 'Site incharge Updated Successfully');
         }
+
+
+
+// to update status active or inactive
+
+public function update_site_incharge_status($id)
+{
+    // Get the current status of the vendor
+    $site_manager = DB::table('site_manager')->where('id', $id)->first();
+
+    // Determine the new status
+    $newStatus = $site_manager->status == '1' ? '0' : '1';
+
+    // Update the site_manager's status
+    DB::table('site_manager')->where('id', $id)->update(['status' => $newStatus]);
+
+    // Flash success message and redirect
+    session()->flash('success', 'site_manager status has been updated successfully.');
+    return redirect()->route('site_manager'); // Adjust redirect route as needed
+}
 
         public function delete_site_incharge($id)
         {

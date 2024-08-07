@@ -111,3 +111,5 @@ Route::post('postRepairingAndMaintenance', [ApiController::class, 'postRepairing
 Route::get('getRepairingAndMaintenance', [ApiController::class, 'getRepairingAndMaintenance']);
 
 Route::post('updateAssignedTaskWeightage', [ApiController::class, 'updateAssignedTaskWeightage']);
+
+Route::post('postTrackEmpLocation', [ApiController::class, 'postTrackEmpLocation']);

@@ -7,7 +7,27 @@
 
             <div class="panel-body" style="padding:1px 5px 2px 5px;">
 
+                @if ($errors->any())
+                <div class="alert alert-danger mt-2">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
                 <div class="col-md-12" style="margin-top:5px;">
                     <div class="panel panel-default">
                         <h5 class="panel-title"
@@ -56,11 +76,14 @@
                         <div class="col-md-2">
                             <label>City</label>
                             <select class="form-control select" data-live-search="true" name="city_id">
-                                @foreach($city as $city)
-                                <option value="{{ $city->id }}">{{ $city->city }}</option>
+                                @foreach($city as $c)
+                                <option value="{{ $c->id }}" {{ isset($vendor_edit) && $c->id == $vendor_edit->city_id ? 'selected' : '' }}>
+                                    {{ $c->city }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="col-md-2" style="margin-top: 5px;">
                             <label class="control-label">Address<font color="#FF0000">*</font></label>
                             <input type="text" class="form-control" name="city_address" placeholder="" value="{{$vendor_edit->city_address}}"  />
@@ -69,7 +92,9 @@
                             <label>Select Brand</label>
                             <select class="form-control select" data-live-search="true" name="brand_id">
                                 @foreach($brand as $b)
-                                <option value="{{ $b->id }}">{{ $b->brand }}</option>
+                                <option value="{{ $b->id }}" {{ $b->id == $vendor_edit->brand_id ? 'selected' : '' }}>
+                                    {{ $b->brand }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -218,53 +243,93 @@
 @section('js')
 <script>
     $(document).ready(function() {
-    $(".add-row-purchase").click(function() {
-        var name = $('#name').val();
-        var bank = $('#bank').val();
-        var ac_n = $('#ac_n').val();
-        var ifsc_code = $('#ifsc').val();
+        $(".add-row-purchase").click(function() {
+            var name = $('#name').val();
+            var bank = $('#bank').val();
+            var ac_n = $('#ac_n').val();
+            var ifsc_code = $('#ifsc').val();
 
-        // Check if any of the fields are empty
-        if (name === '' || bank === '' || ac_n === '' || ifsc_code === '') {
-            // If any field is empty, show a message
-            alert('Please fill all the fields before appending.');
-        } else {
-            // If all fields are filled, proceed with appending
-            var markup =
-                '<tr>' +
-                '<td>' +
-                '<input type="hidden" name="name[]" required="" style="border:none; width: 100%;" value="' + name + '">' +
-                '<input type="text" required="" style="border:none; width: 100%;" value="' + name + '">' +
-                '</td>' +
-                '<td>' +
-                '<input type="hidden" name="bank[]" required="" style="border:none; width: 100%;" value="' + bank + '">' +
-                '<input type="text" required="" style="border:none; width: 100%;" value="' + bank + '">' +
-                '</td>' +
-                '<td>' +
-                '<input type="hidden" name="ac_n[]" required="" style="border:none; width: 100%;" value="' + ac_n + '">' +
-                '<input type="text" required="" style="border:none; width: 100%;" value="' + ac_n + '">' +
-                '</td>' +
-                '<td>' +
-                '<input type="text" name="ifsc[]" required="" style="border:none; width: 100%;" value="' + ifsc_code + '">' +
-                '</td>' +
-                '<td style="text-align:center; color:#FF0000">' +
-                '<button class="delete-row"><i class="fa fa-trash-o"></i></button>' +
-                '</td>' +
-                '</tr>';
+            // Check if any of the fields are empty
+            if (name === '' || bank === '' || ac_n === '' || ifsc_code === '') {
+                // If any field is empty, show a message
+                alert('Please fill all the fields before appending.');
+            } else {
+                // If all fields are filled, proceed with appending
+                var markup =
+                    '<tr>' +
+                    '<td>' +
+                    '<input type="hidden" name="name[]" required="" style="border:none; width: 100%;" value="' +
+                    name + '">' +
+                    '<input type="text" required="" style="border:none; width: 100%;" value="' + name +
+                    '">' +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="hidden" name="bank[]" required="" style="border:none; width: 100%;" value="' +
+                    bank + '">' +
+                    '<input type="text" required="" style="border:none; width: 100%;" value="' + bank +
+                    '">' +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="hidden" name="ac_n[]" required="" style="border:none; width: 100%;" value="' +
+                    ac_n + '">' +
+                    '<input type="text" required="" style="border:none; width: 100%;" value="' + ac_n +
+                    '">' +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="text" name="ifsc[]" required="" style="border:none; width: 100%;" value="' +
+                    ifsc_code + '">' +
+                    '</td>' +
+                    '<td style="text-align:center; color:#FF0000">' +
+                    '<button class="delete-row"><i class="fa fa-trash-o"></i></button>' +
+                    '</td>' +
+                    '</tr>';
 
-            $(".add_more_purchase").append(markup);
+                $(".add_more_purchase").append(markup);
 
-            // Clear the input fields
-            $('#name').val('');
-            $('#bank').val('');
-            $('#ac_n').val('');
-            $('#ifsc').val('');
-        }
+                // Clear the input fields
+                $('#name').val('');
+                $('#bank').val('');
+                $('#ac_n').val('');
+                $('#ifsc').val('');
+            }
+        });
+
+        $("tbody").delegate(".delete-row", "click", function() {
+            $(this).parents("tr").remove();
+        });
+
+
+
     });
 
-    $("tbody").delegate(".delete-row", "click", function() {
-        $(this).parents("tr").remove();
-    });
-});
 </script>
+
+<script>
+    $(document).ready(function() {
+        $('.acc_delete').click(function(e) {
+
+            var id = $(this).attr('id'); // Get the id of the clicked element
+            console.log(id);
+
+            if (confirm('Are you sure you want to delete this record?')) {
+                $.ajax({
+                    url: '{{ route('delete_acc_details') }}',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                         _method: 'post', // Use _method if you want to simulate a DELETE request
+                    _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        console.log('Record deleted successfully:', response);
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error deleting record:', error);
+                    }
+                });
+            }
+        });
+    });
+    </script>
 @stop

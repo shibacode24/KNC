@@ -21,6 +21,8 @@
 <script src="{{asset('https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js')}}"></script> --}}
 
 
+@yield('styles')
+
 </head>
 
 <body>
@@ -118,6 +120,12 @@
             stroke: #fff;
         }
     </style>
+
+{{-- MAP --}}
+
+
+{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1Cz13aBYAbBYJL0oABZ8KZnd7imiWwA4&callback=initMap" async defer></script> --}}
+
     <!-- START PAGE CONTAINER -->
     <div class="page-container page-navigation-top">
         <!-- PAGE CONTENT -->
@@ -622,7 +630,7 @@
                     </li>
                 @endif
 
-
+                <li><a href="transfer-material"><span class="fa fa-plus"></span>Transfer Material</a></li>
 
                 @if (Auth::user()->panel_role == 1 ||
                         in_array('app-user-roles', $permission) ||
@@ -668,6 +676,8 @@
                 <li>
                     <a href="{{route('map')}}" target="_blank" title="Account Department"><span class="fa fa-map-marker"> </span>Track Location</a>
                 </li>
+
+
                 @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
 
                     <li>
@@ -680,12 +690,12 @@
                         </ul>
                     </li>
                 @endif
-                {{--
+
 
             <li>
-                <a href="#" title="Prediction"><span class="fa fa-tachometer"> </span></a>
+                <a href="prediction" title="Prediction"><span class="fa fa-tachometer"> </span></a>
 
-            </li> --}}
+            </li>
 
                 {{-- <li>
                 <a href="#" title="User Role"><span class="fa fa-money"> </span>User Roles For App</a>
