@@ -70,19 +70,30 @@ class IssueMaterialByInventory extends Model
 
 
 //non consumable
+// public function non_consumable_material_name()
+// {
+//     return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'material_id');
+// }
+
+// public function non_consumable_raw_material_name()
+// {
+//     return $this->hasOne(NonConsumableCategory::class, 'id', 'raw_material_id');
+// }
+
 public function non_consumable_material_name()
 {
-    return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'material_id');
+    return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'raw_material_id');
 }
 
-public function non_consumable_raw_material_name()
+public function non_consumable_category_name()
 {
-    return $this->hasOne(NonConsumableCategory::class, 'id', 'raw_material_id');
+    return $this->hasOne(NonConsumableCategory::class, 'id', 'material_id');
 }
+
 
 public function non_consumable_unit_type()
 {
-    return $this->hasOne(NonConsumableUnitType::class, 'id', 'material_unit_type_id');
+    return $this->hasOne(NonConsumableUnitType::class, 'id', 'material_unit_id');
 }
 
 public function non_consumable_brand_name()

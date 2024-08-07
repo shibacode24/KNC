@@ -51,7 +51,7 @@
         <div class="col-md-2" style="margin-top:22px; margin-left:10px" align="left">
             <button id="on" type="submit" class="btn mjks"
                 style="color:#FFFFFF; height:30px; width:auto;">
-                <i class="fa fa-plus"></i>submit</button>
+                <i class="fa fa-plus"></i>Submit</button>
 
         </div>
     </tr>

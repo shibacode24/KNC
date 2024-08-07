@@ -29,7 +29,7 @@
             <input type="time" class="form-control" name="received_time" id="timepicker" placeholder="" required />
         </div>
 
-        <div class="col-md-2" style="margin:7px">
+        {{-- <div class="col-md-2" style="margin:7px">
             <label class="control-label">Location (Warehouse)<font color="#FF0000">*</font></label>
 
                 <select class="form-control select" data-live-search="true" name="received_location">
@@ -38,7 +38,7 @@
                      <option value="{{$warehouse->id}}">{{$warehouse->warehouse_name}}</option>
                      @endforeach
                  </select>
-        </div>
+        </div> --}}
         <div class="col-md-2" style="margin:7px">
             <label class="control-label">Received Quantity<font color="#FF0000">*</font></label>
             <input type="text" class="form-control" name="received_quantity" placeholder="" required />
@@ -51,7 +51,7 @@
         <div class="col-md-2" style="margin-top:22px; margin-left:10px" align="left">
             <button id="on" type="submit" class="btn mjks"
                 style="color:#FFFFFF; height:30px; width:auto;">
-                <i class="fa fa-plus"></i>submit</button>
+                <i class="fa fa-plus"></i>Submit</button>
 
         </div>
     </tr>
