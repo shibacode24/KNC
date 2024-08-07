@@ -269,9 +269,12 @@ Route::get('non_consumable_direct_grn_in', [WarehouseController::class, 'non_con
 Route::get('/issue-material', [WarehouseController::class, 'issue_material'])->name('issue_material');
 Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
 
+Route::get('/non_consumable_grn_out_material', [WarehouseController::class, 'non_consumable_grn_out_material'])->name('non_consumable_grn_out_material');
+Route::post('/add_non_consumable_grn_out_material', [WarehouseController::class, 'add_non_consumable_grn_out_material'])->name('add_non_consumable_grn_out_material');
 // Direct GRN Out
 // Route::get('/issue-material', [WarehouseController::class, 'issue_material'])->name('issue_material');
 // Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
+Route::get('non_consumanle_directGrnOut', [WarehouseController::class, 'non_consumanle_directGrnOut'])->name('non_consumanle_directGrnOut');
 
 
 // Direct GRN In
@@ -282,6 +285,7 @@ Route::post('direct-grn-in-store', [WarehouseController::class, 'directGrnInStor
 // Direct GRN Out
 Route::get('/direct-grn-out', [WarehouseController::class, 'directGrnOut'])->name('direct-grn-out');
 // Route::get('/viewgrn', [WarehouseController::class, 'viewgrn'])->name('viewgrn');
+
 
 
 
@@ -363,3 +367,12 @@ Route::get('expense-entry', [AccountDepartmentController::class, 'expenseEntry']
 
 
 Route::get('map', [MapController::class, 'showMap'])->name('map');
+
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    return redirect()->back();
+    //return "All cache cleared!";
+});

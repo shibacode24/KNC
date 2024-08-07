@@ -492,5 +492,86 @@ public function non_consumable_viewDirectGrnIn(Request $request)
     return response()->json(['html' => $render_view, 'status' => 'success', 'message' => 'Data loaded successfully']);
 }
 
+//non consume grn out
+
+public function non_consumable_grn_out_material(Request $request)
+{
+    $issueMaterial = IssueMaterialByInventory::whereNull('issue_type')
+    ->where('material_type', 'Non-Consumable')
+    ->get();
+    // $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')->get();
+
+    $statusID = Status::all();
+    $existingMaterials = IssueMaterialByWarehouse::all()->keyBy('issue_material_by_inventory_id');
+
+    return view('warehouse.non_consumable_grn_out', compact('issueMaterial', 'statusID', 'existingMaterials'));
+}
+
+
+
+public function add_non_consumable_grn_out_material(Request $request)
+{
+$remarks = $request->input('remarks', []);
+$statuses = $request->input('status', []);
+$redirectRoute = 'non_consumable_grn_out_material'; // Default redirect route
+
+foreach ($remarks as $id => $remark) {
+    $status = $statuses[$id] ?? null; // Get the corresponding status for the current material ID
+
+    if ($status !== null) {
+        // Check if the record already exists
+        $existingRecord = IssueMaterialByWarehouse::where('issue_material_by_inventory_id', $id)->first();
+
+        if ($existingRecord) {
+            // Update existing record
+            $existingRecord->update([
+                'remark' => $remark,
+                'status_id' => $status,
+                'app_status_id' =>6,
+            ]);
+        } else {
+            // Create new record
+            IssueMaterialByWarehouse::create([
+                'issue_material_by_inventory_id' => $id,
+                'remark' => $remark,
+                'status_id' => $status,
+                'app_status_id' =>6,
+
+            ]);
+        }
+
+        // Update the corresponding IssueMaterialByInventory record
+        $inventoryRecord = IssueMaterialByInventory::find($id);
+        if ($inventoryRecord) {
+            $inventoryRecord->update([
+                'inventory_status' => $status,
+                'app_status' =>6,
+
+        ]);
+
+          // Check the issue_type and set the redirect route
+          if ($inventoryRecord->issue_type === 'Direct Issue') {
+            $redirectRoute = 'non_consumanle_directGrnOut';
+        }
+        }
+    }
+}
+
+return redirect()->route($redirectRoute)->with('success', 'Materials updated successfully!');
+}
+
+
+public function non_consumanle_directGrnOut(Request $request)
+{
+   // $issueMaterial = IssueMaterialByInventory::where('issue_type', 'Direct Issue')->get();
+    $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')
+    ->where('material_type', 'Non-Consumable')->get();
+
+    $statusID = Status::all();
+    $existingMaterials = IssueMaterialByWarehouse::all()->keyBy('issue_material_by_inventory_id');
+
+    return view('warehouse.non_consumable_direct_grn_out', compact('directIssueMaterial', 'statusID', 'existingMaterials'));
+}
+
 
 }
