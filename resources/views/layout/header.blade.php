@@ -611,13 +611,13 @@
                                 <ul>
 
                             @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href=""><span class="fa fa-plus"></span>GRN
+                                <li><a href="{{route('non_consumable_grn_out_material')}}"><span class="fa fa-plus"></span>GRN
                                         Out</a></li>
                             @endif
 
 
                             @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href=""><span class="fa fa-plus"></span>Direct GRN
+                                <li><a href="{{route('non_consumanle_directGrnOut')}}"><span class="fa fa-plus"></span>Direct GRN
                                         Out</a></li>
                             @endif
                                 </ul>
