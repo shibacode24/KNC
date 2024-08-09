@@ -111,7 +111,7 @@
                                     </thead>
                                     <tbody>
 
-                                        @foreach ($issueMaterial as $material)
+                                        @foreach ($issueMaterial->sortByDesc('created_at') as $material)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $material->requested_material_date }}</td>

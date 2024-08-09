@@ -84,7 +84,7 @@
                             </select>
                         </td>
                         <td style="padding:5px;" align="center">
-                            <input type="text" class="form-control available-material" name="data[{{ $loop->index }}][available_material]" placeholder="" style="color: #707B7C;" value="" readonly/>
+                            <input type="text" class="form-control available-material" name="data[{{ $loop->index }}][available_material]" placeholder="" style="color: #707B7C;" value="0" readonly/>
                             </td>
                         <td style="padding:10px;" align="center">
                             <input type="text" class="form-control issue-material" name="data[{{ $loop->index }}][issue_material]" data-loop-index="{{ $loop->index }}" placeholder="" />
@@ -128,6 +128,11 @@
         $('.select').change(function() {
             var warehouseId = $(this).val();
             var loopIndex = $(this).data('loop-index');
+			 var brandId = $('input[name="data[' + loopIndex + '][brand]"]').val();
+            // console.log(brandId);
+            var materialId = $('input[name="data[' + loopIndex + '][material]"]').val();
+
+            var rawmaterialId = $('input[name="data[' + loopIndex + '][raw_material]"]').val();
             var availableMaterialField = $('input[name="data[' + loopIndex + '][available_material]"]');
 
             if (warehouseId) {
@@ -136,7 +141,10 @@
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        warehouse_id: warehouseId
+                        warehouse_id: warehouseId,
+						 brand_id: brandId,
+                        material_id: materialId,
+                        rawmaterial_id: rawmaterialId,
                     },
                     success: function(response) {
                         availableMaterialField.val(response.available_material);

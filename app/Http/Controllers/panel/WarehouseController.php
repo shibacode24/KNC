@@ -92,7 +92,7 @@ public function viewgrn(Request $request)
         $grn->material_req_list_id = $request->material_req_list_id;
         $grn->received_date = $request->received_date;
         $grn->received_time = $request->received_time;
-        // $grn->warehouse_id = $request->received_location;
+        $grn->warehouse_id = $request->received_location;
         $grn->received_quantity = $request->received_quantity;
         $grn->received_by = $request->received_by;
         $grn->add_material_id = $materialRequest->add_material_id; // Store the add_material_id
