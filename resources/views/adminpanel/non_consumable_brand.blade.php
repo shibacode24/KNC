@@ -30,11 +30,11 @@
                                 <input type="text" class="form-control" name="brand" placeholder="" required />
                             </div>
                             <div class="col-md-2">
-                                <label>Select Material</label>
-                                <select class="form-control select" data-live-search="true" name="material_id"
-                                    id="material">
-                                    @foreach ($material as $material)
-                                        <option value="{{ $material->id }}">{{ $material->material }}</option>
+                                <label>Select Category</label>
+                                <select class="form-control select" data-live-search="true" name="category_id"
+                                    id="category">
+                                    @foreach ($category as $category)
+                                        <option value="{{ $category->id }}">{{ $category->category }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -83,7 +83,7 @@
 
 
                                                 <td>{{ $brand->brand ?? null }}</td>
-                                                <td>{{ $brand->material_name->material ?? null }}</td>
+                                                <td>{{ $brand->category_name->category ?? null }}</td>
                                                 <td>
 
 

@@ -582,21 +582,21 @@ public function non_consumable_unit_type_update(Request $request)
  public function non_consumablebrand(Request $request)
  {
      $brand = NonConsumableBrand::all();
-     $material = NonConsumableCategoryMaterial::all();
-     return view('adminpanel.non_consumable_brand', compact('brand', 'material'));
+     $category = NonConsumableCategory::all();
+     return view('adminpanel.non_consumable_brand', compact('brand', 'category'));
  }
  public function non_consumablebrandstore(Request $request)
  {
      // Validate the incoming request data
      $request->validate([
          'brand' => 'required|',
-         'material_id' => 'required|',
+         'category_id' => 'required|',
 
 
      ]);
      $brand = new NonConsumableBrand();
      $brand->brand = $request->brand;
-     $brand->material_id = $request->material_id;
+     $brand->category_id = $request->category_id;
 
      $brand->save();
      return redirect()->route('non_consumable_brand')->with('success', 'brand added successfully!');
@@ -1813,12 +1813,24 @@ public function update_employee_status($id)
         return redirect()->route('non-consumable-category')->with('success', 'Category is Deleted Successfully');
     }
 
+
+
     public function nonConsumableCategoryMaterial(){
         $material = NonConsumableCategoryMaterial::all();
         $category = NonConsumableCategory::all();
-        return view('adminpanel.non_consumable_category_material', compact('material', 'category'));
+        $unit = NonConsumableUnitType::all();
+        $brand = NonConsumableBrand::all();
+
+        return view('adminpanel.non_consumable_category_material', compact('material', 'unit', 'category', 'brand'));
     }
 
+    public function getNonConsumableBrands(Request $request)
+    {
+        $category_id = $request->get('category_id');
+        $brands = NonConsumableBrand::where('category_id', $category_id)->get();
+
+        return response()->json($brands);
+    }
 
     public function nonConsumableCategoryMaterialStore(Request $request)
     {
@@ -1829,11 +1841,16 @@ public function update_employee_status($id)
         // ]);
         $category = new NonConsumableCategoryMaterial();
         $category->category_id = $request->category;
-        $category->material = $request->material;
+        $category->sub_category_name = $request->sub_category_name;
+        $category->brand_id = $request->brand;
+        $category->unit_type_id = $request->unit_type;
+        $category->minimum_keeping_quantity = $request->minimum_keeping_quantity;
+        $category->maximum_keeping_quantity = $request->maximum_keeping_quantity;
 
         $category->save();
         return redirect()->route('non-consumable-category-material')->with('success', 'Material added successfully!');
     }
+
 
 
     public function nonConsumableCategoryMaterialDestroy($id)

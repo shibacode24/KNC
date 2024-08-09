@@ -6,7 +6,7 @@ use App\Http\Controllers\panel\DashboardController;
 use App\Http\Controllers\panel\UserRolesController;
 use App\Http\Controllers\panel\WarehouseController;
 use App\Http\Controllers\panel\InventoryManagementController;
-use App\Http\Controllers\panel\{AccountDepartmentController, TransferMaterialController};
+use App\Http\Controllers\panel\{AccountDepartmentController, TransferMaterialController, PredictionController};
 use App\Http\Controllers\panel\MapController;
 
 /*
@@ -191,6 +191,7 @@ Route::get('non-consumable-category-destroy/{id}', [DashboardController::class, 
 Route::get('/non-consumable-category-material', [DashboardController::class, 'nonConsumableCategoryMaterial'])->name('non-consumable-category-material');
 Route::post('/non-consumable-category-material-store', [DashboardController::class, 'nonConsumableCategoryMaterialStore'])->name('non-consumable-category-material-store');
 Route::get('non-consumable-category-material-destroy/{id}', [DashboardController::class, 'nonConsumableCategoryMaterialDestroy'])->name('non-consumable-category-material-destroy');
+Route::get('/brands/getNonConsumableBrands', [DashboardController::class, 'getNonConsumableBrands'])->name('brands.getNonConsumableBrands');
 
 Route::get('/issue', [DashboardController::class, 'issue'])->name('issue');
 Route::post('/issue-store', [DashboardController::class, 'issueStore'])->name('issue-store');
@@ -379,3 +380,11 @@ Route::get('/filter-employees', [MapController::class, 'filterEmployees'])->name
 // Transfer Material
 Route::get('transfer-material', [TransferMaterialController::class, 'transferMaterial'])->name('transfer-material');
 Route::post('transfer-material-store', [TransferMaterialController::class, 'transferMaterialStore'])->name('transfer-material.store');
+Route::get('transfer-material-edit/{id}', [TransferMaterialController::class, 'transferMaterialEdit'])->name('transfer-material.edit');
+Route::post('transfer-material-update', [TransferMaterialController::class, 'transferMaterialUpdate'])->name('transfer-material.update');
+
+// Prediction
+Route::get('prediction', [PredictionController::class, 'prediction'])->name('prediction');
+Route::post('prediction-store', [PredictionController::class, 'predictionStore'])->name('prediction.store');
+Route::get('prediction-edit/{id}', [PredictionController::class, 'predictionEdit'])->name('prediction.edit');
+Route::post('prediction-update', [PredictionController::class, 'predictionUpdate'])->name('prediction.update');

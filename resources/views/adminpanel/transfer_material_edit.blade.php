@@ -5,27 +5,6 @@
             <div class="col-md-12">
 
 
-    @if ($errors->any())
-    <div class="alert alert-danger mt-2">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
                 <div class="panel-body" style="padding:1px 5px 2px 5px;">
 
                     <div class="col-md-12" style="margin-top:5px;">
@@ -38,9 +17,10 @@
                         </div>
                     </div>
                     <div class="col-md-12" style="margin-top:10px;">
-                        <form action="{{route('transfer-material.store')}}" method="post">
+                        <form action="{{route('transfer-material.update')}}" method="post">
                             @csrf
                             <div class="col-md-2"></div>
+                            <input type="hidden" name="id" value="{{ $materialEdit->id }}">
 
                             <div class="col-md-2">
                                 <label class="control-label">Select Transfer Type<font color="#FF0000">*</font></label>
@@ -69,7 +49,7 @@
                             <div class="col-md-2" style="margin-top:15px;" align="left">
                                 <button id="on" type="submit" class="btn mjks"
                                     style="color:#FFFFFF; height:30px; width:auto;">
-                                    <i class="fa fa-plus"></i>Transfer</button>
+                                    <i class="fa fa-plus"></i>Update Transfer</button>
                             </div>
                         </form>
                     </div>
@@ -90,67 +70,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12" style="margin-top:15px;">
 
-                            <!-- START DEFAULT DATATABLE -->
-
-                            <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                            <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
-                                <table class="table datatable">
-                                    <thead>
-                                        <tr>
-                                            <th>Sr. No.</th>
-                                            <th>Transfer Type</th>
-                                            <th>Source Location</th>
-                                            <th>Target Location</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($transferedMaterial as $index => $material)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $material->transfer_type}}</td>
-                                            <td>{{ $material->sourceWarehouseName->warehouse_name ?? '' }}</td>
-                                            <td>
-                                                @if($material->transfer_type === 'Warehouse-to-Warehouse')
-                                                    {{ $material->targetWarehouseName->warehouse_name ?? '' }}
-                                                @else
-                                                    {{ $material->siteName->site_name ?? '' }}
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                <a href="{{ route('transfer-material.edit', $material->id) }}"><button
-                                                    style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                    type="button" class="btn btn-info" data-toggle="tooltip"
-                                                    data-placement="top" title="Edit"><i class="fa fa-edit"
-                                                    {{-- onclick="confirmDelete({{ $material->id }})" --}}
-                                                        style="margin-left:5px;"></i></button></a>
-
-
-                                                {{-- <a href="{{ route('transfer-material-destroy', $material->id) }}"><button
-                                                        style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                        type="button" class="btn btn-info" data-toggle="tooltip"
-                                                        data-placement="top" title="Delete"
-                                                        onclick="confirmDelete({{ $material->id }})"><i
-                                                            class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a> --}}
-
-                                            </td>
-
-                                        </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- END DEFAULT DATATABLE -->
-
-
-                        </div>
-                        <div class="col-md-2" style="margin-top:15px;"></div>
                     </div>
                 </div>
             </div>

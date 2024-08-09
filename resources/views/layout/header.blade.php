@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" href="{{ asset('public/logo/favicon.png') }}" type="image/x-icon" />
+    <link rel="icon" href="{{ asset('logo/favicon.png') }}" type="image/x-icon" />
     <!-- END META SECTION -->
     <!-- CSS INCLUDE -->
     <link rel="stylesheet" type="text/css" id="theme" href="{{ asset('public/css/theme-default.css') }}" />
@@ -674,7 +674,7 @@
                 @endif
 
                 <li>
-                    <a href="{{route('map')}}" target="_blank" title="Account Department"><span class="fa fa-map-marker"> </span>Track Location</a>
+                    <a href="{{route('map')}}" title="Account Department"><span class="fa fa-map-marker"> </span>Track Location</a>
                 </li>
 
 

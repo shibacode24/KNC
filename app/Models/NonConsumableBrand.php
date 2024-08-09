@@ -11,11 +11,11 @@ class NonConsumableBrand extends Model
     protected $table = 'non_consumable_brand';
 
     protected $fillable = [
-        'material_id',
+        'category_id',
         'brand'
     ];
-    public function material_name()
+    public function category_name()
     {
-        return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'material_id');
+        return $this->hasOne(NonConsumableCategory::class, 'id', 'category_id');
     }
 }

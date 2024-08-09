@@ -26,68 +26,52 @@ class MapController extends Controller
 //         return view('map', compact('coordinate', 'emp', 'allLocations'));
 // }
 
-public function showMap2(Request $request)
-{
-    $selectedEmployeeLocation = TrackEmpLocation::where('emp_id', $request->emp_id)->first(['latitude', 'longitude']);
 
-    // Retrieve all employee locations
-    $allLocations = TrackEmpLocation::all(['latitude', 'longitude', 'emp_id']);
 
-    // Retrieve all employees for displaying names
-    $employees = User::all(['id', 'name']); // Adjust as needed
 
-    return view('map', compact('selectedEmployeeLocation', 'employees', 'allLocations'));
-}
+// Controller method that returns view
+// public function showMap(Request $request) {
+//     $empId = $request->input('emp_id');
+//     $latestLocation = TrackEmpLocation::where('emp_id', 32)
+//                                       ->orderBy('created_at', 'desc')
+//                                       ->first();
+// // dd($latestLocation);
+//     $locations = TrackEmpLocation::where('emp_id', 32)
+//                                  ->orderBy('created_at', 'desc')
+//                                  ->get();
 
-public function showMap(Request $request)
-{
+//     return view('map', compact('latestLocation', 'locations'));
+
+
+// }
+
+public function showMap(Request $request) {
     $empId = $request->input('emp_id');
+    $fromDate = $request->input('from_date');
+    $toDate = $request->input('to_date');
 
-    // Retrieve the latest location of the selected employee
-    $selectedEmployeeLocation = TrackEmpLocation::where('emp_id', $empId)->first(['latitude', 'longitude']);
+    $query = TrackEmpLocation::query();
 
-    // Retrieve all location history of the selected employee
-    $locationHistory = DB::table('track_emp_location')
-        ->where('emp_id', $empId)
-        ->orderBy('recorded_at', 'asc')
-        ->get(['latitude', 'longitude', 'recorded_at']);
+    if ($empId) {
+        $query->where('emp_id', $empId);
+    }
 
-    // Retrieve all employees for displaying names
-    $employees = User::all(['id', 'name']); // Adjust as needed
+    if ($fromDate) {
+        $query->whereDate('created_at', '>=', $fromDate);
+    }
 
-    return view('map', compact('selectedEmployeeLocation', 'employees', 'locationHistory'));
+    if ($toDate) {
+        $query->whereDate('created_at', '<=', $toDate);
+    }
+
+    $locations = $query->orderBy('created_at', 'desc')->get();
+    $latestLocation = $locations->first(); // Get the latest location if available
+
+    return view('map', compact('latestLocation', 'locations'));
 }
 
 
 
-// In your controller
-// public function getEmployeesByType(Request $request)
-// {
-//     $type = $request->input('type');
-
-//     // Query based on employee type
-//     $employees = User::whereIn('id', function($query) use ($type) {
-//         $query->select('emp_id')
-//               ->from('TrackEmpLocation')
-//               ->where('emp_type', $type);
-//     })->get(['id', 'name']); // Ensure 'name' is selected
-
-//     return response()->json($employees);
-// }
-
-
-// public function filterEmployees(Request $request)
-// {
-//     $type = $request->query('type');
-
-//     if (!$type) {
-//         return response()->json([]);
-//     }
-
-//     $employees = TrackEmpLocation::where('emp_type', $type)->get(['id', 'emp_id']);
-
-//     return response()->json($employees);
-// }
 
 public function filterEmployees(Request $request)
 {
@@ -97,10 +81,11 @@ public function filterEmployees(Request $request)
         return response()->json([]);
     }
 
-    // Join TrackEmpLocation with user table to get employee names
+    // Join TrackEmpLocation with user table to get unique employee names
     $employees = TrackEmpLocation::where('emp_type', $type)
         ->join('users', 'track_emp_location.emp_id', '=', 'users.id')
-        ->get(['track_emp_location.id', 'users.name']); // Adjust column name based on your user table
+        ->distinct('track_emp_location.emp_id') // Ensure distinct emp_id
+        ->get(['track_emp_location.emp_id as id', 'users.name']); // Alias id for consistency
 
     return response()->json($employees);
 }
