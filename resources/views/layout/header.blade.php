@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" href="{{ asset('public/logo/favicon.png') }}" type="image/x-icon" />
+    <link rel="icon" href="{{ asset('logo/favicon.png') }}" type="image/x-icon" />
     <!-- END META SECTION -->
     <!-- CSS INCLUDE -->
     <link rel="stylesheet" type="text/css" id="theme" href="{{ asset('public/css/theme-default.css') }}" />
@@ -20,6 +20,8 @@
     {{-- <link href="{{asset('https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css')}}" rel="stylesheet" />
 <script src="{{asset('https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js')}}"></script> --}}
 
+
+@yield('styles')
 
 </head>
 
@@ -118,6 +120,12 @@
             stroke: #fff;
         }
     </style>
+
+{{-- MAP --}}
+
+
+{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1Cz13aBYAbBYJL0oABZ8KZnd7imiWwA4&callback=initMap" async defer></script> --}}
+
     <!-- START PAGE CONTAINER -->
     <div class="page-container page-navigation-top">
         <!-- PAGE CONTENT -->
@@ -622,7 +630,7 @@
                     </li>
                 @endif
 
-
+                <li><a href="transfer-material"><span class="fa fa-plus"></span>Transfer Material</a></li>
 
                 @if (Auth::user()->panel_role == 1 ||
                         in_array('app-user-roles', $permission) ||
@@ -666,8 +674,10 @@
                 @endif
 
                 <li>
-                    <a href="{{route('map')}}" target="_blank" title="Account Department"><span class="fa fa-map-marker"> </span>Track Location</a>
+                    <a href="{{route('map')}}" title="Account Department"><span class="fa fa-map-marker"> </span>Track Location</a>
                 </li>
+
+
                 @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
 
                     <li>
@@ -680,12 +690,12 @@
                         </ul>
                     </li>
                 @endif
-                {{--
+
 
             <li>
-                <a href="#" title="Prediction"><span class="fa fa-tachometer"> </span></a>
+                <a href="prediction" title="Prediction"><span class="fa fa-tachometer"> </span></a>
 
-            </li> --}}
+            </li>
 
                 {{-- <li>
                 <a href="#" title="User Role"><span class="fa fa-money"> </span>User Roles For App</a>

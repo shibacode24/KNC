@@ -22,6 +22,7 @@ class Site_Manager extends Model
         'bank_name',
         'account_number',
         'ifsc_code',
+        'status',
 
     ];
      public function cityname()

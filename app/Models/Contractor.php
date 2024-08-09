@@ -17,6 +17,7 @@ class Contractor extends Model
         'pan_number',
         'city_address',
         'city_id',
+        'status',
     ];
 
     public function cityname()

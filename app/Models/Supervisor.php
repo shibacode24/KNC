@@ -19,6 +19,7 @@ class Supervisor extends Model
         'city_id',
         'user_id',
         'password',
+        'status',
     ];
 
     public function cityname()

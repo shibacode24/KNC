@@ -19,12 +19,13 @@ class Vendor extends Model
         'brand',
         'materials',
         'city_id',
+        'status'
 
     ];
 
     public function cityname()
     {
-        return $this->hasOne(City::class, 'id', 'city_address');
+        return $this->hasOne(City::class, 'id', 'city_id');
     }
     public function brandname()
     {

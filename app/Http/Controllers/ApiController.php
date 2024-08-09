@@ -19,7 +19,9 @@ use App\Models\AssignedTask;
 use App\Models\AssignedTaskIssues;
 use App\Models\Issues;
 use App\Models\Brand;
-use App\Models\{UnitType, RawMaterial, LostMaterial, ApplyLeave, WorkPlace, TransferWorkPlaceMaterial, NonConsumableCategory, NonConsumableCategoryMaterial, MaterialConsumed, RepairingAndMaintenance, Warehouse};
+use App\Models\{UnitType, RawMaterial, LostMaterial, ApplyLeave, WorkPlace, TransferWorkPlaceMaterial,
+                NonConsumableCategory, NonConsumableCategoryMaterial, MaterialConsumed, RepairingAndMaintenance,
+                Warehouse, TrackEmpLocation};
 use App\Models\Inventory\IssueMaterialByInventory;
 use App\Models\Warehouse\IssueMaterialByWareHouse;
 use App\Models\Attendance\AttendanceSupervisor;
@@ -1180,6 +1182,23 @@ public function getRepairingAndMaintenance(Request $request){
 		}
 }
 
+
+public function postTrackEmpLocation(Request $request)
+{
+    $emp = TrackEmpLocation::create([
+        'emp_type' => $request-> input('emp_type'),
+        'emp_id'=> $request->input('emp_id'),
+        'latitude'=> $request->input('latitude'),
+        'longitude'=> $request->input('longitude'),
+    ]);
+
+    if($emp){
+        return response()->json(['status' => true, 'message'=>'Data Added Successfully']);
+    }else{
+        return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+    }
+
+}
 
 
 }

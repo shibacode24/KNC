@@ -188,51 +188,68 @@
                                         <th>PAN Number</th>
                                         <th>City</th>
                                         <th>Address</th>
-                                        <th>Account Holder Name</th>
+                                        <th>status</th>
+                                        {{-- <th>Account Holder Name</th>
                                         <th>Bank Name</th>
                                         <th>Account Number</th>
-                                        <th>IFSC</th>
+                                        <th>IFSC</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($ac as $index => $accountDetail)
+                                    @foreach($supervisor as $index => $supervisor)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $accountDetail->supervisor->supervisor_name ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->email ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->mobile_number ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->aadhar_number ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->pan_number ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->cityname->city ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->supervisor->city_address ?? 'N/A' }}</td>
-                                        <td>{{ $accountDetail->account_holder }}</td>
-                                        <td>{{ $accountDetail->bank_name }}</td>
-                                        <td>{{ $accountDetail->account_number }}</td>
-                                        <td>{{ $accountDetail->ifsc_code }}</td>
+                                        <td>{{ $supervisor->supervisor_name ?? 'N/A' }}</td>
+                                        <td>{{ $supervisor->email ?? 'N/A' }}</td>
+                                        <td>{{ $supervisor->mobile_number ?? 'N/A' }}</td>
+                                        <td>{{ $supervisor->aadhar_number ?? 'N/A' }}</td>
+                                        <td>{{ $supervisor->pan_number ?? 'N/A' }}</td>
+                                        <td>{{ $supervisor->cityname->city ?? 'N/A' }}</td>
+                                        <td>{{ $supervisor->city_address ?? 'N/A' }}</td>
+                                        {{-- <td>{{ $account_holder }}</td>
+                                        <td>{{ $bank_name }}</td>
+                                        <td>{{ $account_number }}</td>
+                                        <td>{{ $ifsc_code }}</td> --}}
+                                        <td style="background-color: #ffffff;">
+                                            <div class="d-flex align-items-center">
+
+                                                       <?php if ($supervisor->status=='1'){?>
+
+                                                        <a href="{{url('/update_supervisor_status', $supervisor->id)}}"
+                                                            class="btn btn-success"> Active</a>
+
+                                                            <?php } else {?>
+                                                            <a href="{{url('/update_supervisor_status', $supervisor->id)}}"
+                                                                class="btn btn-danger">Inactive</a>
+                                                                <?php
+                                                        }?>
+                                                        </td>
+
+
 
                                         <td>
 
-                                            <button
-                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                            <a href="{{route('supervisor-edit',$supervisor->id)}}"> <button
+                                                style="background-color:#3399ff; border:none; max-height:25px; margin-bottom:-5px;"
                                                 type="button" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Edit"><i class="fa fa-edit"
-                                                    style="margin-left:5px;"></i></button>
+                                                    style="margin-left:5px;"></i></button></a>
 
-                                                    {{-- <a href="{{ route('supervisor-destroy', $accountDetail->id) }}"><button
+                                                    {{-- <a href="{{ route('supervisor-destroy', $supervisor->id) }}"><button
                                                         style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                         type="button" class="btn btn-info" data-toggle="tooltip"
                                                         data-placement="top" title="Delete"
-                                                        onclick="confirmDelete({{ $accountDetail->id }})"><i
+                                                        onclick="confirmDelete({{ $supervisor->id }})"><i
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a> --}}
 
-                                                @if($accountDetail->supervisor)
+                                                {{-- @if($supervisor)
 
-                                                <a href="{{ route('supervisor-destroy', $accountDetail->supervisor->id) }}" onclick="return confirm('Are you sure you want to delete this Supervisor?')">
+                                                <a href="{{ route('supervisor-destroy', $supervisor->id) }}" onclick="return confirm('Are you sure you want to delete this Supervisor?')">
                                                     <button style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o" style="margin-left:5px;"></i></button>
                                                 </a>
-                                                @endif
+                                                @endif --}}
                                         </td>
                                     </tr>
 
@@ -343,6 +360,17 @@
     $("tbody").delegate(".delete-row", "click", function() {
         $(this).parents("tr").remove();
     });
+});
+</script>
+
+
+<script>
+    const toggleButton = document.getElementById('toggleButton');
+toggleButton.addEventListener('click', function() {
+    const currentStatus = toggleButton.getAttribute('data-status');
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    toggleButton.setAttribute('data-status', newStatus);
+    toggleButton.classList.toggle('toggled', newStatus === 'active');
 });
 </script>
 @stop
