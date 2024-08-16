@@ -98,18 +98,17 @@
                                     @foreach ($material as $material)
                                         <option value="{{ $material->id }}">{{ $material->category }}</option>
                                     @endforeach
-
                                 </select>
                             </div>
 
                             <div class="col-md-2">
                                 <label>Select Sub Category</label>
                                 <select class="form-control select" data-live-search="true" name="raw_material_id"
-                                    id="sub_category">
+                                    id="subcategory">
                                     <option value="">--Select--</option>
-                                    {{-- @foreach ($material as $material)
-                                        <option value="{{ $material->id }}">{{ $material->material }}</option>
-                                    @endforeach --}}
+                                    @foreach ($sub_category as $sub_category)
+                                        <option value="{{ $sub_category->id }}">{{ $sub_category->sub_category_name }}</option>
+                                    @endforeach
 
                                 </select>
                             </div>
@@ -198,7 +197,8 @@
                                             <th>Site Name</th>
                                             {{-- <th>Supervisor Name</th> --}}
                                             <th>Warehouse Name</th>
-                                            <th>Material Name</th>
+                                            <th>Category Name</th>
+                                            <th>Sub Category Name</th>
                                             {{-- <th>Raw Material Name</th> --}}
                                             <th>Brand Name</th>
                                             <th>Material Unit Type</th>
@@ -218,8 +218,8 @@
                                                 <td>{{ $addMaterial->site_name->site_name ?? ''}}</td>
                                                 {{-- <td>{{ $addMaterial->supervisor_name->supervisor_name ?? ''}}</td> --}}
                                                 <td>{{ $addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
-                                                <td>{{ $addMaterial->material_name->material ?? ''}}</td>
-                                                {{-- <td>{{$addMaterial->raw_material_name->raw_material_name}}</td> --}}
+                                                <td>{{ $addMaterial->material_name->category ?? ''}}</td>
+                                                <td>{{$addMaterial->sub_category_name->sub_category_name ?? ''}}</td>
                                                 <td>{{ $addMaterial->brand_name->brand ?? ''}}</td>
                                                 <td>{{ $addMaterial->unit_type->unit_type ?? ''}}</td>
                                                 <td>{{ $addMaterial->quantity ?? ''}}</td>

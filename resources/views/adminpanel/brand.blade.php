@@ -17,6 +17,28 @@
                         </h5>
 
 
+                        @if ($errors->any())
+                        <div class="alert alert-danger mt-2">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
 
                     </div>
                 </div>
@@ -41,7 +63,7 @@
                         <div class="col-md-2" style="margin-top:15px;" align="left">
                             <button id="on" type="submit" class="btn mjks"
                                 style="color:#FFFFFF; height:30px; width:auto;">
-                                <i class="fa fa-plus"></i>Add</button>
+                                <i class="fa fa-plus"></i>Update</button>
 
                         </div>
                     </form>
@@ -77,7 +99,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($brand as $brand)
+                                    @foreach($brand->sortByDesc('created_at') as $brand)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
 
@@ -93,13 +115,13 @@
                                                     style="margin-left:5px;"></i></button> </a>
 
 
-                                                    <a href="{{ route('brand-destroy', $brand->id) }}"><button
+                                                    {{-- <a href="{{ route('brand-destroy', $brand->id) }}"><button
                                                         style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                         type="button" class="btn btn-info" data-toggle="tooltip"
                                                         data-placement="top" title="Delete"
                                                         onclick="confirmDelete({{ $brand->id }})"><i
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
+                                                </a> --}}
                                         </td>
                                     </tr>
 

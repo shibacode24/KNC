@@ -43,9 +43,14 @@ Route::get('getRawMaterial', [ApiController::class, 'getRawMaterial']);
 
 Route::get('getRawMaterialBrand', [ApiController::class, 'getRawMaterialBrand']);
 
+// post request for consumable and non consumable material
 Route::post('postRequestMaterial', [ApiController::class, 'postRequestMaterial']);
 
-Route::get('getRequestedMaterial', [ApiController::class, 'getRequestedMaterial']);
+//Route::post('postRequestNonConsumableMaterial', [ApiController::class, 'postRequestNonConsumableMaterial']);
+
+Route::get('getRequestedConsumableMaterial', [ApiController::class, 'getRequestedConsumableMaterial']);
+
+Route::get('getRequestedNonConsumableMaterial', [ApiController::class, 'getRequestedNonConsumableMaterial']);
 
 Route::get('getCategory', [ApiController::class, 'getCategory']);
 
@@ -73,11 +78,15 @@ Route::get('getAllMaterialUnitType', [ApiController::class, 'getAllMaterialUnitT
 
 Route::post('postReceivedMaterial', [ApiController::class, 'postReceivedMaterial']);
 
-Route::get('getReceivedMaterial', [ApiController::class, 'getReceivedMaterial']);
+Route::get('getConsumableReceivedMaterial', [ApiController::class, 'getConsumableReceivedMaterial']);
+
+Route::get('getNonConsumableReceivedMaterial', [ApiController::class, 'getNonConsumableReceivedMaterial']);
 
 Route::post('postLostMaterialRequest', [ApiController::class, 'postLostMaterialRequest']);
 
-Route::get('getLostMaterial', [ApiController::class, 'getLostMaterial']);
+Route::get('getConsumableLostMaterial', [ApiController::class, 'getConsumableLostMaterial']);
+
+Route::get('getNonConsumableLostMaterial', [ApiController::class, 'getNonConsumableLostMaterial']);
 
 Route::post('postSupervisorAttendance', [ApiController::class, 'postSupervisorAttendance']);
 Route::get('getSupervisorAttendance', [ApiController::class, 'getSupervisorAttendance']);
@@ -100,6 +109,8 @@ Route::get('getNonConsumableCategories', [ApiController::class, 'getNonConsumabl
 
 Route::get('getNonConsumableCategoryMaterial', [ApiController::class, 'getNonConsumableCategoryMaterial']);
 
+Route::get('getNonConsumableBrand', [ApiController::class, 'getNonConsumableBrand']);
+
 Route::post('postMaterialConsumed', [ApiController::class, 'postMaterialConsumed']);
 
 Route::get('getMaterialConsumed', [ApiController::class, 'getMaterialConsumed']);
@@ -112,4 +123,17 @@ Route::get('getRepairingAndMaintenance', [ApiController::class, 'getRepairingAnd
 
 Route::post('updateAssignedTaskWeightage', [ApiController::class, 'updateAssignedTaskWeightage']);
 
+Route::post('postTransferMaterial', [ApiController::class, 'postTransferMaterial']);
+
+Route::get('getTransferConsumableMaterial', [ApiController::class, 'getTransferConsumableMaterial']);
+
+Route::get('getTransferNonConsumableMaterial', [ApiController::class, 'getTransferNonConsumableMaterial']);
+
+Route::post('postConsumedMaterialByWorkplace', [ApiController::class, 'postConsumedMaterialByWorkplace']);
+
+Route::get('getAllSites', [ApiController::class, 'getAllSites']);
+
+Route::get('getConsumedMaterialByWorkplace', [ApiController::class, 'getConsumedMaterialByWorkplace']);
+
+// To add lat long of an employee
 Route::post('postTrackEmpLocation', [ApiController::class, 'postTrackEmpLocation']);

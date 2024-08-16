@@ -59,7 +59,7 @@
                                 <th>Requested Date</th>
                                 <th>Request ID</th>
                                 <th>Site Name</th>
-
+                                <th>Selected Warehouse</th>
                                 <th>Material Name</th>
                                 <th>Brand Name</th>
                                 <th>Material Qty</th>
@@ -78,9 +78,10 @@
                         @endphp
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$material->requested_material_date}}</td>
+                                <td>{{ date('d-m-Y', strtotime($material->requested_material_date)) }}</td>
                                 <td>{{$material->requested_material_id}}</td>
                                 <td>{{$material->site_name->site_name ?? ''}}</td>
+                                <td>{{$material->warehouse_name->warehouse_name}}</td>
                                 <td>{{$material->material_name->material ?? ''}}</td>
                                 <td>{{$material->brand_name->brand}}</td>
                                 <td>{{$material->requested_material_quantity}}</td>
@@ -143,7 +144,7 @@
                     @endphp
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$material->requested_material_date ?? ''}}</td>
+                            <td>{{ date('d-m-Y', strtotime($material->requested_material_date)) }}</td>
                             <td>{{$material->requested_material_id ?? ''}}</td>
                             <td>{{$material->site_name->site_name ?? ''}}</td>
                             <td>{{$material->material_name->material ?? ''}}</td>
@@ -207,7 +208,7 @@
                     @endphp
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$material->requested_material_date ?? ''}}</td>
+                            <td>{{ date('d-m-Y', strtotime($material->requested_material_date)) }}</td>
                             <td>{{$material->requested_material_id ?? ''}}</td>
                             <td>{{$material->site_name->site_name ?? ''}}</td>
                             <td>{{$material->material_name->material ?? ''}}</td>
@@ -267,7 +268,7 @@
                     @endphp
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$material->requested_material_date}}</td>
+                            <td>{{ date('d-m-Y', strtotime($material->requested_material_date)) }}</td>
                             <td>{{$material->requested_material_id}}</td>
                             <td>{{$material->site_name->site_name ?? ''}}</td>
                             <td>{{$material->material_name->material}}</td>

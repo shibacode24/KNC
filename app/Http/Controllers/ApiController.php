@@ -19,9 +19,7 @@ use App\Models\AssignedTask;
 use App\Models\AssignedTaskIssues;
 use App\Models\Issues;
 use App\Models\Brand;
-use App\Models\{UnitType, RawMaterial, LostMaterial, ApplyLeave, WorkPlace, TransferWorkPlaceMaterial,
-                NonConsumableCategory, NonConsumableCategoryMaterial, MaterialConsumed, RepairingAndMaintenance,
-                Warehouse, TrackEmpLocation};
+use App\Models\{UnitType, RawMaterial, LostMaterial, ApplyLeave, WorkPlace, TransferWorkPlaceMaterial, NonConsumableCategory, NonConsumableCategoryMaterial, MaterialConsumed, RepairingAndMaintenance, Warehouse, TransferAppMaterial, ConsumedMaterialByWorkplace};
 use App\Models\Inventory\IssueMaterialByInventory;
 use App\Models\Warehouse\IssueMaterialByWareHouse;
 use App\Models\Attendance\AttendanceSupervisor;
@@ -87,7 +85,7 @@ class ApiController extends Controller
 	}
 
 		// get all sites details and supervisor name
-	public function getAssignSite(Request $request)
+	public function getAssignSite2(Request $request)
 {
      $task = DB::table('assign_site')
 
@@ -104,6 +102,81 @@ class ApiController extends Controller
         return response()->json(['status' => false, 'message' => 'No Task Found']);
     }
 }
+
+	public function getAssignSite3(Request $request)
+{
+
+    $assignSites = AssignSite::all();
+    $userIds = [];
+
+    // Collect all user IDs from the results
+    foreach ($assignSites as $site) {
+        $userIds = array_merge($userIds, $site->user_id);
+    }
+
+    // Remove duplicates
+    $userIds = array_unique($userIds);
+
+    // Fetch users from the User model
+    $users = User::whereIn('id', $userIds)->pluck('name', 'id');
+
+    // Map user names to each AssignSite
+    foreach ($assignSites as $site) {
+        $site->user_names = array_map(function($id) use ($users) {
+            return $users[$id] ?? null;
+        }, $site->user_id);
+    }
+
+    if ($assignSites->isNotEmpty()) {
+        return response()->json(['status' => true, 'data' => $assignSites]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No Task Found']);
+    }
+}
+
+public function getAssignSite(Request $request)
+{
+    // Validate the request
+    $validated = $request->validate([
+        'user_id' => 'required|integer',
+    ]);
+
+    $userId = $validated['user_id'];
+
+    // Fetch AssignSite entries where user_id array contains the specified user_id
+    $assignSites = AssignSite::whereJsonContains('user_id', $userId)
+        ->leftJoin('sites', 'sites.id', '=', 'assign_site.site_assign')
+        ->select('sites.id', 'sites.site_name', 'sites.city_address', 'assign_site.user_id')
+        ->get();
+
+    // Fetch the user names for the given user_id
+    $user = User::find($userId);
+
+    if (!$user) {
+        return response()->json(['status' => false, 'message' => 'User Not Found']);
+    }
+
+    $userName = $user->name;
+
+    // Map the site names and user name to the result
+    $result = $assignSites->map(function ($site) use ($userName) {
+        return [
+            'site_name' => $site->site_name,
+            'user_name' => $userName,
+			'city_address' => $site->city_address,
+			'site_id' => $site->id,
+        ];
+    });
+
+    if ($result->isNotEmpty()) {
+        return response()->json(['status' => true, 'data' => $result]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No Assign Site Found']);
+    }
+}
+
+
+
 
 // get particular site by site id
 	public function getAssignSiteById(Request $request)
@@ -368,69 +441,6 @@ public function getWorkingUnitType(){
     }
 
 
-
-	public function getAssignedTask222(Request $request)
-{
-    $tasks = AssignedTask::
-        leftJoin('sites', 'sites.id', '=', 'assigned_task.site_id')
-        ->leftJoin('task', 'task.id', '=', 'assigned_task.task_id')
-        ->leftJoin('task_category', 'task_category.id', '=', 'assigned_task.task_category_id')
-        ->leftJoin('task_subcategory', 'task_subcategory.id', '=', 'assigned_task.task_subcategory_id')
-        ->leftJoin('contractor', 'contractor.id', '=', 'assigned_task.contractor_id')
-        ->leftJoin('working_unit_type', 'working_unit_type.id', '=', 'assigned_task.work_unit_type_id')
-        ->where('assigned_task.task_id', $request->task_id)
-        ->where('assigned_task.site_id', $request->site_id)
-        ->select(
-            'assigned_task.id',
-            'assigned_task.task_id',
-            'sites.site_name',
-            'task_category.category_name',
-            'task_subcategory.subcategory_name',
-            'contractor.contractor_name',
-            'working_unit_type.working_unit_type',
-            'assigned_task.start_date',
-            'assigned_task.end_date',
-            'assigned_task.total_work',
-            'assigned_task.status'
-        )
-        ->get();
-
-    // Count the number of tasks for the given task_id
-    $taskCount = $tasks->count();
-
-    // Calculate weightage for each task
-    $weightage = $taskCount > 0 ? 100 / $taskCount : 0;
-
-    // Update statuses and weightages
-    $currentDate = Carbon::now()->startOfDay();
-    foreach ($tasks as $task) {
-        $startDate = Carbon::parse($task->start_date)->startOfDay();
-        $endDate = Carbon::parse($task->end_date)->startOfDay();
-
-        if ($currentDate->gt($endDate)) {
-            $task->status = 'Delayed';
-        } elseif ($currentDate->gte($startDate) && $currentDate->lte($endDate)) {
-            $task->status = 'Inprogress';
-        } elseif ($currentDate->lt($startDate)) {
-            $task->status = 'Pending';
-        }
-
-        // Assign weightage
-        $task->weightage = $weightage;
-
-        // Save the updated status and weightage
-        $task->save();
-    }
-
-    if ($tasks->isNotEmpty()) {
-        return response()->json(['status' => true, 'data' => $tasks]);
-    } else {
-        return response()->json(['status' => false, 'message' => 'No tasks found for the given criteria.']);
-    }
-}
-
-
-
 public function getAssignedTask(Request $request)
 {
     $tasks = AssignedTask::
@@ -565,7 +575,7 @@ public function getAssignedTask(Request $request)
 			->leftJoin('brand', 'brand.id', '=', 'raw_material.brand_id')
 			->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
 			->leftJoin('material', 'material.id', '=', 'raw_material.material_id')
-			->select('material.material', 'brand.brand', 'unit_type.unit_type', 'raw_material.raw_material_name', 'raw_material.id',  'raw_material.brand_id', 'raw_material.maximum_keeping_quantity', 'raw_material.minimum_keeping_quantity', )
+			->select('material.material', 'brand.brand', 'unit_type.unit_type', 'unit_type.id as unit_id', 'raw_material.raw_material_name', 'raw_material.id',  'raw_material.brand_id', 'raw_material.maximum_keeping_quantity', 'raw_material.minimum_keeping_quantity',)
 			->get();
 		if($material){
 			return response()->json(['status'=>true, 'data'=>$material]);
@@ -594,7 +604,9 @@ public function getAssignedTask(Request $request)
 		'material_id' => $request->input('material_id'),
 		'raw_material_id' => $request->input('raw_material_id'),
 		'brand_id' => $request->input('brand_id'),
+		'material_unit_type_id' => $request->input('unit_id'),
 		'requested_quantity' => $request->input('requested_quantity'),
+		'material_type' => $request->input('material_type'),
 
 		]);
 
@@ -606,7 +618,8 @@ public function getAssignedTask(Request $request)
 	}
 
 
-	public function getRequestedMaterial(Request $request)
+
+	public function getRequestedConsumableMaterial(Request $request)
 	{
 		$material = RequestedMaterial::
 leftJoin('material', 'material.id', '=', 'requested_material.material_id')
@@ -617,8 +630,35 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 ->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
 ->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
  ->where('requested_material.site_id', $request->site_id)
+->where('requested_material.material_type', 'Consumable')
 ->whereNull('requested_material.received_quantity')
-->select( 'material.material', 'requested_material.id', 'raw_material.raw_material_name', 'users.name as supervisor_name', 'requested_material.requested_quantity', 'unit_type.unit_type', 'brand.brand', 'requested_material.created_at', 'status.status', 'issue_material_by_inventory.issue_material')
+->select( 'material.material', 'requested_material.id', 'raw_material.raw_material_name', 'users.name as supervisor_name', 'requested_material.requested_quantity', 'unit_type.unit_type', 'brand.brand', 'requested_material.material_type', 'requested_material.created_at', 'status.status', 'issue_material_by_inventory.issue_material')
+//->groupBy('material.material', 'requested_material.*')
+->get()
+	  ->groupBy(function ($item) {
+            return $item->created_at->format('Y-m-d');
+        });
+		if($material){
+			return response()->json(['status'=>true, 'data'=>$material]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+	public function getRequestedNonConsumableMaterial(Request $request)
+	{
+		$material = RequestedMaterial::
+leftJoin('material', 'material.id', '=', 'requested_material.material_id')
+->leftJoin('raw_material', 'raw_material.id', '=', 'requested_material.raw_material_id')
+->leftJoin('brand', 'brand.id', '=', 'requested_material.brand_id')
+->leftJoin('users', 'users.id', '=', 'requested_material.supervisor_id')
+->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
+->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
+->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
+ ->where('requested_material.site_id', $request->site_id)
+->where('requested_material.material_type', 'Non-Consumable')
+->whereNull('requested_material.received_quantity')
+->select( 'material.material', 'requested_material.id', 'raw_material.raw_material_name', 'users.name as supervisor_name', 'requested_material.requested_quantity', 'unit_type.unit_type', 'brand.brand', 'requested_material.material_type', 'requested_material.created_at', 'status.status', 'issue_material_by_inventory.issue_material')
 //->groupBy('material.material', 'requested_material.*')
 ->get()
 	  ->groupBy(function ($item) {
@@ -685,20 +725,24 @@ public function postAssignedTaskIssues(Request $request)
     }
 
     // Collect all issue IDs from the task issues
-    $issueIds = $taskIssues->pluck('issue_id')->flatten()->unique()->toArray();
+    $issueIds = $taskIssues->flatMap(function ($taskIssue) {
+        return explode(',', $taskIssue->issue_id);
+    })->unique()->toArray();
 
     // Retrieve the issues
     $issues = Issues::whereIn('id', $issueIds)->get()->keyBy('id');
 
     // Append issue details to each task issue
     $taskIssues->each(function ($taskIssue) use ($issues) {
-        $taskIssue->issue_details = collect($taskIssue->issue_id)->map(function ($id) use ($issues) {
+        $issueIds = explode(',', $taskIssue->issue_id); // Convert the comma-separated string to an array
+        $taskIssue->issue_details = collect($issueIds)->map(function ($id) use ($issues) {
             return $issues->get($id);
         });
     });
 
     return response()->json(['status' => true, 'data' => $taskIssues]);
 }
+
 
 
 	public function getAllMaterialBrands(Request $request)
@@ -722,22 +766,7 @@ public function postAssignedTaskIssues(Request $request)
 		}
 	}
 
-	public function postReceivedMaterial2(Request $request)
-	{
-		 $material = RequestedMaterial::where('id', $request->requested_material_id)->update([
-        'received_quantity' => $request->input('received_quantity'),
-        'remaining_quantity' => $request->input('remaining_quantity'),
-		'received_remark' => $request->input('received_remark'),
-        //'specification' => $request->input('specification'), // Uncomment this line if you need to update the specification field
-    ]);
 
-
-		if($material){
-			return response()->json(['status'=>true, 'data'=>$material]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
-	}
 
 	public function postReceivedMaterial(Request $request)
 {
@@ -771,48 +800,8 @@ public function postAssignedTaskIssues(Request $request)
 }
 
 
-		public function getReceivedMaterial33(Request $request)
-	{
-		$material = RequestedMaterial::
-leftJoin('material', 'material.id', '=', 'requested_material.material_id')
-->leftJoin('raw_material', 'raw_material.id', '=', 'requested_material.raw_material_id')
-->leftJoin('brand', 'brand.id', '=', 'raw_material.brand_id')
-->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
-->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
-->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
-->where('requested_material.site_id', $request->site_id)
-->whereNotNull('requested_material.received_quantity')
-//->select( 'material.material', 'raw_material.raw_material_name', 'requested_material.id', 'requested_material.received_remark','requested_material.requested_quantity', 'unit_type.unit_type', 'brand.brand', 'requested_material.received_quantity', 'requested_material.remaining_quantity', 'requested_material.created_at', 'issue_material_by_inventory.app_status', 'status.status' )
 
-	   ->selectRaw(
-            'material.material,
-            raw_material.raw_material_name,
-            requested_material.id,
-            requested_material.received_remark,
-            SUM(requested_material.requested_quantity) as requested_quantity,
-            unit_type.unit_type,
-            brand.brand,
-            SUM(requested_material.received_quantity) as received_quantity,
-            SUM(requested_material.remaining_quantity) as remaining_quantity,
-            requested_material.created_at,
-            issue_material_by_inventory.app_status,
-            status.status'
-        )
-	        ->groupBy('material.material', 'raw_material.raw_material_name', 'requested_material.id', 'requested_material.received_remark', 'unit_type.unit_type', 'brand.brand', 'requested_material.created_at', 'issue_material_by_inventory.app_status', 'status.status')
-
-//->groupBy('material.material', 'requested_material.*')
-->get()
-	  ->groupBy(function ($item) {
-            return $item->created_at->format('Y-m-d');
-        });
-		if($material){
-			return response()->json(['status'=>true, 'data'=>$material]);
-		}else{
-			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
-		}
-	}
-
-	public function getReceivedMaterial(Request $request)
+	public function getConsumableReceivedMaterial(Request $request)
 {
     $material = RequestedMaterial::
         leftJoin('material', 'material.id', '=', 'requested_material.material_id')
@@ -822,6 +811,58 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
         ->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
         ->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
         ->where('requested_material.site_id', $request->site_id)
+		->where('requested_material.material_type', 'Consumable')
+        ->whereNotNull('requested_material.received_quantity')
+        ->selectRaw(
+            'material.material,
+            raw_material.raw_material_name,
+            requested_material.material_id,
+            requested_material.raw_material_id,
+            SUM(requested_material.requested_quantity) as requested_quantity,
+            unit_type.unit_type,
+            brand.brand,
+            SUM(requested_material.received_quantity) as received_quantity,
+            SUM(requested_material.remaining_quantity) as remaining_quantity,
+            DATE(requested_material.created_at) as date,
+            issue_material_by_inventory.app_status,
+            status.status'
+        )
+        ->groupBy(
+            'material.material',
+            'raw_material.raw_material_name',
+            'requested_material.material_id',
+            'requested_material.raw_material_id',
+            'unit_type.unit_type',
+            'brand.brand',
+            'date', // Group by the formatted date
+            'issue_material_by_inventory.app_status',
+            'status.status'
+        )
+        ->get()
+        ->groupBy('date'); // Group by the formatted date part
+
+    if ($material) {
+        return response()->json(['status' => true, 'data' => $material]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'Something Error Occured']);
+    }
+}
+
+
+
+
+
+	public function getNonConsumableReceivedMaterial(Request $request)
+{
+    $material = RequestedMaterial::
+        leftJoin('material', 'material.id', '=', 'requested_material.material_id')
+        ->leftJoin('raw_material', 'raw_material.id', '=', 'requested_material.raw_material_id')
+        ->leftJoin('brand', 'brand.id', '=', 'raw_material.brand_id')
+        ->leftJoin('unit_type', 'unit_type.id', '=', 'raw_material.unit')
+        ->leftJoin('issue_material_by_inventory', 'issue_material_by_inventory.requested_material_id', '=', 'requested_material.id')
+        ->leftJoin('status', 'status.id', '=', 'issue_material_by_inventory.app_status')
+        ->where('requested_material.site_id', $request->site_id)
+		->where('requested_material.material_type', 'Non-Consumable')
         ->whereNotNull('requested_material.received_quantity')
         ->selectRaw(
             'material.material,
@@ -869,7 +910,7 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 		'raw_material_id' => $request->input('raw_material_id'),
 		'brand_id'=>$request->input('brand_id'),
 		'unit_type_id' => $request->input('unit_id'),
-		//'material_type' => $request->input('material_type'),
+		'material_type' => $request->input('material_type'),
 		'lost_quantity' => $request->input('lost_quantity'),
 		'remark' => $request->input('remark'),
 		//'status' => $request->input('status'),
@@ -883,9 +924,10 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 		}
 	}
 
-	public function getLostMaterial(Request $request)
+	public function getConsumableLostMaterial(Request $request)
 	{
 		$lostMaterial = LostMaterial::where('site_id', $request->site_id)
+			->where('lost_material.material_type', 'Consumable')
 			->leftJoin('material', 'material.id', '=', 'lost_material.material_id')
 			->leftJoin('raw_material', 'raw_material.id', '=', 'lost_material.raw_material_id')
 			->leftJoin('unit_type', 'unit_type.id', '=', 'lost_material.unit_type_id')
@@ -898,6 +940,24 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
 		}
 	}
+
+	public function getNonConsumableLostMaterial(Request $request)
+	{
+		$lostMaterial = LostMaterial::where('site_id', $request->site_id)
+			->where('lost_material.material_type', 'Non-Consumable')
+			->leftJoin('material', 'material.id', '=', 'lost_material.material_id')
+			->leftJoin('raw_material', 'raw_material.id', '=', 'lost_material.raw_material_id')
+			->leftJoin('unit_type', 'unit_type.id', '=', 'lost_material.unit_type_id')
+			->leftJoin('brand', 'brand.id', '=', 'raw_material.brand_id')
+			->select('lost_material.*', 'material.material', 'raw_material.raw_material_name', 'brand.brand', 'unit_type.unit_type')
+			->get();
+		if($lostMaterial){
+			return response()->json(['status'=>true, 'data'=>$lostMaterial]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
 
 	public function postSupervisorAttendance2(Request $request)
 	{
@@ -1095,9 +1155,25 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 		}
 	}
 
-	public function getNonConsumableCategoryMaterial(Request $request)
+		public function getNonConsumableCategoryMaterial(Request $request)
 	{
-		$category = NonConsumableCategoryMaterial::where('category_id', $request->non_consumable_category_id)->get();
+
+		$material = NonConsumableCategoryMaterial::where('non_consumable_category_material.category_id', $request->category_id)
+			->leftJoin('non_consumable_brand', 'non_consumable_brand.id', '=', 'non_consumable_category_material.brand_id')
+			->leftJoin('non_consumable_unit_type', 'non_consumable_unit_type.id', '=', 'non_consumable_category_material.unit_type_id')
+			->leftJoin('non_consumable_category', 'non_consumable_category.id', '=', 'non_consumable_category_material.category_id')
+			->select('non_consumable_category.category', 'non_consumable_brand.brand', 'non_consumable_unit_type.unit_type', 'non_consumable_category_material.unit_type_id', 'non_consumable_category_material.sub_category_name', 'non_consumable_category_material.id',  'non_consumable_category_material.brand_id', 'non_consumable_category_material.maximum_keeping_quantity', 'non_consumable_category_material.minimum_keeping_quantity',)
+			->get();
+		if($material){
+			return response()->json(['status'=>true, 'data'=>$material]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+	public function getNonConsumableBrand(Request $request)
+	{
+		$category = NonConsumableBrand::where('material_id', $request->category_id)->get();
 		if($category){
 			return response()->json(['status'=>true, 'data'=>$category]);
 		}else{
@@ -1105,6 +1181,15 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 		}
 	}
 
+	public function getNonConsumableUnitType(Request $request)
+	{
+		$category = NonConsumableUnitType::all();
+		if($category){
+			return response()->json(['status'=>true, 'data'=>$category]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
 
 	public function postMaterialConsumed(Request $request)
 	{
@@ -1117,7 +1202,7 @@ leftJoin('material', 'material.id', '=', 'requested_material.material_id')
 		]);
 
 		if($material){
-			return response()->json(['status'=>true, 'data'=>$material]);
+			return response()->json(['status'=>true, 'message'=>'Data Added Successfully', 'data'=>$material]);
 		}else{
 			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
 		}
@@ -1155,6 +1240,16 @@ public function getAllWarehouse(){
 		}
 }
 
+	public function getAllSites(Request $request)
+	{
+	$site = Site::select('id', 'site_name')->get();
+		if($site){
+        return response()->json(['status' => true, 'message'=>'Data Added Successfully', 'data' => $site]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No data found']);
+    }
+	}
+
 		public function postRepairingAndMaintenance(Request $request)
 	{
 		$material = RepairingAndMaintenance::create([
@@ -1167,7 +1262,7 @@ public function getAllWarehouse(){
 		]);
 
 		if($material){
-			return response()->json(['status'=>true, 'data'=>$material]);
+			return response()->json(['status'=>true, 'message'=>'Data Added Successfully', 'data'=>$material]);
 		}else{
 			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
 		}
@@ -1181,6 +1276,151 @@ public function getRepairingAndMaintenance(Request $request){
 			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
 		}
 }
+
+
+		public function postTransferMaterial(Request $request)
+	{
+		$material = TransferAppMaterial::create([
+		'supervisor_id' => $request -> input('supervisor_id'),
+		'material_type' => $request -> input('material_type'),
+		'transfer_type' =>$request -> input('transfer_type'),
+		'source_site_id' => $request -> input('source_site_id'),
+		'dest_site_id' => $request -> input('dest_site_id'),
+		'dest_warehouse_id' => $request -> input('dest_warehouse_id'),
+		'material_id' => $request -> input('material_id'),
+		'raw_material_id' => $request -> input('raw_material_id'),
+		'brand_id' => $request -> input('brand_id'),
+		'unit_type_id' => $request -> input('unit_type_id'),
+		'transfer_quantity' => $request -> input('transfer_quantity')
+		]);
+
+		if($material){
+			return response()->json(['status'=>true, 'message'=>'Data Added Successfully', 'data'=>$material]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+	public function getTransferConsumableMaterial(Request $request)
+{
+    $material = TransferAppMaterial::leftJoin('supervisor', 'supervisor_name', '=', 'transfer_app_material.supervisor_id')
+		->leftJoin('sites as source', 'source.id', '=', 'transfer_app_material.source_site_id')
+        ->leftJoin('sites as dest', 'dest.id', '=', 'transfer_app_material.dest_site_id')
+        ->leftJoin('warehouse', 'warehouse.id', '=', 'transfer_app_material.dest_warehouse_id')
+		->leftJoin('material', 'material.id', '=', 'transfer_app_material.material_id')
+        ->leftJoin('raw_material', 'raw_material.id', '=', 'transfer_app_material.raw_material_id')
+        ->leftJoin('brand', 'brand.id', '=', 'transfer_app_material.brand_id')
+        ->leftJoin('unit_type', 'unit_type.id', '=', 'transfer_app_material.unit_type_id')
+        ->leftJoin('users', 'users.id', '=', 'transfer_app_material.supervisor_id')
+		->where('material_type', 'Consumable')
+        ->select(
+            'transfer_app_material.id',
+		    'transfer_app_material.material_type',
+            'transfer_app_material.transfer_type',
+            'transfer_app_material.supervisor_id',
+			'users.name',
+		    'transfer_app_material.source_site_id',
+			'source.site_name as source_site_name',
+			'transfer_app_material.dest_site_id',
+			'dest.site_name as dest_site_name',
+			'transfer_app_material.dest_warehouse_id',
+			'warehouse.warehouse_name',
+			'material.material',
+			'raw_material.raw_material_name',
+			'brand.brand',
+			'unit_type.unit_type',
+			'transfer_app_material.transfer_quantity',
+        )
+        ->get();
+
+    if ($material->isNotEmpty()) {
+        return response()->json(['status' => true, 'message'=>'Data Added Successfully', 'data' => $material]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No data found']);
+    }
+}
+
+
+	public function getTransferNonConsumableMaterial(Request $request)
+{
+    $material = TransferAppMaterial::leftJoin('supervisor', 'supervisor_name', '=', 'transfer_app_material.supervisor_id')
+		->leftJoin('sites as source', 'source.id', '=', 'transfer_app_material.source_site_id')
+        ->leftJoin('sites as dest', 'dest.id', '=', 'transfer_app_material.dest_site_id')
+        ->leftJoin('warehouse', 'warehouse.id', '=', 'transfer_app_material.dest_warehouse_id')
+		->leftJoin('non_consumable_category', 'non_consumable_category.id', '=', 'transfer_app_material.material_id')
+        ->leftJoin('non_consumable_category_material', 'non_consumable_category_material.id', '=', 'transfer_app_material.raw_material_id')
+        ->leftJoin('non_consumable_brand', 'non_consumable_brand.id', '=', 'transfer_app_material.brand_id')
+        ->leftJoin('non_consumable_unit_type', 'non_consumable_unit_type.id', '=', 'transfer_app_material.unit_type_id')
+        ->leftJoin('users', 'users.id', '=', 'transfer_app_material.supervisor_id')
+		->where('material_type', 'Non-Consumable')
+        ->select(
+            'transfer_app_material.id',
+		    'transfer_app_material.material_type',
+            'transfer_app_material.transfer_type',
+            'transfer_app_material.supervisor_id',
+			'users.name',
+		    'transfer_app_material.source_site_id',
+			'source.site_name as source_site_name',
+			'transfer_app_material.dest_site_id',
+			'dest.site_name as dest_site_name',
+			'transfer_app_material.dest_warehouse_id',
+			'warehouse.warehouse_name',
+			'non_consumable_category.category',
+			'non_consumable_category_material.material',
+			'non_consumable_brand.brand',
+			'non_consumable_unit_type.unit_type',
+			'transfer_app_material.transfer_quantity',
+        )
+        ->get();
+
+    if ($material->isNotEmpty()) {
+        return response()->json(['status' => true, 'message'=>'Data Added Successfully', 'data' => $material]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No data found']);
+    }
+}
+
+		public function postConsumedMaterialByWorkplace(Request $request)
+	{
+		$material = ConsumedMaterialByWorkplace::create([
+		'supervisor_id' => $request -> input('supervisor_id'),
+		'site_id' => $request -> input('site_id'),
+		'workplace_id' => $request -> input('workplace_id'),
+		'material_id' => $request -> input('material_id'),
+		'raw_material_id' => $request -> input('raw_material_id'),
+		'brand_id' => $request -> input('brand_id'),
+		'unit_type_id' => $request -> input('unit_type_id'),
+		]);
+
+		if($material){
+			return response()->json(['status'=>true, 'message'=>'Data Added Successfully', 'data'=>$material]);
+		}else{
+			return response()->json(['status'=>false, 'message'=>'Something Error Occured']);
+		}
+	}
+
+	public function getConsumedMaterialByWorkplace(Request $request)
+	{
+	$material = ConsumedMaterialByWorkplace::where('workplace_id', $request->workplace_id)
+		->leftJoin('sites', 'sites.id', '=', 'consumed_material_by_workplace.site_id')
+		->leftJoin('workplace', 'workplace.id', '=', 'consumed_material_by_workplace.workplace_id')
+		->leftJoin('users', 'users.id', '=', 'consumed_material_by_workplace.supervisor_id')
+		->leftJoin('material', 'material.id', '=', 'consumed_material_by_workplace.material_id')
+		->leftJoin('raw_material', 'raw_material.id', '=', 'consumed_material_by_workplace.raw_material_id')
+		->leftJoin('brand', 'brand.id', '=', 'consumed_material_by_workplace.brand_id')
+		->leftJoin('unit_type', 'unit_type.id', '=', 'consumed_material_by_workplace.unit_type_id')
+		->select('consumed_material_by_workplace.*', 'sites.site_name', 'workplace.workplace_name', 'users.name', 'material.material', 'raw_material.raw_material_name', 'brand.brand', 'unit_type.unit_type')
+		->get()
+		  ->groupBy(function ($item) {
+            return $item->created_at->format('Y-m-d');
+        });
+		if($material){
+        return response()->json(['status' => true, 'message'=>'Data Added Successfully', 'data' => $material]);
+    } else {
+        return response()->json(['status' => false, 'message' => 'No data found']);
+    }
+	}
+
 
 
 public function postTrackEmpLocation(Request $request)

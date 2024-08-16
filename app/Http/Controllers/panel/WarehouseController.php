@@ -23,6 +23,8 @@ use App\Models\NonConsumableCategory;
 use App\Models\NonConsumableCategoryMaterial;
 use App\Models\NonConsumableUnitType;
 use App\Models\Warehouse\IssueMaterialByWareHouse;
+use App\Models\Inventory\NonConsumableDirectIssueMaterial;
+
 
 class WarehouseController extends Controller
 {
@@ -564,8 +566,9 @@ return redirect()->route($redirectRoute)->with('success', 'Materials updated suc
 public function non_consumanle_directGrnOut(Request $request)
 {
    // $issueMaterial = IssueMaterialByInventory::where('issue_type', 'Direct Issue')->get();
-    $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')
-    ->where('material_type', 'Non-Consumable')->get();
+    $directIssueMaterial = NonConsumableDirectIssueMaterial::whereNotNull('issue_type')
+    // ->where('material_type', 'Non-Consumable')
+    ->get();
 
     $statusID = Status::all();
     $existingMaterials = IssueMaterialByWarehouse::all()->keyBy('issue_material_by_inventory_id');

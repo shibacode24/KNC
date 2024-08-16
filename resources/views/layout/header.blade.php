@@ -137,17 +137,17 @@
             <ul class="x-navigation x-navigation-horizontal">
 
 
-                <li class="xn-logo" style="margin-right:30px;">
-                    <a> <img src="{{ asset('public/logo/logo.png') }}" alt="" style="margin-top:-12px;" /></a>
+                <li class="" style="margin-right:0px; background-color:white;">
+                    <a> <img src="{{ asset('public/logo/logo.png') }}" alt="" style="margin-top:-12px; width:130px" /></a>
                     <a href="#" class="x-navigation-control"></a>
                 </li>
-                <li class="xn-profile">
+                <li class="xn-profile" >
                     <a href="#" class="profile-mini">
                         <img src="{{ asset('public/assets/images/users/avatar.jpg') }}" alt="EMR - OPD Software" />
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('dashboard') }}" title="Dashboard"><span class="fa fa-desktop">
+                <li style="margin-left:-10px;">
+                    <a href="{{ route('dashboard') }}" title="Dashboard" style="font-size: 12px"><span class="fa fa-desktop" style="margin-right: 0px; font-size: 12px">
                         </span>Dashboard</a>
 
                 </li>
@@ -159,8 +159,8 @@
 
 
                 @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission) || in_array('city', $permission))
-                    <li>
-                        <a href="#" title="Masters"><span class="fa fa-list"> </span>Masters</a>
+                    <li style="margin-left:-20px;">
+                        <a href="#" title="Masters" style="font-size: 12px"><span class="fa fa-list" style="margin-right: -1px; font-size: 12px"> </span>Masters</a>
                         <ul>
 
                             {{-- @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission))
@@ -243,7 +243,7 @@
 
 
 
-                                        @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                        @if (Auth::user()->panel_role == 1 || in_array('non_consumable_unit_type', $permission))
                                             <li><a href="{{ route('non_consumable_unit_type') }}"><span
                                                         class="fa fa-plus"></span>Add Unit Type</a>
                                             </li>
@@ -263,7 +263,7 @@
                                             </li>
                                         @endif
 
-                                        @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                        @if (Auth::user()->panel_role == 1 || in_array('non_consumable_brand', $permission))
                                             <li><a href="{{ route('non_consumable_brand') }}"><span
                                                         class="fa fa-plus"></span>Add Brand</a></li>
                                         @endif
@@ -309,8 +309,7 @@
 
 
                             @if (Auth::user()->panel_role == 1 || in_array('site_manager', $permission))
-                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site
-                                    Manager</a>
+                            <li><a href="{{ route('site_manager') }}"><span class="fa fa-plus"></span>Add Site Manager</a>
                             </li>
                         @endif
 
@@ -330,23 +329,20 @@
                 @if (Auth::user()->panel_role == 1 || in_array('engg', $permission))
                 <li><a href="{{ route('engg') }}"><span class="fa fa-plus"></span>Add Engineer</a>
                 </li>
-            @endif
-                            @if (Auth::user()->panel_role == 1 || in_array('contractor', $permission))
-                                <li><a href="{{ route('contractor') }}"><span class="fa fa-plus"></span>Add
-                                        Contractor</a>
-                                </li>
-                            @endif
+                 @endif
+
+                 @if (Auth::user()->panel_role == 1 || in_array('contractor', $permission))
+                <li><a href="{{ route('contractor') }}"><span class="fa fa-plus"></span>Add
+                Contractor</a>
+                </li>
+                @endif
 
 
 
                             @if (Auth::user()->panel_role == 1 || in_array('employee', $permission))
-                                <li><a href="{{ route('employee') }}"><span class="fa fa-plus"></span>Add Employes</a>
+                                <li><a href="{{ route('employee') }}"><span class="fa fa-plus"></span>Add Employee</a>
                                 </li>
                             @endif
-
-
-
-
 
 
                             @if (Auth::user()->panel_role == 1 || in_array('status', $permission))
@@ -362,15 +358,15 @@
                 @endif
 
                 @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission))
-                    <li><a href="{{ route('assign_site') }}"><span class="fa fa-bars"></span>Assign Site</a>
+                    <li style="margin-left:-20px;"><a href="{{ route('assign_site') }}"  style="font-size: 12px"><span class="fa fa-location-arrow" style="margin-right: -1px"></span>Assign Site</a>
                     </li>
                 @endif
 
 
                 @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission))
 
-                    <li>
-                        <a href="#" title="Inventory Managemnt"><span class="fa fa-exchange"> </span>Inventory
+                    <li style="margin-left:-20px;">
+                        <a href="#" title="Inventory Managemnt"  style="font-size: 12px"><span class="fa fa-exchange" style="margin-right: -1px; font-size: 12px"> </span>Inventory
                             Managemnt</a>
                         <ul>
                             {{-- @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission))
@@ -478,8 +474,8 @@
 
                 @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission) || in_array('order_details', $permission))
 
-                    <li>
-                        <a href="#" title="Purchase Department"><span class="fa fa-exchange"> </span>Purchase
+                    <li style="margin-left:-20px;">
+                        <a href="#" title="Purchase Department"  style="font-size: 12px"><span class="fa fa-exchange" style="font-size: 12px; margin-right:-1px"> </span>Purchase
                             Department</a>
                         <ul>
 
@@ -541,8 +537,8 @@
 
                 @if (Auth::user()->panel_role == 1 || in_array('grn', $permission) || in_array('issue_material', $permission))
 
-                    <li>
-                        <a href="#" title="Warehouse"><span class="fa fa-exchange"> </span>Warehouse</a>
+                    <li style="margin-left:-20px;">
+                        <a href="#" title="Warehouse"  style="font-size: 12px"><span class="fa fa-exchange" style="margin-right: -1px; font-size: 12px"> </span>Warehouse</a>
                         <ul>
 
                             <li>
@@ -626,18 +622,20 @@
                                 </ul>
                             </li>
 
+                            <li style="margin-left:0px;">
+                                <a href="transfer-material"  style="font-size: 12px"><span class="fa fa-truck" style="margin-right: -1px; font-size: 12px"></span>Transfer Material</a></li>
+
                         </ul>
                     </li>
                 @endif
 
-                <li><a href="transfer-material"><span class="fa fa-plus"></span>Transfer Material</a></li>
 
                 @if (Auth::user()->panel_role == 1 ||
                         in_array('app-user-roles', $permission) ||
                         in_array('panel-user-roles', $permission) ||
                         in_array('panel-user', $permission))
-                    <li>
-                        <a href="#" title="User Roles"><span class="fa fa-user"> </span>User Roles</a>
+                    <li style="margin-left:-20px;">
+                        <a href="#" title="User Roles"  style="font-size: 12px"><span class="fa fa-user" style="margin-right: -1px; font-size: 12px"> </span>User Roles</a>
                         <ul>
                             @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
                                 <li>
@@ -673,15 +671,15 @@
                     </li>
                 @endif
 
-                <li>
-                    <a href="{{route('map')}}" title="Account Department"><span class="fa fa-map-marker"> </span>Track Location</a>
+                <li style="margin-left:-20px;">
+                    <a href="{{route('map')}}" title="Track Location"  style="font-size: 12px"><span class="fa fa-map-marker" style="margin-right: -1px; font-size: 12px"> </span>Track Location</a>
                 </li>
 
 
                 @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
 
-                    <li>
-                        <a href="#" title="Account Department"><span class="fa fa-user"> </span>Account
+                    <li  style="margin-left:-20px;">
+                        <a href="#" title="Account Department"  style="font-size: 12px"><span class="fa fa-user" style="margin-right: -1px; font-size: 12px"> </span>Account
                             Department</a>
                         <ul>
                             @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
@@ -692,8 +690,8 @@
                 @endif
 
 
-            <li>
-                <a href="prediction" title="Prediction"><span class="fa fa-tachometer"> </span></a>
+            <li style="margin-left:-20px; margin-right:-50px">
+                <a href="prediction" title="Prediction"  style="font-size: 12px"><span class="fa fa-tachometer"> </span></a>
 
             </li>
 

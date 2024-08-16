@@ -38,7 +38,8 @@
                                         <th>Sr. No.</th>
                                         <th>Order ID</th>
                                         <th>Order Date</th>
-                                        <th>Material Name</th>
+                                        <th>Category Name</th>
+                                        <th>Sub Category Name</th>
                                         <th>Brand Name</th>
                                         <th>Unit Type</th>
                                         <th>Qty</th>
@@ -55,7 +56,8 @@
                                         <td>{{$orderDetails->order_id}}</td>
 
                                         <td>{{date('d-m-Y',strtotime($orderDetails->date))}}</td>
-                                        <td>{{$orderDetails->non_consumable_material_name->material ?? ''}}</td>
+                                        <td>{{$orderDetails->non_consumable_category_name->category ?? ''}}</td>
+                                        <td>{{$orderDetails->non_consumable_material_name->sub_category_name ?? ''}}</td>
                                         <td>{{$orderDetails->non_consumable_brand_name->brand ?? ''}}</td>
                                         <td>{{$orderDetails->non_consumable_unit_type->unit_type ?? ''}}</td>
                                         <td>{{$orderDetails->quantity}}</td>
@@ -113,7 +115,8 @@
                                         <th>Sr. No.</th>
                                         <th>Order ID</th>
                                         <th>Order Date</th>
-                                        <th>Material Name</th>
+                                        <th>Category Name</th>
+                                        <th>Sub Category Name</th>
                                         <th>Brand Name</th>
                                         <th>Unit Type</th>
                                         <th>Qty</th>
@@ -133,8 +136,8 @@
                                         <td>{{$orderDetails->order_id}}</td>
 
                                         <td>{{date('d-m-Y',strtotime($orderDetails->date))}}</td>
-                                        <td>{{$orderDetails->non_consumable_material_name->material}}</td>
-                                        <td>{{$orderDetails->non_consumable_brand_name->brand}}</td>
+                                        <td>{{$orderDetails->non_consumable_category_name->category ?? ''}}</td>
+                                        <td>{{$orderDetails->non_consumable_material_name->sub_category_name ?? ''}}</td>                                        <td>{{$orderDetails->non_consumable_brand_name->brand}}</td>
                                         <td>{{$orderDetails->non_consumable_unit_type->unit_type}}</td>
                                         <td>{{$orderDetails->quantity}}</td>
 

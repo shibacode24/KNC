@@ -21,11 +21,29 @@
 
                     </div>
                 </div>
-                @if(session('success'))
+
+                @if ($errors->any())
+                <div class="alert alert-danger mt-2">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
-                @endif
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
                 <div class="col-md-12" style="margin-top:10px;">
                     <div class="tabs">
                         <ul class="nav nav-tabs nav-justified">

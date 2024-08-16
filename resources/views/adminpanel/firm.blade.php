@@ -17,21 +17,33 @@
                             </h5>
 
 
+                            @if ($errors->any())
+                            <div class="alert alert-danger mt-2">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
-                        </div>
-                    </div>
-                    <div class="col-md-12" style="margin-top:10px;">
-                        @if (session('success'))
+                        @if(session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}
                             </div>
                         @endif
 
-                        @if (session('error'))
+                        @if(session('error'))
                             <div class="alert alert-danger">
                                 {{ session('error') }}
                             </div>
                         @endif
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-top:10px;">
+
                         <form action="{{ route('firm.store') }}" method="post">
                             @csrf
                             <!-- <div class="col-md-4"></div>

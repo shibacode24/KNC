@@ -666,14 +666,17 @@ public function non_consumable_unit_type_update(Request $request)
 
         $materialAll = Material::all();
         $materialEdit = Material::find($id);
+        $unit_type = UnitType::all();
 
-        return view('adminpanel.material_edit', compact('materialAll', 'materialEdit',));
+        return view('adminpanel.material_edit', compact('materialAll', 'materialEdit', 'unit_type'));
     }
 
     public function materialUpdate(Request $request)
     {
         $material = Material::find($request->id);
         $material->material = $request->material;
+        $material->unit_type_id = $request->unit_type;
+
         $material->save();
 
 
@@ -793,23 +796,22 @@ public function non_consumable_unit_type_update(Request $request)
 
     public function brandEdit($id){
 
-        $assignSiteAll = AssignSite::all();
-        $assignSiteEdit = AssignSite::find($id);
-        $site = Site::all();
-        $supervisor = supervisor::all();
-        return view('adminpanel.brand', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+        $brandAll = brand::all();
+        $brandEdit = brand::find($id);
+        $brand = Brand::all();
+        $material = Material::all();
+        return view('adminpanel.brand_edit', compact('brandAll', 'brandEdit', 'brand', 'material'));
     }
 
     public function brandUpdate(Request $request)
     {
-        $assignSite = AssignSite::find($request->id);
-        $assignSite->date = $request->date;
-        $assignSite->supervisor = $request->supervisor_id;
-        $assignSite->site_assign = $request->site_id;
-        $assignSite->save();
+        $brand = Brand::find($request->id);
+        $brand->brand = $request->brand;
+        $brand->material_id = $request->material_id;
+        $brand->save();
 
 
-        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+        return redirect(route('brand'))->with('success', 'Successfully Updated !');
     }
 
 

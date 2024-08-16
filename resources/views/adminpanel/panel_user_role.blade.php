@@ -78,24 +78,15 @@
                                 </div>
                             </div>
 
+                            {{-- Consumable --}}
 
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="client"
+                                    <input class="form-check-input" type="checkbox" value="unit_type"
                                         name="permission[]" id="flexCheckDefault6">
-                                    <label class="form-check-label" for="flexCheckDefault6">Add Client</label>
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Unit Type </label>
                                 </div>
                             </div>
-
-
-                            <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="site"
-                                        name="permission[]" id="flexCheckDefault6">
-                                    <label class="form-check-label" for="flexCheckDefault6">Add Sites </label>
-                                </div>
-                            </div>
-
 
                             <div class="col-md-2">
                                 <div class="form-check">
@@ -126,13 +117,42 @@
 
 
 
+                            {{-- Non Consumable --}}
+
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="unit_type"
+                                    <input class="form-check-input" type="checkbox" value="non_consumable_unit_type"
                                         name="permission[]" id="flexCheckDefault6">
                                     <label class="form-check-label" for="flexCheckDefault6">Add Unit Type </label>
                                 </div>
                             </div>
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="non-consumable-category"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Category </label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="non-consumable-category-material"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Sub Category </label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="non_consumable_brand"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Brand </label>
+                                </div>
+                            </div>
+                            {{-- ------------------------ --}}
 
 
                             <div class="col-md-2">
@@ -153,7 +173,6 @@
                             </div>
 
 
-
                             <div class="col-md-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="subcategory"
@@ -163,22 +182,29 @@
                             </div>
 
 
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="client"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Client</label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="site"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Sites </label>
+                                </div>
+                            </div>
+
 
                             <div class="col-md-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="warehouse"
                                         name="permission[]" id="flexCheckDefault6">
                                     <label class="form-check-label" for="flexCheckDefault6">Add Warehouse </label>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="contractor"
-                                        name="permission[]" id="flexCheckDefault6">
-                                    <label class="form-check-label" for="flexCheckDefault6">Add Contractor</label>
                                 </div>
                             </div>
 
@@ -190,6 +216,54 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="site_manager"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Site Manager</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="site_incharge"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Site Incharge</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="supervisor"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Supervisor</label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="engg"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Engineer</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="contractor"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Contractor</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="employee"
+                                        name="permission[]" id="flexCheckDefault6">
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Employee</label>
+                                </div>
+                            </div>
 
 
                             <div class="col-md-2">
@@ -206,7 +280,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="issue"
                                         name="permission[]" id="flexCheckDefault6">
-                                    <label class="form-check-label" for="flexCheckDefault6">Issues </label>
+                                    <label class="form-check-label" for="flexCheckDefault6">Add Issues </label>
                                 </div>
                             </div>
 
@@ -234,13 +308,41 @@
 
                         </div>
                         <hr>
+
+                        <div class="row g-2" style="margin-top: 20px; margin-left:10px">
+                            <div class="col-md-2">
+                                <label for="inputFirstName" class="form-label" style="font-weight: bold; font-size:16px">Assign Site:
+                                    </label>
+                            </div>
+
+                            <div class="col-md-10">
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="assign_site"
+                                        name="permission[]" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">Assign Site</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                        <hr>
                         <div class="row g-2" style="margin-top: 20px; margin-left:10px">
                             <div class="col-md-2">
                                 <label for="inputFirstName" class="form-label" style="font-weight: bold; font-size:16px">Inventory Management
                                     :</label>
                             </div>
+                        </div>
 
-                            <div class="col-md-10">
+                        <div class="row g-2" style="margin-top: 20px; margin-left:10px">
+                            <div class="col-md-2">
+                                <label for="inputFirstName" class="form-label" style="font-weight: bold; font-size:14px">Consumable Inventory
+                                    :</label>
+                            </div>
+
+                            <div class="col-md-10" style="margin-bottom:10px">
 
                             <div class="col-md-2">
                                 <div class="form-check">
@@ -251,17 +353,58 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="add_material-restro"
+                                    <input class="form-check-input" type="checkbox" value="add_material"
                                         id="flexCheckDefault1" name="permission[]">
                                     <label class="form-check-label" for="flexCheckDefault1">Add Material</label>
                                 </div>
                             </div>
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="direct-issue-material"
+                                        id="flexCheckDefault1" name="permission[]">
+                                    <label class="form-check-label" for="flexCheckDefault1">Direct Issue Material</label>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="row g-2" style="margin-top: 20px; margin-left:0px">
+                            <div class="col-md-2">
+                                <label for="inputFirstName" class="form-label" style="font-weight: bold; font-size:14px">Non-Consumable Inventory
+                                    :</label>
+                            </div>
+
+                            <div class="col-md-10">
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="site-non-consumed-material"
+                                        name="permission[]" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">Site Material Req. List</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="non_consumable_add_material"
+                                        id="flexCheckDefault1" name="permission[]">
+                                    <label class="form-check-label" for="flexCheckDefault1">Add Material</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="non_consumable_direct_issue_material"
+                                        id="flexCheckDefault1" name="permission[]">
+                                    <label class="form-check-label" for="flexCheckDefault1">Direct Issue Material</label>
+                                </div>
+                            </div>
                         </div>
 
                         </div>
+
 
                         <hr>
+
                         <div class="row g-2" style="margin-top: 20px; margin-left:14px">
                             <div class="col-md-2">
                                 <label for="inputFirstName" class="form-label"

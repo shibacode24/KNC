@@ -68,7 +68,7 @@
                                             </td>
                                             <td>
                                                 <input type="hidden" name="materials[{{$index}}][material_id]" value="{{$material->material_id}}">
-                                                {{$material->material_name->material ?? ''}}
+                                                {{$material->material_name->sub_category_name ?? ''}}
                                             </td>
                                             <td>
                                                 <input type="hidden" name="materials[{{$index}}][brand_id]" value="{{$material->brand_id}}">

@@ -89,7 +89,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($city as $city)
+                                        @foreach ($city->sortByDesc('created_at') as $city)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
 
