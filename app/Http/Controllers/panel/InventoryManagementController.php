@@ -415,11 +415,11 @@ public function update_non_consumable_site_material(Request $request)
             $material->site_id =$material->site_id;
             $material->material_type =$material->material_type;
             $material->requested_material_id =$material->requested_material_id;
-            $material->material_unit_id =$material->material_unit_id;
+            //$material->material_unit_id =$material->material_unit_id;
             $material->material_id = $data[0]['material_id'];
             $material->raw_material_id =$data[0]['raw_material_id'];
             $material->brand_id =$data[0]['brand_id'];
-            $material->material_unit_id = $data[0]['unit_type'];
+          //  $material->material_unit_id = $data[0]['unit_type'];
             $material->requested_material_quantity =$data[0]['requested_material_quantity'];
             $material->selected_warehouse_id =$data[0]['selected_warehouse_id'];
             $material->available_material =$data[0]['available_material'];
@@ -538,6 +538,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
     {
         $materials = NonConsumableCategoryMaterial::all();
         $category = NonConsumableCategory::all();
+        $sub_category = NonConsumableCategoryMaterial::all();
         $brand = NonConsumableBrand::all();
         $unit = NonConsumableUnitType::all();
         $addMaterial = NonConsumableMaterial::all();
@@ -546,7 +547,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         $site = Site::all();
         $supervisor = Supervisor::all();
         $edit_material = NonConsumableDirectIssueMaterial::find($request->id);
-        return view('inventory_managmt.edit_non_consumable_direct_issue_material', compact('edit_material', 'site', 'warehouse', 'materials', 'brand', 'unit', 'addMaterial','supervisor','category'));
+        return view('inventory_managmt.edit_non_consumable_direct_issue_material', compact('edit_material', 'sub_category', 'site', 'warehouse', 'materials', 'brand', 'unit', 'addMaterial','supervisor','category'));
     }
 
     public function Nonconsumable_DirectIssueMaterial_update(Request $request)
@@ -560,7 +561,7 @@ public function Nonconsumable_directIssueMaterial(Request $request)
         $material->material_id = $request->material;
         $material->brand_id = $request->brand;
         $material->unit_id = $request->unit_type;
-        // $material->raw_material_id = $request->raw_material;
+        $material->raw_material_id = $request->raw_material_id;
         $material->quantity = $request->quantity;
         $material->remark = $request->remark;
         $material->issue_type = 'Direct Issue';

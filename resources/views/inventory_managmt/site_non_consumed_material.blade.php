@@ -190,7 +190,7 @@
     </div>
     <div class="modal" id="non_consumable_service-area-edit" tabindex="-1" role="dialog" aria-labelledby="largeModalHead"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg" style="width: 80% !important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span

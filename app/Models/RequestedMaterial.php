@@ -58,12 +58,12 @@ class RequestedMaterial extends Model
 //non consumable
 public function non_consumable_material_name()
 {
-    return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'material_id');
+    return $this->hasOne(NonConsumableCategory::class, 'id', 'material_id');
 }
 
 public function non_consumable_raw_material_name()
 {
-    return $this->hasOne(NonConsumableCategory::class, 'id', 'raw_material_id');
+    return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'raw_material_id');
 }
 
 public function non_consumable_unit_type()

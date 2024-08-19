@@ -637,18 +637,18 @@
                     <li style="margin-left:-20px;">
                         <a href="#" title="User Roles"  style="font-size: 12px"><span class="fa fa-user" style="margin-right: -1px; font-size: 12px"> </span>User Roles</a>
                         <ul>
-                            @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
-                                <li>
-                                    <a href="#" title="Mobile App"><span class="fa fa-user"> </span>Mobile
-                                        App</a>
-                                    <ul>
-                                        @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
-                                            <li><a href="{{ route('app-user-roles') }}"><span
-                                                        class="fa fa-plus"></span>User Role</a></li>
-                                        @endif
-                                    </ul>
-                                </li>
-                            @endif
+                                {{-- @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
+                                    <li>
+                                        <a href="#" title="Mobile App"><span class="fa fa-user"> </span>Mobile
+                                            App</a>
+                                        <ul>
+                                            @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
+                                                <li><a href="{{ route('app-user-roles') }}"><span
+                                                            class="fa fa-plus"></span>User Role</a></li>
+                                            @endif
+                                        </ul>
+                                    </li>
+                                @endif --}}
 
                             @if (Auth::user()->panel_role == 1 || in_array('panel-user-roles', $permission) || in_array('panel-user', $permission))
                                 <li>

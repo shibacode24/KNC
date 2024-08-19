@@ -23,7 +23,7 @@
                     <th width="5%" style="text-align:center">Raw Material</th>
                     <th width="5%" style="text-align:center">Brand</th>
                     <th width="5%" style="text-align:center">Req. Quantity</th>
-                   {{--  <th width="6%" style="text-align   :center">Material Unit</th>--}}
+				    <th width="6%" style="text-align   :center">Material Unit</th>
                     <th width="11%" style="text-align:center">Select Warehouse<strong><font color="#FF0000">*</font></strong></th>
                     <th width="10%" style="text-align:center">Available Material<strong><font color="#FF0000">*</font></strong></th>
                     <th width="10%" style="text-align:center">Issue Material<strong><font color="#FF0000">*</font></strong></th>
@@ -44,11 +44,11 @@
                         {{-- </td> --}}
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][material_id]" value="{{ $data->material_id }}">
-                            {{ $data->material_name->material ?? ''}}
+                            {{ $data->non_consumable_category_name->category ?? ''}}
                         </td>
                         <td style="padding:5px;" align="center">
-                            <input type="hidden" name="data[{{ $loop->index }}][raw_material]" value="{{ $data->raw_material_id }}">
-                            {{ $data->raw_material_name->raw_material_name ?? ''}}
+                            <input type="hidden" name="data[{{ $loop->index }}][raw_material_id]" value="{{ $data->raw_material_id }}">
+                            {{ $data->non_consumable_material_name->sub_category_name ?? ''}}
                         </td>
                         <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][brand_id]" value="{{ $data->brand_id }}">
@@ -58,10 +58,10 @@
                             <input type="hidden" name="data[{{ $loop->index }}][requested_material_quantity]" value="{{ $data->requested_material_quantity }}">
                             {{ $data->requested_material_quantity }}
                         </td>
-                      {{--  <td style="padding:5px;" align="center">
+                       <td style="padding:5px;" align="center">
                             <input type="hidden" name="data[{{ $loop->index }}][unit_type]" value="{{ $data->material_unit_type_id }}">
-                            {{ $data->unit_type->unit_type }}
-                        </td>--}}
+                            {{ $data->unit_type->unit_type ?? '' }}
+                        </td>
                         <td style="padding:10px;" align="center">
                             <select class="form-control select" data-live-search="true" name="data[{{ $loop->index }}][selected_warehouse_id]" data-loop-index="{{ $loop->index }}" required>
                                 <option align="center">Select</option>
