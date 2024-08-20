@@ -367,12 +367,14 @@ class DashboardController extends Controller
 
     public function site(Request $request)
     {
-        $site = Site::all();
+        $personalSite = Site::where('site_personal_or_buisness', 'personal')->get();
+        $businessSite = Site::where('site_personal_or_buisness', 'buisness')->get();
+
         $firm = Firm::all();
         $client = Client::all();
         $city = City::all();
 
-        return view('adminpanel.sites', compact('site', 'firm', 'city', 'client'));
+        return view('adminpanel.sites', compact('personalSite', 'businessSite', 'firm', 'city', 'client'));
     }
     public function siteStore(Request $request)
     {
@@ -450,8 +452,11 @@ class DashboardController extends Controller
         $siteAll = Site::all();
         $siteEdit = Site::find($id);
         $city = City::all();
+        $firm = Firm::all();
+        $client = Client::all();
+        $type = $siteEdit->site_personal_or_buisness; // 'personal' or 'buisness'
 
-        return view('adminpanel.site_edit', compact('siteAll', 'siteEdit', 'city'));
+        return view('adminpanel.sites_edit', compact('siteAll', 'siteEdit', 'city',  'firm', 'client', 'type'));
     }
 
     public function siteUpdate(Request $request)
@@ -468,8 +473,8 @@ class DashboardController extends Controller
         $site->longitude = $request->longitude;
         $site->site_description = $request->site_description;
 
-        if ($request->filled('buisness_name')) {
-            $site->buisness_name = $request->buisness_name;
+        if ($request->filled('business_name')) {
+            $site->buisness_name = $request->business_name;
         }
 
         // Handle file upload
@@ -733,23 +738,26 @@ public function non_consumable_unit_type_update(Request $request)
 
     public function rawMaterialEdit($id){
 
-        $assignSiteAll = AssignSite::all();
-        $assignSiteEdit = AssignSite::find($id);
-        $site = Site::all();
-        $supervisor = supervisor::all();
-        return view('adminpanel.assign_task_edit', compact('assignSiteAll', 'assignSiteEdit', 'site', 'supervisor'));
+        $unit = UnitType::all();
+        $brand = Brand::all();
+        $material = Material::all();
+        $rawMaterialEdit = RawMaterial::find($id);
+        return view('adminpanel.raw_material_edit', compact('rawMaterialEdit', 'unit', 'brand', 'material'));
     }
 
     public function rawMaterialUpdate(Request $request)
     {
-        $assignSite = AssignSite::find($request->id);
-        $assignSite->date = $request->date;
-        $assignSite->supervisor = $request->supervisor_id;
-        $assignSite->site_assign = $request->site_id;
-        $assignSite->save();
+        $material = RawMaterial::find($request->id);
+        $material->raw_material_name = $request->input('raw_material_name');
+        $material->unit = $request->input('unit_id');
+        $material->material_id = $request->input('material_id');
+        $material->brand_id = $request->input('brand');
+        $material->minimum_keeping_quantity = $request->input('minimum_keeping_quantity');
+        $material->maximum_keeping_quantity = $request->input('maximum_keeping_quantity');
+        $material->save();
 
 
-        return redirect(route('assign_task'))->with('success', 'Successfully Updated !');
+        return redirect(route('raw_material'))->with('success', 'Successfully Updated !');
     }
 
 
@@ -912,7 +920,7 @@ public function non_consumable_unit_type_update(Request $request)
         $contractor->city_id = $request->city_id;
 
         $contractor->save();
-
+        if ($request->has('name') && is_array($request->name)) {
         foreach ($request->name as $key => $name) {
             $account_details = new AccountDetails();
             $account_details->account_holder = $request->name[$key];
@@ -922,6 +930,7 @@ public function non_consumable_unit_type_update(Request $request)
             $account_details->ifsc_code = $request->ifsc[$key];
             $account_details->save();
         }
+    }
         // dd(1);
         return redirect()->back()->with('success', 'Contractor and Account Details Added Successfully');
     }
@@ -995,6 +1004,7 @@ public function non_consumable_unit_type_update(Request $request)
 
                 $delete = AccountDetails::where('contractor_id',$contractor->id)->delete();
 
+                if ($request->has('name') && is_array($request->name)) {
             for($i=0;$i<count($request->name); $i++){
                 if (isset($request->name[$i])){
                 $account_details = new AccountDetails();
@@ -1005,6 +1015,7 @@ public function non_consumable_unit_type_update(Request $request)
                 $account_details->ifsc_code = $request->ifsc[$i];
                 $account_details->save();
             }
+        }
         }
                 // dd(1);
                 return redirect()->route('contractor')->with('success', 'Contractor and Account Details Updated Successfully');
@@ -1091,14 +1102,16 @@ public function update_contractor_status($id)
 
         $Vendors->save();
 
-        foreach ($request->name as $key => $name) {
-            $account_details = new AccountDetails();
-            $account_details->account_holder = $request->name[$key];
-            $account_details->vendor_id = $Vendors->id;
-            $account_details->bank_name = $request->bank[$key];
-            $account_details->account_number = $request->ac_n[$key];
-            $account_details->ifsc_code = $request->ifsc[$key];
-            $account_details->save();
+        if ($request->has('name') && is_array($request->name)) {
+            foreach ($request->name as $key => $name) {
+                $account_details = new AccountDetails();
+                $account_details->account_holder = $name;
+                $account_details->supervisor_id = $supervisor->id;
+                $account_details->bank_name = $request->bank[$key];
+                $account_details->account_number = $request->ac_n[$key];
+                $account_details->ifsc_code = $request->ifsc[$key];
+                $account_details->save();
+            }
         }
         // dd(1);
         return redirect()->back()->with('success', 'Vendor and Account Details Added Successfully');
@@ -1199,6 +1212,7 @@ public function update_contractor_status($id)
 
         $delete = AccountDetails::where('vendor_id',$vendor->id)->delete();
 
+        if ($request->has('name') && is_array($request->name)) {
         for($i=0;$i<count($request->name); $i++){
             if (isset($request->name[$i])){
             $account_details = new AccountDetails();
@@ -1208,6 +1222,7 @@ public function update_contractor_status($id)
             $account_details->account_number = $request->ac_n[$i];
             $account_details->ifsc_code = $request->ifsc[$i];
             $account_details->save();
+            }
         }
     }
 
@@ -1249,27 +1264,39 @@ public function update_vendor_status($id)
 
     public function supervisorstore(Request $request)
     {
-        //  dd($request->all());
+        // Validate the input
         $request->validate([
-            'supervisor_name' => 'required',
-            'email' => 'required|',
-            'mobile_number' => 'required|',
-            'aadhar_number' => 'required|',
-            'pan_number' => 'required',
-            'city_address' => 'required',
-            'city_id' => 'required',
-
+            'supervisor_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'mobile_number' => 'required|numeric',
+            'aadhar_number' => 'required|numeric',
+            'pan_number' => 'required|string|max:10',
+            'city_id' => 'required|exists:city,id',
+            'city_address' => 'required|string',
+            'password' => 'required|string|min:8',
+            'bank_details.*.account_holder' => 'nullable|string|max:255',
+            'bank_details.*.bank_name' => 'nullable|string|max:255',
+            'bank_details.*.account_number' => 'nullable|string|max:20',
+            'bank_details.*.ifsc_code' => 'nullable|string|max:11',
+        ], [
+            'supervisor_name.required' => 'Please enter the supervisor\'s name.',
+            'email.required' => 'Please enter an email address.',
+            'mobile_number.required' => 'Please enter a mobile number.',
+            'aadhar_number.required' => 'Please enter an Aadhar number.',
+            'pan_number.required' => 'Please enter a PAN number.',
+            'city_id.required' => 'Please select a city.',
+            'city_address.required' => 'Please enter an address.',
+            'password.required' => 'Please enter a password.',
         ]);
 
-         // Create a new User instance and set its attributes
-    $user = new User();
-    $user->name = $request->supervisor_name;
-    $user->email = $request->email;
-    $user->contact = $request->mobile_number;
-    $user->password = bcrypt($request->password); // Hash the password
-    $user->role = 'Supervisor'; // Set the role to supervisor
-    $user->save();
-
+        // Create a new User instance and set its attributes
+        $user = new User();
+        $user->name = $request->supervisor_name;
+        $user->email = $request->email;
+        $user->contact = $request->mobile_number;
+        $user->password = bcrypt($request->password);
+        $user->role = 'Supervisor';
+        $user->save();
 
         $supervisor = new Supervisor();
         $supervisor->supervisor_name = $request->supervisor_name;
@@ -1279,23 +1306,24 @@ public function update_vendor_status($id)
         $supervisor->pan_number = $request->pan_number;
         $supervisor->city_address = $request->city_address;
         $supervisor->city_id = $request->city_id;
-        // $supervisor->password = $request->password;
         $supervisor->user_id = $user->id;
         $supervisor->save();
 
-        foreach ($request->name as $key => $name) {
-            $account_details = new AccountDetails();
-            $account_details->account_holder = $request->name[$key];
-            $account_details->supervisor_id = $supervisor->id;
-            $account_details->bank_name = $request->bank[$key];
-            $account_details->account_number = $request->ac_n[$key];
-            $account_details->ifsc_code = $request->ifsc[$key];
-            $account_details->save();
+        // Check if bank details are provided before iterating
+        if ($request->has('name') && is_array($request->name)) {
+            foreach ($request->name as $key => $name) {
+                $account_details = new AccountDetails();
+                $account_details->account_holder = $name;
+                $account_details->supervisor_id = $supervisor->id;
+                $account_details->bank_name = $request->bank[$key];
+                $account_details->account_number = $request->ac_n[$key];
+                $account_details->ifsc_code = $request->ifsc[$key];
+                $account_details->save();
+            }
         }
-        // dd(1);
+
         return redirect()->back()->with('success', 'Supervisor and Account Details Added Successfully');
     }
-
 
 
     public function supervisorEdit(Request $request)
@@ -1348,6 +1376,22 @@ public function update_vendor_status($id)
 
     public function supervisorUpdate(Request $request)
     {
+
+        $request->validate([
+            'supervisor_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'mobile_number' => 'required|numeric',
+            'aadhar_number' => 'required|numeric',
+            'pan_number' => 'required|string|max:10',
+            'city_id' => 'required|exists:city,id',
+            'city_address' => 'required|string',
+            'password' => 'nullable|string|min:8',
+            'bank_details.*.account_holder' => 'nullable|string|max:255',
+            'bank_details.*.bank_name' => 'nullable|string|max:255',
+            'bank_details.*.account_number' => 'nullable|string|max:20',
+            'bank_details.*.ifsc_code' => 'nullable|string|max:11',
+        ]);
+
         $supervisor = Supervisor::where('id',$request->id)->first();
         $user = User:: where('id',$supervisor->user_id)->first();
 
@@ -1377,15 +1421,17 @@ public function update_vendor_status($id)
 
             $delete = AccountDetails::where('supervisor_id',$supervisor->id)->delete();
 
-        for($i=0;$i<count($request->name); $i++){
-            if (isset($request->name[$i])){
-            $account_details = new AccountDetails();
-            $account_details->account_holder = $request->name[$i];
-            $account_details->supervisor_id = $supervisor->id;
-            $account_details->bank_name = $request->bank[$i];
-            $account_details->account_number = $request->ac_n[$i];
-            $account_details->ifsc_code = $request->ifsc[$i];
-            $account_details->save();
+            if ($request->has('name') && is_array($request->name)) {
+                foreach ($request->name as $index => $name) {
+                    if (!empty($name)) {
+                        AccountDetails::create([
+                            'supervisor_id' => $supervisor->id,
+                            'account_holder' => $name,
+                            'bank_name' => $request->bank[$index] ?? '',
+                            'account_number' => $request->ac_n[$index] ?? '',
+                            'ifsc_code' => $request->ifsc[$index] ?? '',
+                        ]);
+                    }
         }
     }
             // dd(1);
@@ -1462,6 +1508,7 @@ public function update_supervisor_status($id)
 
         $employee->save();
 
+        if ($request->has('name') && is_array($request->name)) {
         foreach ($request->name as $key => $name) {
             $account_details = new AccountDetails();
             $account_details->account_holder = $request->name[$key];
@@ -1471,6 +1518,7 @@ public function update_supervisor_status($id)
             $account_details->ifsc_code = $request->ifsc[$key];
             $account_details->save();
         }
+    }
         // dd(1);
 
 
@@ -1534,6 +1582,7 @@ public function update_supervisor_status($id)
 
         $delete = AccountDetails::where('employee_id',$employee->id)->delete();
 
+        if ($request->has('name') && is_array($request->name)) {
         for($i=0;$i<count($request->name); $i++){
             if (isset($request->name[$i])){
             $account_details = new AccountDetails();
@@ -1544,6 +1593,7 @@ public function update_supervisor_status($id)
             $account_details->ifsc_code = $request->ifsc[$i];
             $account_details->save();
         }
+    }
     }
 
         return redirect()->route('employee')->with('success', 'Employee and Account Details Added Successfully');
@@ -2040,6 +2090,7 @@ public function update_employee_status($id)
         $user = new User();
         $user->name = $request->employee_name;
         $user->email = $request->email;
+        $user->contact = $request->mobile_number;
         $user->password = bcrypt($request->password); // Hash the password
         $user->role = 'Engineer';
         $user->save();
@@ -2088,6 +2139,7 @@ public function update_employee_status($id)
             $user = User:: where('email',$employee->email)->first();
             $user->name = $request->employee_name;
             $user->email = $request->email;
+            $user->contact = $request->mobile_number;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
             $user->role = 'Engineer';
             $user->save();
@@ -2162,8 +2214,9 @@ public function update_engg_status($id)
         $user = new User();
         $user->name = $request->employee_name;
         $user->email = $request->email;
+        $user->contact = $request->mobile_number;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'site-manager';
+        $user->role = 'Site-Manager';
         $user->save();
 
 
@@ -2211,8 +2264,9 @@ public function update_engg_status($id)
             $user = User:: where('email',$employee->email)->first();
             $user->name = $request->employee_name;
             $user->email = $request->email;
+            $user->contact = $request->mobile_number;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'site-manager';
+            $user->role = 'Site-Manager';
             $user->save();
 
             $employee->user_id = $user->id;
@@ -2287,8 +2341,9 @@ public function update_site_manager_status($id)
         $user = new User();
         $user->name = $request->employee_name;
         $user->email = $request->email;
+        $user->contact = $request->mobile_number;
         $user->password = bcrypt($request->password); // Hash the password
-        $user->role = 'site-incharge';
+        $user->role = 'Site-Incharge';
         $user->save();
 
 
@@ -2337,7 +2392,7 @@ public function update_site_manager_status($id)
             $user->name = $request->employee_name;
             $user->email = $request->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password; // Hash the password
-            $user->role = 'site-incharge';
+            $user->role = 'Site-Incharge';
             $user->save();
 
             $employee->user_id = $user->id;
@@ -2365,17 +2420,17 @@ public function update_site_manager_status($id)
 public function update_site_incharge_status($id)
 {
     // Get the current status of the vendor
-    $site_manager = DB::table('site_manager')->where('id', $id)->first();
+    $site_incharge = DB::table('site_incharge')->where('id', $id)->first();
 
     // Determine the new status
-    $newStatus = $site_manager->status == '1' ? '0' : '1';
+    $newStatus = $site_incharge->status == '1' ? '0' : '1';
 
-    // Update the site_manager's status
-    DB::table('site_manager')->where('id', $id)->update(['status' => $newStatus]);
+    // Update the site_incharge's status
+    DB::table('site_incharge')->where('id', $id)->update(['status' => $newStatus]);
 
     // Flash success message and redirect
-    session()->flash('success', 'site_manager status has been updated successfully.');
-    return redirect()->route('site_manager'); // Adjust redirect route as needed
+    session()->flash('success', 'site_incharge status has been updated successfully.');
+    return redirect()->route('site_incharge'); // Adjust redirect route as needed
 }
 
         public function delete_site_incharge($id)

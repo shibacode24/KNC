@@ -12,6 +12,12 @@ class AppRoles extends Model
     use HasFactory;
     protected $table = 'app_roles';
 
-    protected $fillable = ['role'];
+    protected $fillable = ['role', 'permission'];
+
+    protected $casts = [
+
+        'permission' => 'array',
+
+    ];
 
 }

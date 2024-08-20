@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-top:10px;">
-                    <form action="{{ route('map') }}" method="get">
+                    <form action="{{ route('track_location') }}" method="get">
                         @csrf
                         <div class="col-md-2">
                             <label class="control-label">Select Employee Type<font color="#FF0000">*</font></label>

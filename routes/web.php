@@ -350,12 +350,17 @@ Route::post('/assign-site-store', [DashboardController::class, 'assignSiteStore'
 // User Roles
 Route::get('panel-user-roles', [UserRolesController::class, 'panelUserRole'])->name('panel-user-roles');
 Route::post('panel-user-role-store', [UserRolesController::class, 'panelUserRolestore'])->name('panel-user-role-store');
+Route::get('panel-user-roles-edit/{id}', [UserRolesController::class, 'panelUserRoleEdit'])->name('panel-user-roles-edit');
+Route::post('panel-user-roles-update', [UserRolesController::class, 'panelUserRoleUpdate'])->name('panel-user-roles-update');
+
 Route::get('panel-user', [UserRolesController::class, 'panelUser'])->name('panel-user');
 Route::post('panel-user-store', [UserRolesController::class, 'panelUserStore'])->name('panelUser.store');
 
 
 Route::get('app-user-roles', [UserRolesController::class, 'appUserRole'])->name('app-user-roles');
-Route::post('app-user-store', [UserRolesController::class, 'appUserstore'])->name('app-user-store');
+Route::post('app-user-role-store', [UserRolesController::class, 'appUserRolestore'])->name('app-user-role-store');
+Route::get('app-user', [UserRolesController::class, 'appUser'])->name('app-user');
+Route::post('app-user-store', [UserRolesController::class, 'appUserStore'])->name('appUser.store');
 
 
 // Account Department
@@ -374,7 +379,7 @@ Route::get('income-billing', [AccountDepartmentController::class, 'incomeBilling
 Route::get('expense-entry', [AccountDepartmentController::class, 'expenseEntry']);
 
 
-Route::get('map', [MapController::class, 'showMap'])->name('map');
+Route::get('track_location', [MapController::class, 'showMap'])->name('track_location');
 Route::get('/filter-employees', [MapController::class, 'filterEmployees'])->name('filterEmployees');
 
 // In your web.php

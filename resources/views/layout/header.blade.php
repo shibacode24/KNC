@@ -158,15 +158,38 @@
                 @endphp
 
 
-                @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission) || in_array('city', $permission))
+                @if (Auth::user()->panel_role == 1
+                || in_array('city', $permission)
+                || in_array('firm', $permission)
+                || in_array('branch', $permission)
+                || in_array('unit_type', $permission)
+                || in_array(' material', $permission)
+                || in_array('brand', $permission)
+                || in_array('raw_material', $permission)
+                || in_array('non_consumable_unit_type', $permission)
+                || in_array('non-consumable-category', $permission)
+                || in_array('non-consumable-category-material', $permission)
+                || in_array('non_consumable_brand', $permission)
+                || in_array('working_unit_type', $permission)
+                || in_array('category', $permission)
+                || in_array('subcategory', $permission)
+                || in_array('client', $permission)
+                || in_array('site', $permission)
+                || in_array('warehouse', $permission)
+                || in_array('vendor', $permission)
+                || in_array('site_manager', $permission)
+                || in_array('site_incharge', $permission)
+                || in_array('supervisor', $permission)
+                || in_array('engg', $permission)
+                || in_array('contractor', $permission)
+                || in_array('employee', $permission)
+                || in_array('status', $permission)
+                || in_array('issue', $permission)
+
+                )
                     <li style="margin-left:-20px;">
                         <a href="#" title="Masters" style="font-size: 12px"><span class="fa fa-list" style="margin-right: -1px; font-size: 12px"> </span>Masters</a>
                         <ul>
-
-                            {{-- @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission))
-                            <li><a href="{{ route('assign_site') }}"><span class="fa fa-bars"></span>Assign Site</a>
-                            </li>
-                        @endif --}}
 
                             @if (Auth::user()->panel_role == 1 || in_array('city', $permission))
                                 <li><a href="{{ route('city') }}"><span class="fa fa-plus"></span>Add City</a></li>
@@ -221,20 +244,12 @@
                                 </li>
                             @endif
 
-                            {{-- @if (Auth::user()->panel_role == 1 || in_array('material', $permission) || in_array('brand', $permission) || in_array('raw_material', $permission) || in_array('unit_type', $permission))
-                        <li>
-                            <a href="#" title="Assign Site"><span class="fa fa-list"> </span>Assign Site</a>
-                            <ul> --}}
-
-                            {{-- </ul>
-                        </li>
-                        @endif --}}
 
                             @if (Auth::user()->panel_role == 1 ||
-                                    in_array('material', $permission) ||
-                                    in_array('brand', $permission) ||
-                                    in_array('raw_material', $permission) ||
-                                    in_array('unit_type', $permission))
+                                    in_array('non_consumable_unit_type', $permission) ||
+                                    in_array('non-consumable-category', $permission) ||
+                                    in_array('non-consumable-category-material', $permission) ||
+                                    in_array('non_consumable_brand', $permission))
                                 <li>
                                     <a href="#" title="Non Consumable Inventory"><span class="fa fa-list">
                                         </span>Non Consumable Inventory</a>
@@ -363,17 +378,27 @@
                 @endif
 
 
-                @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission))
+                @if (Auth::user()->panel_role == 1
+                || in_array('site_material', $permission)
+                || in_array('add_material', $permission)
+                || in_array('direct-issue-material', $permission)
+                || in_array('site-non-consumed-material', $permission)
+                || in_array('non_consumable_add_material', $permission)
+                || in_array('non_consumable_direct_issue_material', $permission)
+                )
 
                     <li style="margin-left:-20px;">
                         <a href="#" title="Inventory Managemnt"  style="font-size: 12px"><span class="fa fa-exchange" style="margin-right: -1px; font-size: 12px"> </span>Inventory
                             Managemnt</a>
                         <ul>
-                            {{-- @if (Auth::user()->panel_role == 1 || in_array('assign_site', $permission))
-                            <li><a href="{{ route('assign_site') }}"><span class="fa fa-bars"></span>Assign Site</a></li>
-                        @endif --}}
-                            {{-- @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission)) --}}
 
+
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('site_material', $permission)
+                            || in_array('add_material', $permission)
+                            || in_array('direct-issue-material', $permission)
+
+                            )
                             <li>
                                 <a href="#" title="Consumable Inventory"><span class="fa fa-bars">
                                     </span>Consumable Inventory</a>
@@ -395,30 +420,28 @@
                                     @endif
                                 </ul>
                             </li>
-                            {{-- @endif --}}
-                            {{-- @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href=""><span class="fa fa-plus"></span>Transfer Stock</a></li>
-                            @endif --}}
+                            @endif
 
 
-                            {{-- @if (Auth::user()->panel_role == 1 || in_array('site_material', $permission) || in_array('add_material', $permission)) --}}
 
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('site-non-consumed-material', $permission)
+                            || in_array('non_consumable_add_material', $permission)
+                            || in_array('non_consumable_direct_issue_material', $permission)
+
+                            )
                             <li>
                                 <a href="#" title="Non Consumable Inventory"><span class="fa fa-bars">
                                     </span>Non Consumable Inventory</a>
                                 <ul>
 
-
-
-
-
                                     @if (Auth::user()->panel_role == 1 || in_array('site-non-consumed-material', $permission))
+
                                         <li><a href="{{ route('site-non-consumed-material') }}"><span
                                                     class="fa fa-plus"></span>Non Consumeble Site Material Request
                                                 List</a>
                                         </li>
                                     @endif
-
                                     @if (Auth::user()->panel_role == 1 || in_array('non_consumable_add_material', $permission))
                                         <li><a href="{{ route('non_consumable_add_material') }}"><span
                                                     class="fa fa-plus"></span>Non Consumable Add Material</a>
@@ -434,51 +457,32 @@
 
                                 </ul>
                             </li>
-                            {{-- @endif --}}
+                            @endif
                         </ul>
                     </li>
                 @endif
 
-
-                {{-- @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission) || in_array('order_details', $permission) || in_array('direct-po-list', $permission))
-
-                    <li>
-                        <a href="#" title="Purchase Department"><span class="fa fa-money"> </span>Purchase
-                            Department</a>
-                        <ul>
-                            @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission))
-                                <li><a href="{{ route('req_material') }}"><span class="fa fa-plus"></span>Material
-                                        Request
-                                        List</a></li>
-                            @endif
-
-                            @if (Auth::user()->panel_role == 1 || in_array('order_details', $permission))
-                                <li><a href="{{ route('order_details') }}"><span class="fa fa-plus"></span>Order
-                                        Details
-                                        List</a></li>
-                            @endif
-
-                            @if (Auth::user()->panel_role == 1 || in_array('direct-po-list', $permission))
-                                <li><a href="direct-po-list"><span class="fa fa-plus"></span>Direct PO
-                                        List</a></li>
-                            @endif
-
-                            {{-- @if (Auth::user()->panel_role == 1 || in_array('', $permission))
-                                <li><a href="{{ route('feedback') }}"><span class="fa fa-plus"></span>Feedback</a>
-                                </li>
-                            @endif --}}
-
-                {{-- </ul>
-                    </li>
-                @endif --}}
-
-                @if (Auth::user()->panel_role == 1 || in_array('req_material', $permission) || in_array('order_details', $permission))
+                @if (Auth::user()->panel_role == 1
+                || in_array('req_material', $permission)
+                || in_array('order_details', $permission)
+                || in_array('direct-po-list', $permission)
+                || in_array('non_consume_req_material', $permission)
+                || in_array('non_consumable_order_list', $permission)
+                || in_array('non_consumable_directPoList', $permission)
+                )
 
                     <li style="margin-left:-20px;">
                         <a href="#" title="Purchase Department"  style="font-size: 12px"><span class="fa fa-exchange" style="font-size: 12px; margin-right:-1px"> </span>Purchase
                             Department</a>
                         <ul>
 
+
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('req_material', $permission)
+                            || in_array('order_details', $permission)
+                            || in_array('direct-po-list', $permission)
+
+                            )
                             <li>
                                 <a href="#" title="Consumable Purchase"><span class="fa fa-bars">
                                     </span>Consumable Purchase</a>
@@ -504,6 +508,15 @@
 
                                 </ul>
                             </li>
+                            @endif
+
+
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('non_consume_req_material', $permission)
+                            || in_array('non_consumable_order_list', $permission)
+                            || in_array('non_consumable_directPoList', $permission)
+
+                            )
                             <li>
                                 <a href="#" title="Non Consumable Purchase"><span class="fa fa-bars">
                                     </span>Non Consumable Purchase</a>
@@ -517,7 +530,7 @@
                                                 List</a></li>
                                     @endif
 
-                                    @if (Auth::user()->panel_role == 1 || in_array('order_details', $permission))
+                                    @if (Auth::user()->panel_role == 1 || in_array('non_consumable_order_list', $permission))
                                         <li><a href="{{ route('non_consumable_order_list') }}"><span
                                                     class="fa fa-plus"></span>Order
                                                 Details
@@ -530,22 +543,44 @@
                                     @endif
                                 </ul>
                             </li>
-                            {{-- @endif --}}
+                            @endif
                         </ul>
                     </li>
                 @endif
 
-                @if (Auth::user()->panel_role == 1 || in_array('grn', $permission) || in_array('issue_material', $permission))
+                @if (Auth::user()->panel_role == 1
+                || in_array('grn', $permission)
+                || in_array('direct-grn-in', $permission)
+                || in_array('issue_material', $permission)
+                || in_array('direct-grn-out', $permission)
+                || in_array('non_consumable_grn', $permission)
+                || in_array('non_consumable_direct_grn_in', $permission)
+                || in_array('non_consumable_grn_out_material', $permission)
+                || in_array('non_consumanle_directGrnOut', $permission)
+                || in_array('transfer-material', $permission)
+                )
 
                     <li style="margin-left:-20px;">
                         <a href="#" title="Warehouse"  style="font-size: 12px"><span class="fa fa-exchange" style="margin-right: -1px; font-size: 12px"> </span>Warehouse</a>
                         <ul>
 
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('grn', $permission)
+                            || in_array('direct-grn-in', $permission)
+                            || in_array('issue_material', $permission)
+                            || in_array('direct-grn-out', $permission)
+
+                            )
+
+
                             <li>
                                 <a href="#" title="Consumable GRN"><span class="fa fa-exchange"> </span>Consumable GRN</a>
                                 <ul>
 
-
+                                    @if (Auth::user()->panel_role == 1
+                                    || in_array('grn', $permission)
+                                    || in_array('direct-grn-in', $permission)
+                                    )
                             <li>
                                 <a href="#" title="GRN In"><span class="fa fa-exchange"> </span>GRN In</a>
                                 <ul>
@@ -560,6 +595,12 @@
                         @endif
                                 </ul>
                             </li>
+                            @endif
+
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('issue_material', $permission)
+                            || in_array('direct-grn-out', $permission)
+                            )
 
                             <li>
                                 <a href="#" title="GRN Out"><span class="fa fa-exchange"> </span>GRN Out</a>
@@ -578,52 +619,79 @@
                                 </ul>
                             </li>
 
+                            @endif
+
                                 </ul>
                             </li>
+                            @endif
 
 
+
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('non_consumable_grn', $permission)
+                            || in_array('non_consumable_direct_grn_in', $permission)
+                            || in_array('non_consumable_grn_out_material', $permission)
+                            || in_array('non_consumanle_directGrnOut', $permission)
+
+                            )
                             <li>
                                 <a href="#" title="Non Consumable GRN"><span class="fa fa-exchange"> </span>Non Consumable GRN</a>
                                 <ul>
 
-
+                                    @if (Auth::user()->panel_role == 1
+                                    || in_array('non_consumable_grn', $permission)
+                                    || in_array('non_consumable_direct_grn_in', $permission)
+                                    )
                             <li>
                                 <a href="#" title="GRN In"><span class="fa fa-exchange"> </span>GRN In</a>
                                 <ul>
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            @if (Auth::user()->panel_role == 1 || in_array('non_consumable_grn', $permission))
                                 <li><a href="{{route('non_consumable_grn')}}"><span class="fa fa-plus"></span>GRN In</a>
                                 </li>
                             @endif
 
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            @if (Auth::user()->panel_role == 1 || in_array('non_consumable_direct_grn_in', $permission))
                             <li><a href="{{route('non_consumable_direct_grn_in')}}"><span class="fa fa-plus"></span>Direct GRN In</a>
                             </li>
                         @endif
                                 </ul>
                             </li>
+                            @endif
 
+
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('non_consumable_grn_out_material', $permission)
+                            || in_array('non_consumanle_directGrnOut', $permission)
+
+                            )
                             <li>
                                 <a href="#" title="GRN Out"><span class="fa fa-exchange"> </span>GRN Out</a>
                                 <ul>
 
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            @if (Auth::user()->panel_role == 1 || in_array('non_consumable_grn_out_material', $permission))
                                 <li><a href="{{route('non_consumable_grn_out_material')}}"><span class="fa fa-plus"></span>GRN
                                         Out</a></li>
                             @endif
 
 
-                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            @if (Auth::user()->panel_role == 1 || in_array('non_consumanle_directGrnOut', $permission))
                                 <li><a href="{{route('non_consumanle_directGrnOut')}}"><span class="fa fa-plus"></span>Direct GRN
                                         Out</a></li>
                             @endif
                                 </ul>
                             </li>
+                            @endif
 
                                 </ul>
                             </li>
 
+                            @endif
+
+                            @if (Auth::user()->panel_role == 1 || in_array('transfer-material', $permission))
+
                             <li style="margin-left:0px;">
                                 <a href="transfer-material"  style="font-size: 12px"><span class="fa fa-truck" style="margin-right: -1px; font-size: 12px"></span>Transfer Material</a></li>
+                            @endif
 
                         </ul>
                     </li>
@@ -637,7 +705,9 @@
                     <li style="margin-left:-20px;">
                         <a href="#" title="User Roles"  style="font-size: 12px"><span class="fa fa-user" style="margin-right: -1px; font-size: 12px"> </span>User Roles</a>
                         <ul>
-                                {{-- @if (Auth::user()->panel_role == 1 || in_array('app-user-roles', $permission))
+                                @if (Auth::user()->panel_role == 1
+                                || in_array('app-user-roles', $permission)
+                                )
                                     <li>
                                         <a href="#" title="Mobile App"><span class="fa fa-user"> </span>Mobile
                                             App</a>
@@ -646,11 +716,21 @@
                                                 <li><a href="{{ route('app-user-roles') }}"><span
                                                             class="fa fa-plus"></span>User Role</a></li>
                                             @endif
+
+                                            @if (Auth::user()->panel_role == 1 || in_array('app-user', $permission))
+                                            <li><a href="{{ route('app-user') }}"><span
+                                                        class="fa fa-plus"></span>Add User</a></li>
+                                        @endif
+
+
                                         </ul>
                                     </li>
-                                @endif --}}
+                                @endif
 
-                            @if (Auth::user()->panel_role == 1 || in_array('panel-user-roles', $permission) || in_array('panel-user', $permission))
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('panel-user-roles', $permission)
+                            || in_array('panel-user', $permission)
+                            )
                                 <li>
                                     <a href="#" title="Admin Panel"><span class="fa fa-user"> </span>Admin
                                         Panel</a>
@@ -671,29 +751,29 @@
                     </li>
                 @endif
 
+                @if (Auth::user()->panel_role == 1
+                || in_array('track_location', $permission)
+                )
                 <li style="margin-left:-20px;">
-                    <a href="{{route('map')}}" title="Track Location"  style="font-size: 12px"><span class="fa fa-map-marker" style="margin-right: -1px; font-size: 12px"> </span>Track Location</a>
+                    <a href="{{route('track_location')}}" title="Track Location"  style="font-size: 12px"><span class="fa fa-map-marker" style="margin-right: -1px; font-size: 12px"> </span>Track Location</a>
                 </li>
-
-
-                @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
-
-                    <li  style="margin-left:-20px;">
-                        <a href="#" title="Account Department"  style="font-size: 12px"><span class="fa fa-user" style="margin-right: -1px; font-size: 12px"> </span>Account
-                            Department</a>
-                        <ul>
-                            @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
-                                <li><a href="expense-master"><span class="fa fa-plus"></span>Expenses</a></li>
-                            @endif
-                        </ul>
-                    </li>
                 @endif
 
 
+                @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
+                    <li  style="margin-left:-20px;">
+                        <a href="expense-master" title="Account Department"  style="font-size: 12px"><span class="fa fa-user" style="margin-right: -1px; font-size: 12px"> </span>Account
+                            Department</a>
+
+                    </li>
+                @endif
+
+            @if (Auth::user()->panel_role == 1 || in_array('prediction', $permission))
             <li style="margin-left:-20px; margin-right:-50px">
                 <a href="prediction" title="Prediction"  style="font-size: 12px"><span class="fa fa-tachometer"> </span></a>
 
             </li>
+            @endif
 
                 {{-- <li>
                 <a href="#" title="User Role"><span class="fa fa-money"> </span>User Roles For App</a>

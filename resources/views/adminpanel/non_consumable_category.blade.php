@@ -77,21 +77,21 @@
                                         <td>{{ $category->category ?? null}}</td>
                                         <td>
 
-                                            {{-- <a href="{{ route('unit-type-edit', $category->id) }}"><button
+                                            <a href="{{ route('unit-type-edit', $category->id) }}"><button
                                                 style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                 type="button" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Edit"><i class="fa fa-edit"
                                                     style="margin-left:5px;"></i></button>
-                                                </a> --}}
+                                                </a>
 
 
-                                                    <a href="{{ route('non-consumable-category-destroy', $category->id) }}"><button
+                                                    {{-- <a href="{{ route('non-consumable-category-destroy', $category->id) }}"><button
                                                         style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                         type="button" class="btn btn-info" data-toggle="tooltip"
                                                         data-placement="top" title="Delete"
                                                         onclick="confirmDelete({{ $category->id }})"><i
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
+                                                </a> --}}
                                         </td>
                                     </tr>
 

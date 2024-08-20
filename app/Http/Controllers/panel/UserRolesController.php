@@ -11,133 +11,180 @@ use App\Models\{User, AccountDetails, Supervisor, Employee};
 
 class UserRolesController extends Controller
 {
-    public function panelUserRole(){
-
-        $city = City::all();
-        $role = PanelRoles::all();
-        // $ac = AccountDetails::where('supervisor_id', '!=', NULL)->with('supervisor')->get();
-        // $supervisor = Supervisor::get();
-        return view('adminpanel.panel_user_role', compact('city', 'role'));
-    }
-
-    public function panelUserRoleStore(Request $request)
-    {
-        //  dd($request->all());
-        // $request->validate([
-        //     'supervisor_name' => 'required',
-        //     'email' => 'required|',
-        //     'mobile_number' => 'required|',
-        //     'aadhar_number' => 'required|',
-        //     'pan_number' => 'required',
-        //     'city_address' => 'required',
-        //     'city_id' => 'required',
-
-        // ]);
-
-         // Create a new User instance and set its attributes
-    // $user = new User();
-    // $user->name = $request->supervisor_name;
-    // $user->email = $request->email;
-    // $user->password = bcrypt($request->password); // Hash the password
-    // $user->role = 'supervisor'; // Set the role to supervisor
-    // $user->save();
-
-        $user = new PanelRoles();
-        $user->role = $request->role;
-    //     $user->name = $request->name;
-    //     $user->email = $request->email;
-    //     $user->contact = $request->mobile_number;
-    //     $user->aadhar_number = $request->aadhar_number;
-    //     $user->pan_number = $request->pan_number;
-    //     $user->address = $request->city_address;
-    //     $user->city = $request->city_id;
-    //     $user->password = bcrypt($request->password); // Hash the password
-           $user->permission = $request->permission;
-
-        // $user->user_id = $user->id;
-        // $user->permission = json_encode($request->permission);
-
-        // dd($user);
-        $user->save();
-
-        // foreach ($request->acc_holder_name as $key => $acc_holder_name) {
-        //     $account_details = new AccountDetails();
-        //     $account_details->user_id = $user->id;
-        //     $account_details->account_holder = $request->acc_holder_name[$key];
-        //     $account_details->bank_name = $request->bank[$key];
-        //     $account_details->account_number = $request->ac_n[$key];
-        //     $account_details->ifsc_code = $request->ifsc[$key];
-        //     $account_details->save();
-        // }
-        // dd(1);
-        return redirect()->back()->with('success', 'Role Added Successfully');
-    }
 
 
     public function appUserRole(){
 
         $city = City::all();
         $role = AppRoles::all();
-        // $ac = AccountDetails::where('supervisor_id', '!=', NULL)->with('supervisor')->get();
-        // $supervisor = Supervisor::get();
+
         return view('adminpanel.app_user_roles', compact('city', 'role'));
     }
 
 
-    public function appUserstore(Request $request)
+    public function appUserRoleStore(Request $request)
     {
-        //  dd($request->all());
-        // $request->validate([
-        //     'supervisor_name' => 'required',
-        //     'email' => 'required|',
-        //     'mobile_number' => 'required|',
-        //     'aadhar_number' => 'required|',
-        //     'pan_number' => 'required',
-        //     'city_address' => 'required',
-        //     'city_id' => 'required',
 
-        // ]);
+        $user = new AppRoles();
+        $user->role = $request->role;
+        $user->permission = $request->permission;
 
-         // Create a new User instance and set its attributes
-    // $user = new User();
-    // $user->name = $request->supervisor_name;
-    // $user->email = $request->email;
-    // $user->password = bcrypt($request->password); // Hash the password
-    // $user->role = 'supervisor'; // Set the role to supervisor
-    // $user->save();
-
-
-        $user = new User();
-        $user->app_role = $request->role;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->contact = $request->mobile_number;
-        $user->aadhar_number = $request->aadhar_number;
-        $user->pan_number = $request->pan_number;
-        $user->address = $request->city_address;
-        $user->city = $request->city_id;
-    $user->password = bcrypt($request->password); // Hash the password
-    $user->permission = $request->permission;
-
-        // $user->user_id = $user->id;
-        // $user->permission = json_encode($request->permission);
-
-        // dd($user);
         $user->save();
 
-        foreach ($request->acc_holder_name as $key => $acc_holder_name) {
-            $account_details = new AccountDetails();
-            $account_details->user_id = $user->id;
-            $account_details->account_holder = $request->acc_holder_name[$key];
-            $account_details->bank_name = $request->bank[$key];
-            $account_details->account_number = $request->ac_n[$key];
-            $account_details->ifsc_code = $request->ifsc[$key];
-            $account_details->save();
-        }
-        // dd(1);
-        return redirect()->back()->with('success', 'User and Account Details Added Successfully');
+
+        return redirect()->back()->with('success', 'Role Added Successfully');
     }
 
+
+
+public function appUser(Request $request)
+{
+
+    $user_data = User::where(function($query) {
+        $query->where('role', 'Site-Manager')
+              ->orWhere('role', 'Site-Incharge')
+              ->orWhere('role', 'Supervisor')
+              ->orWhere('role', 'Engineer')
+              ->orWhere('role', 'Other');
+    })
+    ->whereNotNull('app_role')
+    ->with(['role_name', 'supervisor', 'siteManager', 'siteIncharge', 'engineer']) // Eager load relationships
+    ->get();
+
+    // dd($user_data);
+
+    $siteManager = User::where('role', 'Site-Manager')->get();
+    $siteIncharge = User::where('role', 'Site-Incharge')->get();
+    $supervisor = User::where('role', 'Supervisor')->get();
+    $engineer =  User::where('role', 'Engineer')->get();
+    $role = AppRoles::all();
+    $user = User::all();
+
+        return view('adminpanel.app_user', compact('user_data', 'siteManager', 'siteIncharge', 'engineer', 'role', 'user', 'supervisor'));
+    }
+
+
+
+    public function appUserstore(Request $request)
+    {
+
+        if ($request->person === 'Site-Manager' && $request->siteManager) {
+            // Get the supervisor
+            $manager = User::find($request->siteManager);
+
+            // Update the supervisor's role and permissions
+            $manager->app_role = $request->role_id;
+
+            // Get permissions from PanelRoles table
+            $rolePermissions = AppRoles::find($request->role_id)->permission;
+            $manager->app_permission = $rolePermissions;
+
+            $manager->save();
+        } elseif ($request->person === 'Site-Incharge' && $request->siteIncharge) {
+            // Get the supervisor
+            $incharge = User::find($request->employee);
+
+            // Update the supervisor's role and permissions
+            $incharge->app_role = $request->role_id;
+
+            // Get permissions from appRoles table
+            $rolePermissions = AppRoles::find($request->role_id)->permission;
+            $incharge->app_permission = $rolePermissions;
+
+            $incharge->save();
+        }
+        elseif ($request->person === 'Supervisor' && $request->supervisor) {
+            // Get the supervisor
+            $supervisor = User::find($request->supervisor);
+
+            // Update the supervisor's role and permissions
+            $supervisor->app_role = $request->role_id;
+
+            // Get permissions from appRoles table
+            $rolePermissions = AppRoles::find($request->role_id)->permission;
+            $supervisor->app_permission = $rolePermissions;
+
+            $supervisor->save();
+        }
+        elseif ($request->person === 'Engineer' && $request->engineer) {
+            // Get the supervisor
+            $engineer = User::find($request->engineer);
+
+            // Update the supervisor's role and permissions
+            $engineer->app_role = $request->role_id;
+
+            // Get permissions from appRoles table
+            $rolePermissions = AppRoles::find($request->role_id)->permission;
+            $engineer->permission = $rolePermissions;
+
+            $engineer->save();
+        }
+        elseif($request->person === 'Other'){
+            // Get permissions from AppRoles table
+            $rolePermissions = AppRoles::find($request->role_id)->permission;
+
+            $user = new User();
+            $user -> name = $request->name;
+            $user -> contact = $request->contact;
+            $user -> email = $request->email;
+            $user->password = bcrypt($request->password); // Hash the password
+            $user -> app_role = $request->role_id;
+
+            $user -> role = 'Other';
+            $user->app_permission = $rolePermissions;
+
+            $user->save();
+
+        }
+
+        return redirect(route('app-user'))->with('success', 'Successfully Updated!');
+    }
+
+
+    // Panel
+
+
+    public function panelUserRole(){
+
+        $city = City::all();
+        $role = PanelRoles::all();
+
+        return view('adminpanel.panel_user_role', compact('city', 'role'));
+    }
+
+    public function panelUserRoleStore(Request $request)
+    {
+
+        $user = new PanelRoles();
+        $user->role = $request->role;
+        $user->permission = $request->permission;
+
+        $user->save();
+
+
+        return redirect()->back()->with('success', 'Role Added Successfully');
+    }
+
+
+    public function panelUserRoleEdit($id){
+
+        $roleEdit = PanelRoles::find($id);
+
+        return view('adminpanel.panel_user_role_edit', compact('roleEdit'));
+    }
+
+    public function panelUserRoleUpdate(Request $request)
+    {
+
+        $user = PanelRoles::find($request->id);
+        $user->role = $request->role;
+        $user->permission = $request->permission;
+
+        $user->save();
+
+
+        return redirect(route('panel-user-roles'))->with('success', 'Successfully Updated !');
+    }
 
 
 public function panelUser(Request $request)
