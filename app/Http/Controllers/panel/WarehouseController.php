@@ -236,6 +236,57 @@ public function viewDirectGrnIn(Request $request)
     }
 
 
+    // public function addIssuedMaterialByWarehouse(Request $request)
+    // {
+    //     $remarks = $request->input('remarks', []);
+    //     $statuses = $request->input('status', []);
+    //     $redirectRoute = 'issue_material'; // Default redirect route
+
+    //     foreach ($remarks as $id => $remark) {
+    //         $status = $statuses[$id] ?? null; // Get the corresponding status for the current material ID
+
+    //         if ($status !== null) {
+    //             // Check if the record already exists
+    //             $existingRecord = IssueMaterialByWarehouse::where('issue_material_by_inventory_id', $id)->first();
+
+    //             if ($existingRecord) {
+    //                 // Update existing record
+    //                 $existingRecord->update([
+    //                     'remark' => $remark,
+    //                     'status_id' => $status,
+    //                     'app_status_id' =>6,
+    //                 ]);
+    //             } else {
+    //                 // Create new record
+    //                 IssueMaterialByWarehouse::create([
+    //                     'issue_material_by_inventory_id' => $id,
+    //                     'remark' => $remark,
+    //                     'status_id' => $status,
+    //                     'app_status_id' =>6,
+
+    //                 ]);
+    //             }
+
+    //             // Update the corresponding IssueMaterialByInventory record
+    //             $inventoryRecord = IssueMaterialByInventory::find($id);
+    //             if ($inventoryRecord) {
+    //                 $inventoryRecord->update([
+    //                     'inventory_status' => $status,
+    //                     'app_status' =>6,
+
+    //             ]);
+
+    //               // Check the issue_type and set the redirect route
+    //               if ($inventoryRecord->issue_type === 'Direct Issue') {
+    //                 $redirectRoute = 'direct-grn-out';
+    //             }
+    //             }
+    //         }
+    //     }
+
+    //     return redirect()->route($redirectRoute)->with('success', 'Materials updated successfully!');
+    // }
+
 
 public function addIssuedMaterialByWarehouse(Request $request)
 {

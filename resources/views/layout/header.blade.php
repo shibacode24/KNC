@@ -137,7 +137,7 @@
             <ul class="x-navigation x-navigation-horizontal">
 
 
-                <li class="" style="margin-right:0px; background-color:white;">
+                <li class="" style="background-color:white;">
                     <a> <img src="{{ asset('public/logo/logo.png') }}" alt="" style="margin-top:-12px; width:130px" /></a>
                     <a href="#" class="x-navigation-control"></a>
                 </li>
@@ -146,9 +146,9 @@
                         <img src="{{ asset('public/assets/images/users/avatar.jpg') }}" alt="EMR - OPD Software" />
                     </a>
                 </li>
-                <li style="margin-left:-10px;">
-                    <a href="{{ route('dashboard') }}" title="Dashboard" style="font-size: 12px"><span class="fa fa-desktop" style="margin-right: 0px; font-size: 12px">
-                        </span>Dashboard</a>
+                <li >
+                    <a href="{{ route('dashboard') }}" title="Dashboard" style="font-size: 12px"><span class="fa fa-tachometer" style="margin-right: 0px; font-size: 20px">
+                        </span></a>
 
                 </li>
 
@@ -358,6 +358,14 @@
                                 <li><a href="{{ route('employee') }}"><span class="fa fa-plus"></span>Add Employee</a>
                                 </li>
                             @endif
+
+                            @if (Auth::user()->panel_role == 1 || in_array('prediction', $permission))
+                            <li style="margin-left:-20px; margin-right:-50px">
+                                <a href="prediction" title="Prediction"  style="font-size: 12px; margin-left:20px"><span class="fa fa-plus"> </span>Prediction Calculator</a>
+
+                            </li>
+                            @endif
+
 
 
                             @if (Auth::user()->panel_role == 1 || in_array('status', $permission))
@@ -689,7 +697,7 @@
 
                             @if (Auth::user()->panel_role == 1 || in_array('transfer-material', $permission))
 
-                            <li style="margin-left:0px;">
+                            <li >
                                 <a href="transfer-material"  style="font-size: 12px"><span class="fa fa-truck" style="margin-right: 10px; font-size: 12px"></span>Transfer Material</a></li>
                             @endif
 
@@ -747,17 +755,19 @@
                                     </ul>
                                 </li>
                             @endif
+
+                            @if (Auth::user()->panel_role == 1
+                            || in_array('track_location', $permission)
+                            )
+                            <li style="margin-left:-20px;">
+                                <a href="{{route('track_location')}}" title="Track Location"  style="font-size: 12px; margin-left:20px"><span class="fa fa-map-marker" style="margin-right: 10px; font-size: 12px"> </span>Track Location</a>
+                            </li>
+                            @endif
+
                         </ul>
                     </li>
                 @endif
 
-                @if (Auth::user()->panel_role == 1
-                || in_array('track_location', $permission)
-                )
-                <li style="margin-left:-20px;">
-                    <a href="{{route('track_location')}}" title="Track Location"  style="font-size: 12px"><span class="fa fa-map-marker" style="margin-right: -1px; font-size: 12px"> </span>Track Location</a>
-                </li>
-                @endif
 
 
                 @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
@@ -768,12 +778,12 @@
                     </li>
                 @endif
 
-            @if (Auth::user()->panel_role == 1 || in_array('prediction', $permission))
+            {{-- @if (Auth::user()->panel_role == 1 || in_array('prediction', $permission))
             <li style="margin-left:-20px; margin-right:-50px">
                 <a href="prediction" title="Prediction"  style="font-size: 12px"><span class="fa fa-tachometer"> </span></a>
 
             </li>
-            @endif
+            @endif --}}
 
                 {{-- <li>
                 <a href="#" title="User Role"><span class="fa fa-money"> </span>User Roles For App</a>
