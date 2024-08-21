@@ -96,6 +96,7 @@
                                             <th>Request ID </th>
                                             <th>Material Name </th>
                                             <th>Brand Name </th>
+                                            <th>Raw Material</th>
                                             <th>Material Qty </th>
                                             <th>Material Unit </th>
                                             <th>Warehouse </th>
@@ -119,6 +120,9 @@
                                                 <td>{{ $material->requested_material_id ?? '' }}</td>
                                                 <td>{{ $material->material_name->material ?? '' }}</td>
                                                 <td>{{ $material->brand_name->brand ?? '' }}</td>
+                                                <td>{{ $material->raw_material_name->raw_material_name ?? '' }}</td>
+
+
                                                 <td>{{ $material->requested_material_quantity ?? '' }}</td>
 
                                                 <td>{{ $material->unit_type->unit_type ?? ''}}</td>

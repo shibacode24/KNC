@@ -214,7 +214,7 @@
                                         <label class="control-label">Site Description<font color="#FF0000">*</font>
                                         </label>
                                         <textarea type="text" class="form-control" name="site_description" rows="2"
-                                            cols="5">{{$siteEdit->id}}</textarea>
+                                            cols="5">{{$siteEdit->site_description}}</textarea>
 
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">

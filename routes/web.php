@@ -187,11 +187,15 @@ Route::post('subcategory-update', [DashboardController::class, 'subcategoryUpdat
 Route::get('/non-consumable-category', [DashboardController::class, 'nonConsumableCategory'])->name('non-consumable-category');
 Route::post('/non-consumable-category-store', [DashboardController::class, 'nonConsumableCategoryStore'])->name('non-consumable-category-store');
 Route::get('non-consumable-category-destroy/{id}', [DashboardController::class, 'nonConsumableCategoryDestroy'])->name('non-consumable-category-destroy');
+Route::get('non-consumable-category-edit/{id}', [DashboardController::class, 'nonConsumableCategoryEdit'])->name('non-consumable-category-edit');
+Route::post('non-consumable-category-update', [DashboardController::class, 'nonConsumableCategoryUpdate'])->name('non-consumable-category-update');
 
 Route::get('/non-consumable-category-material', [DashboardController::class, 'nonConsumableCategoryMaterial'])->name('non-consumable-category-material');
 Route::post('/non-consumable-category-material-store', [DashboardController::class, 'nonConsumableCategoryMaterialStore'])->name('non-consumable-category-material-store');
 Route::get('non-consumable-category-material-destroy/{id}', [DashboardController::class, 'nonConsumableCategoryMaterialDestroy'])->name('non-consumable-category-material-destroy');
 Route::get('/brands/getNonConsumableBrands', [DashboardController::class, 'getNonConsumableBrands'])->name('brands.getNonConsumableBrands');
+Route::get('non-consumable-category-material-edit/{id}', [DashboardController::class, 'nonConsumableCategoryMaterialEdit'])->name('non-consumable-category-material-edit');
+Route::post('non-consumable-category-material-update', [DashboardController::class, 'nonConsumableCategoryMaterialUpdate'])->name('non-consumable-category-material-update');
 
 Route::get('/issue', [DashboardController::class, 'issue'])->name('issue');
 Route::post('/issue-store', [DashboardController::class, 'issueStore'])->name('issue-store');

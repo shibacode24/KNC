@@ -13,7 +13,7 @@
                         <h5 class="panel-title"
                             style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
                             align="center">
-                            <i class="fa fa-plus"></i> &nbsp;Add Sub Category
+                            <i class="fa fa-plus"></i> &nbsp;Edit Non Consumable Categories
                         </h5>
 
 
@@ -21,37 +21,30 @@
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-top:10px;">
-                    <form action="{{ route('subcategory-update') }}" method="post">
+                    <form action="{{ route('non-consumable-category-update') }}" method="post">
                         @csrf
-                        <div class="col-md-3"></div>
+                        <div class="col-md-4"></div>
 
-                        <input type="hidden" name="id" value="{{$subcategoryEdit->id}}">
+                        <input type="hidden" name="id" value="{{$categoryEdit->id}}">
                         <div class="col-md-2">
-                            <label>Select Category</label>
-                            <select class="form-control select" data-live-search="true" name="category" id="category">
-                                @foreach($category as $cat)
-                                    <option value="{{ $cat->id }}" {{ $cat->id == $subcategoryEdit->category_id ? 'selected' : '' }}>
-                                        {{ $cat->category_name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label class="control-label">Add Category<font color="#FF0000">*</font></label>
+                            <input type="text" class="form-control" name="category" placeholder=""  value="{{$categoryEdit->category}}" required />
                         </div>
-                        <div class="col-md-2">
-                            <label class="control-label">SubCategory Name<font color="#FF0000">*</font></label>
-                            <input type="text" class="form-control" name="subcategory_name" placeholder="" value="{{$subcategoryEdit->subcategory_name}}" required />
-                        </div>
-
                         <div class="col-md-2" style="margin-top:15px;" align="left">
                             <button id="on" type="submit" class="btn mjks"
                                 style="color:#FFFFFF; height:30px; width:auto;">
-                                <i class="fa fa-plus"></i>Add</button>
+                                <i class="fa fa-plus"></i>Update</button>
+
                         </div>
                     </form>
+
                 </div>
 
             </div>
         </div>
     </div>
+
+
 </div>
 
 </div>

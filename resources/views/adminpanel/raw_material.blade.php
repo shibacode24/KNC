@@ -71,15 +71,7 @@
                                 </select>
                             </div>
 
-                            {{-- <div class="col-md-2">
-                                <label>Select Material Type</label>
-                                <select class="form-control select" data-live-search="true" name="material_type"
-                                    id="material_type">
-                                    <option value="">--Select--</option>
-                                        <option value="Consumable">Consumable</option>
-                                        <option value="Non Consumable">Non Consumable</option>
-                                </select>
-                            </div> --}}
+                     
 
 
                             <div class="col-md-2">

@@ -690,7 +690,7 @@
                             @if (Auth::user()->panel_role == 1 || in_array('transfer-material', $permission))
 
                             <li style="margin-left:0px;">
-                                <a href="transfer-material"  style="font-size: 12px"><span class="fa fa-truck" style="margin-right: -1px; font-size: 12px"></span>Transfer Material</a></li>
+                                <a href="transfer-material"  style="font-size: 12px"><span class="fa fa-truck" style="margin-right: 10px; font-size: 12px"></span>Transfer Material</a></li>
                             @endif
 
                         </ul>
@@ -892,6 +892,26 @@
                     }
                 }
             </script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all elements with the class 'alert-temporary'
+        var alerts = document.querySelectorAll('.alert-temporary');
+
+        alerts.forEach(function(alert) {
+            // Set a timeout to hide the alert after 5 seconds
+            setTimeout(function() {
+                alert.style.opacity = 0;
+                // Optional: Remove the element from the DOM after fade out
+                setTimeout(function() {
+                    alert.remove();
+                }, 500); // Matches the fade out duration
+            }, 5000); // Time in milliseconds (5 seconds)
+        });
+    });
+</script>
+
 </body>
 
 </html>

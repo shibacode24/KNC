@@ -15,6 +15,7 @@ use App\Models\AvailableMaterial;
 use App\Models\Warehouse;
 use App\Models\Inventory\AddMaterial;
 use App\Models\PO\MaterialRequestList;
+use Illuminate\Support\Facades\Log;
 
 
 use App\Models\Inventory\IssueMaterialByInventory;
@@ -105,8 +106,6 @@ public function viewgrn(Request $request)
             // You can set a default value or leave it null if no condition is met
             $grn->grn_type = 'GRN'; // Replace with appropriate default value if needed
         }
-
-
         $grn->save();
 
 
@@ -267,6 +266,40 @@ public function addIssuedMaterialByWarehouse(Request $request)
                     'app_status_id' =>6,
 
                 ]);
+
+                $inventoryRecord = IssueMaterialByInventory::find($id);
+                if($inventoryRecord){
+                $availableMaterial = AvailableMaterial::where('warehouse_id', $inventoryRecord->selected_warehouse_id)
+                ->where('material_id', $inventoryRecord->material_id)
+                ->where('brand_id', $inventoryRecord->brand_id)
+                ->where('raw_material_id', $inventoryRecord->raw_material_id)
+                ->where('type', 'Consumable')
+                ->first();
+
+                if ($availableMaterial) {
+                    // Update the existing available material
+                    $availableMaterial->available_quantity -= $inventoryRecord->issue_material;
+
+                    // Debugging: Check the value before saving
+                    // dd($availableMaterial->available_quantity);
+
+                    // Attempt to save and capture the result
+                    $saveResult = $availableMaterial->save();
+
+                    // Debugging: Check if the save operation was successful
+                    if ($saveResult) {
+                        Log::info('Available material quantity updated successfully.');
+                    } else {
+                        Log::error('Failed to update available material quantity.');
+                    }
+
+                    // Fetch the latest data from the database to verify
+                    // $latestAvailableMaterial = AvailableMaterial::find($availableMaterial->id);
+                    // dd($latestAvailableMaterial);
+                }
+
+        }
+
             }
 
             // Update the corresponding IssueMaterialByInventory record
