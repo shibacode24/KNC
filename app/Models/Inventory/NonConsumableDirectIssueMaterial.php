@@ -4,7 +4,7 @@ namespace App\Models\Inventory;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{NonConsumableUnitType, Warehouse,NonConsumableBrand,NonConsumableCategoryMaterial, Supervisor, Site};
+use App\Models\{NonConsumableUnitType, Warehouse,NonConsumableBrand,NonConsumableCategoryMaterial, NonConsumableCategory, Supervisor, Site};
 
 
 class NonConsumableDirectIssueMaterial extends Model
@@ -33,8 +33,14 @@ class NonConsumableDirectIssueMaterial extends Model
 
     public function material_name()
     {
-        return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'material_id');
+        return $this->hasOne(NonConsumableCategory::class, 'id', 'material_id');
     }
+
+    public function sub_category_name()
+    {
+        return $this->hasOne(NonConsumableCategoryMaterial::class, 'id', 'raw_material_id');
+    }
+
 
     public function unit_type()
     {

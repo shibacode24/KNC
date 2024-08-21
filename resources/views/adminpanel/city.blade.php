@@ -6,27 +6,7 @@
 
                 <div class="panel-body" style="padding:1px 5px 2px 5px;">
 
-                    @if ($errors->any())
-                    <div class="alert alert-danger mt-2">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
 
-                @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
 
 
                     <div class="col-md-12" style="margin-top:5px;">
@@ -38,7 +18,27 @@
                             </h5>
 
 
+                            @if ($errors->any())
+                            <div class="alert alert-danger mt-2 alert-temporary">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
+                        @if(session('success'))
+                            <div class="alert alert-success alert-temporary">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if(session('error'))
+                            <div class="alert alert-danger alert-temporary">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         </div>
                     </div>
                     <div class="col-md-12" style="margin-top:10px;">
@@ -89,7 +89,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($city as $city)
+                                        @foreach ($city->sortByDesc('created_at') as $city)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
 
@@ -156,4 +156,6 @@
 
 @stop
 @section('js')
+
+
 @stop

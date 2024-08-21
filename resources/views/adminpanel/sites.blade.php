@@ -21,19 +21,37 @@
 
                     </div>
                 </div>
-                @if(session('success'))
+
+                @if ($errors->any())
+                <div class="alert alert-danger mt-2">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
-                @endif
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
                 <div class="col-md-12" style="margin-top:10px;">
                     <div class="tabs">
                         <ul class="nav nav-tabs nav-justified">
 
                             <li class="active"><a href="#tab9" data-toggle="tab">Personal &nbsp;<span
-                                        style="color: red;">(1)</span></a></li>
+                                        style="color: red;"></span></a></li>
                             <li><a href="#tab10" data-toggle="tab">Business &nbsp;<span
-                                        style="color: red;">(1)</span></a></li>
+                                        style="color: red;"></span></a></li>
 
                         </ul>
                         <div class="panel-body tab-content">
@@ -89,12 +107,12 @@
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Latitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="latitude" placeholder=""
+                                        <input type="number" class="form-control" name="latitude" placeholder=""
                                             required />
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Longitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="longitude" placeholder=""
+                                        <input type="number" class="form-control" name="longitude" placeholder=""
                                             required />
                                     </div>
                                     <div class="col-md-4" style="margin-top: 5px;">
@@ -118,6 +136,86 @@
 
                                     </div>
                                 </form>
+
+                                <div class="row">
+
+                                    <div class="col-md-12" style="margin-top:15px;">
+                                        <div class="panel panel-default">
+                                            <h5 class="panel-title"
+                                                style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
+                                                align="center">
+                                                <i class="fa fa-bars"></i> &nbsp;Added Sites
+                                            </h5>
+
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12" style="margin-top:15px;">
+
+                                        <!-- START DEFAULT DATATABLE -->
+
+                                        <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
+                                        <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
+                                            <table class="table datatable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sr. No.</th>
+                                                        <th>Date</th>
+                                                        <th>Site Name</th>
+                                                        <th>Address</th>
+
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($personalSite as $site)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+
+
+                                                        <td>{{ $site->created_at->format('d-m-y') ?? null}}</td>
+                                                        <td>{{ $site->site_name ?? null}}</td>
+                                                        <td>{{ $site->city_address ?? null}}</td>
+                                                        <td>
+                                                            <button data-toggle="modal" data-target="#popup1"
+                                                                style="background-color:#1abc3d; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                                type="button" class="btn btn-info view-site" data-toggle="tooltip"
+                                                                data-placement="top" title="View" data-site-id="{{ $site->id }}">
+                                                                <i class="fa fa-eye" style="margin-left:5px;"></i>
+                                                            </button>
+
+                                                            <a href="{{ route('site-edit', $site->id) }}">
+                                                            <button
+                                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                                type="button" class="btn btn-info" data-toggle="tooltip"
+                                                                data-placement="top" title="Edit"><i class="fa fa-edit"
+                                                                    style="margin-left:5px;"></i></button>
+                                                            </a>
+
+                                                                    <a href="{{ route('site-destroy', $site->id) }}"><button
+                                                                        style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                                        type="button" class="btn btn-info" data-toggle="tooltip"
+                                                                        data-placement="top" title="Delete"
+                                                                        onclick="confirmDelete({{ $site->id }})"><i
+                                                                            class="fa fa-trash-o" style="margin-left:5px;"></i></button>
+                                                                </a>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- END DEFAULT DATATABLE -->
+
+
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;"></div>
+                                </div>
                             </div>
 
                             {{-- buisness --}}
@@ -170,11 +268,11 @@
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Latitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="latitude" placeholder="" />
+                                        <input type="number" class="form-control" name="latitude" placeholder="" />
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Longitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="longitude" placeholder="" />
+                                        <input type="number" class="form-control" name="longitude" placeholder="" />
                                     </div>
                                     <div class="col-md-4" style="margin-top: 5px;">
                                         <label class="control-label">Site Description<font color="#FF0000">*</font>
@@ -197,13 +295,92 @@
 
                                     </div>
                                 </form>
+
+                                <div class="row">
+
+                                    <div class="col-md-12" style="margin-top:15px;">
+                                        <div class="panel panel-default">
+                                            <h5 class="panel-title"
+                                                style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
+                                                align="center">
+                                                <i class="fa fa-bars"></i> &nbsp;Added Sites
+                                            </h5>
+
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12" style="margin-top:15px;">
+
+                                        <!-- START DEFAULT DATATABLE -->
+
+                                        <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
+                                        <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
+                                            <table class="table datatable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sr. No.</th>
+                                                        <th>Date</th>
+                                                        <th>Site Name</th>
+                                                        <th>Address</th>
+
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($businessSite as $site)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+
+
+                                                        <td>{{ $site->created_at->format('d-m-y') ?? null}}</td>
+                                                        <td>{{ $site->site_name ?? null}}</td>
+                                                        <td>{{ $site->city_address ?? null}}</td>
+                                                        <td>
+                                                            <button data-toggle="modal" data-target="#popup1"
+                                                                style="background-color:#1abc3d; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                                type="button" class="btn btn-info view-site" data-toggle="tooltip"
+                                                                data-placement="top" title="View" data-site-id="{{ $site->id }}">
+                                                                <i class="fa fa-eye" style="margin-left:5px;"></i>
+                                                            </button>
+                                                            <a href="{{ route('site-edit', $site->id) }}">
+                                                            <button
+                                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                                type="button" class="btn btn-info" data-toggle="tooltip"
+                                                                data-placement="top" title="Edit"><i class="fa fa-edit"
+                                                                    style="margin-left:5px;"></i></button>
+                                                            </a>
+
+                                                                    <a href="{{ route('site-destroy', $site->id) }}"><button
+                                                                        style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
+                                                                        type="button" class="btn btn-info" data-toggle="tooltip"
+                                                                        data-placement="top" title="Delete"
+                                                                        onclick="confirmDelete({{ $site->id }})"><i
+                                                                            class="fa fa-trash-o" style="margin-left:5px;"></i></button>
+                                                                </a>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- END DEFAULT DATATABLE -->
+
+
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:15px;"></div>
+                                </div>
                             </div>
 
                         </div>
                     </div>
 
                 </div>
-                <div class="row">
+                {{-- <div class="row">
 
                     <div class="col-md-12" style="margin-top:15px;">
                         <div class="panel panel-default">
@@ -236,7 +413,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($site as $site)
+                                    @foreach($personalSite as $site)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
 
@@ -279,7 +456,7 @@
 
                     </div>
                     <div class="col-md-2" style="margin-top:15px;"></div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

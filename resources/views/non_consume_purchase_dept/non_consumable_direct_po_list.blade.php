@@ -81,11 +81,11 @@
 
                     <div class="col-md-2">
                         <label>Select Sub Category</label>
-                        <select class="form-control select" data-live-search="true" name="raw_material" id="sub_category">
-                            {{-- <option value="">--Select--</option>
-                            @foreach ($material as $material)
-                            <option value="{{$material->id}}">{{$material->material}}</option>
-                            @endforeach --}}
+                        <select class="form-control select" data-live-search="true" name="raw_material" id="subcategory">
+                            <option value="">--Select--</option>
+                            @foreach ($sub_category as $sub_category)
+                            <option value="{{$sub_category->id}}">{{$sub_category->sub_category_name}}</option>
+                            @endforeach
 
                         </select>
                     </div>
@@ -178,10 +178,10 @@
                                         <th>Sr. No.</th>
                                         <th>Date</th>
                                         <th>Warehouse Name</th>
-                                        <th>Material Name</th>
+                                        <th>Category Name</th>
+                                        <th>Sub Category Name</th>
                                         <th>Brand Name</th>
-                                        <th>Raw Material Name</th>
-                                        <th>Material Unit</th>
+                                        <th>Unit Type</th>
                                         <th>Material Qty</th>
                                         <th>Vendor Name</th>
                                         <th>Status</th>
@@ -196,8 +196,8 @@
                                         <td>{{ (date('d-m-Y',strtotime($reqMaterial->date))) }}</td>
                                         <td>{{$reqMaterial->warehouse_name->warehouse_name}}</td>
                                         <td>{{$reqMaterial->non_consumable_category_name->category ?? ''}}</td>
+                                        <td>{{$reqMaterial->non_consumable_material_name->sub_category_name ?? ''}}</td>
                                         <td>{{$reqMaterial->non_consumable_brand_name->brand ?? ''}}</td>
-                                        <td>{{$reqMaterial->non_consumable_material_name->material ?? ''}}</td>
                                         <td>{{$reqMaterial->non_consumable_unit_type->unit_type ?? ''}}</td>
                                         <td>{{$reqMaterial->quantity}}</td>
                                         <td>{{$reqMaterial->vendor_name->vendor_name}}</td>

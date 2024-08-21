@@ -187,11 +187,15 @@ Route::post('subcategory-update', [DashboardController::class, 'subcategoryUpdat
 Route::get('/non-consumable-category', [DashboardController::class, 'nonConsumableCategory'])->name('non-consumable-category');
 Route::post('/non-consumable-category-store', [DashboardController::class, 'nonConsumableCategoryStore'])->name('non-consumable-category-store');
 Route::get('non-consumable-category-destroy/{id}', [DashboardController::class, 'nonConsumableCategoryDestroy'])->name('non-consumable-category-destroy');
+Route::get('non-consumable-category-edit/{id}', [DashboardController::class, 'nonConsumableCategoryEdit'])->name('non-consumable-category-edit');
+Route::post('non-consumable-category-update', [DashboardController::class, 'nonConsumableCategoryUpdate'])->name('non-consumable-category-update');
 
 Route::get('/non-consumable-category-material', [DashboardController::class, 'nonConsumableCategoryMaterial'])->name('non-consumable-category-material');
 Route::post('/non-consumable-category-material-store', [DashboardController::class, 'nonConsumableCategoryMaterialStore'])->name('non-consumable-category-material-store');
 Route::get('non-consumable-category-material-destroy/{id}', [DashboardController::class, 'nonConsumableCategoryMaterialDestroy'])->name('non-consumable-category-material-destroy');
 Route::get('/brands/getNonConsumableBrands', [DashboardController::class, 'getNonConsumableBrands'])->name('brands.getNonConsumableBrands');
+Route::get('non-consumable-category-material-edit/{id}', [DashboardController::class, 'nonConsumableCategoryMaterialEdit'])->name('non-consumable-category-material-edit');
+Route::post('non-consumable-category-material-update', [DashboardController::class, 'nonConsumableCategoryMaterialUpdate'])->name('non-consumable-category-material-update');
 
 Route::get('/issue', [DashboardController::class, 'issue'])->name('issue');
 Route::post('/issue-store', [DashboardController::class, 'issueStore'])->name('issue-store');
@@ -350,12 +354,17 @@ Route::post('/assign-site-store', [DashboardController::class, 'assignSiteStore'
 // User Roles
 Route::get('panel-user-roles', [UserRolesController::class, 'panelUserRole'])->name('panel-user-roles');
 Route::post('panel-user-role-store', [UserRolesController::class, 'panelUserRolestore'])->name('panel-user-role-store');
+Route::get('panel-user-roles-edit/{id}', [UserRolesController::class, 'panelUserRoleEdit'])->name('panel-user-roles-edit');
+Route::post('panel-user-roles-update', [UserRolesController::class, 'panelUserRoleUpdate'])->name('panel-user-roles-update');
+
 Route::get('panel-user', [UserRolesController::class, 'panelUser'])->name('panel-user');
 Route::post('panel-user-store', [UserRolesController::class, 'panelUserStore'])->name('panelUser.store');
 
 
 Route::get('app-user-roles', [UserRolesController::class, 'appUserRole'])->name('app-user-roles');
-Route::post('app-user-store', [UserRolesController::class, 'appUserstore'])->name('app-user-store');
+Route::post('app-user-role-store', [UserRolesController::class, 'appUserRolestore'])->name('app-user-role-store');
+Route::get('app-user', [UserRolesController::class, 'appUser'])->name('app-user');
+Route::post('app-user-store', [UserRolesController::class, 'appUserStore'])->name('appUser.store');
 
 
 // Account Department
@@ -374,7 +383,7 @@ Route::get('income-billing', [AccountDepartmentController::class, 'incomeBilling
 Route::get('expense-entry', [AccountDepartmentController::class, 'expenseEntry']);
 
 
-Route::get('map', [MapController::class, 'showMap'])->name('map');
+Route::get('track_location', [MapController::class, 'showMap'])->name('track_location');
 Route::get('/filter-employees', [MapController::class, 'filterEmployees'])->name('filterEmployees');
 
 // In your web.php

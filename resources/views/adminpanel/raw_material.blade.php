@@ -71,15 +71,7 @@
                                 </select>
                             </div>
 
-                            {{-- <div class="col-md-2">
-                                <label>Select Material Type</label>
-                                <select class="form-control select" data-live-search="true" name="material_type"
-                                    id="material_type">
-                                    <option value="">--Select--</option>
-                                        <option value="Consumable">Consumable</option>
-                                        <option value="Non Consumable">Non Consumable</option>
-                                </select>
-                            </div> --}}
+                     
 
 
                             <div class="col-md-2">
@@ -152,20 +144,21 @@
                                                 <td>{{ $raw_material->minimum_keeping_quantity ?? null }}</td>
                                                 <td>{{ $raw_material->maximum_keeping_quantity ?? null }}</td>
                                                 <td>
+                                                    <a href="{{ route('raw-material-edit', $raw_material->id) }}">
 
                                                     <button
                                                         style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                         type="button" class="btn btn-info" data-toggle="tooltip"
                                                         data-placement="top" title="Edit"><i class="fa fa-edit"
                                                             style="margin-left:5px;"></i></button>
-
-                                                    <a href="{{ route('raw-material-destroy', $raw_material->id) }}"><button
+                                                    </a>
+                                                    {{-- <a href="{{ route('raw-material-destroy', $raw_material->id) }}"><button
                                                             style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                             type="button" class="btn btn-info" data-toggle="tooltip"
                                                             data-placement="top" title="Delete"
                                                             onclick="confirmDelete({{ $raw_material->id }})"><i
                                                                 class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                    </a>
+                                                    </a> --}}
                                                 </td>
                                             </tr>
                                         @endforeach

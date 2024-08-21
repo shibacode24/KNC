@@ -49,7 +49,7 @@
                                                                 </td>
                                                                 <td>{{ $order->non_consumable_category_name->category ?? null }}
                                                                 </td>
-                                                                <td>{{ $order->non_consumable_material_name->material ?? null }}
+                                                                <td>{{ $order->non_consumable_material_name->sub_category_name ?? null }}
                                                                 </td>
                                                                 <td>{{ $order->non_consumable_brand_name->brand ?? null }}
                                                                 </td>
@@ -96,13 +96,13 @@
                                                                 <td>{{ $completeOrder->order_id }}</td>
                                                                 <td>{{ $completeOrder->warehouse_name->warehouse_name ?? null }}
                                                                 </td>
-                                                                <td>{{ $order->non_consumable_category_name->category ?? null }}
+                                                                <td>{{ $completeOrder->non_consumable_category_name->category ?? null }}
                                                                 </td>
-                                                                <td>{{ $order->non_consumable_material_name->material ?? null }}
+                                                                <td>{{ $completeOrder->non_consumable_material_name->sub_category_name ?? null }}
                                                                 </td>
                                                                 <td>{{ $completeOrder->brand_name->brand ?? null }}</td>
                                                                 <td>{{ $completeOrder->unit_type->unit_type ?? null }}</td>
-                                                                <td>{{ $order->quantity ?? null }}</td>
+                                                                <td>{{ $completeOrder->quantity ?? null }}</td>
                                                                 {{-- <td>
                                                             <button data-bs-toggle="modal" data-bs-target="#grn-view-modal"
                                                                 style="background-color: #1abc3d; border: none; max-height: 25px; margin-top: -5px; margin-bottom: -5px;"

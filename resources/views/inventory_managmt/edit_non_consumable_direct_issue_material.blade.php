@@ -96,7 +96,7 @@
                                 </select>
                             </div> --}}
 
-                           
+
 
                             <div class="col-md-2" >
                                 <label>Select Category</label>
@@ -111,18 +111,33 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2" >
+                            {{-- <div class="col-md-2" >
                                 <label>Select Sub Category</label>
-                                <select class="form-control select" data-live-search="true" ame="raw_material_id" id="sub_category">
+                                <select class="form-control select" data-live-search="true" name="raw_material_id" id="subcategory">
                                     <option value="">--Select--</option>
-                                    @foreach ($materials as $materials)
-                                        <option value="{{ $materials->id }}" @if ($edit_material->material_id == $materials->id)
+                                    @foreach ($sub_category as $sub_category)
+                                        <option value="{{ $sub_category->id }}" @if ($edit_material->raw_material_id == $sub_category->id)
                                             selected
-                                        @endif>{{ $materials->material }}</option>
+                                        @endif>{{ $sub_category->raw_material_id }}</option>
+                                    @endforeach
+                                </select>
+                            </div> --}}
+
+                            <div class="col-md-2">
+                                <label>Select Sub Category</label>
+                                <select class="form-control select" data-live-search="true" name="raw_material_id"
+                                    id="subcategory">
+                                    <option value="">--Select--</option>
+                                    @foreach ($sub_category as $sub_category)
+                                        <option value="{{ $sub_category->id }}"
+                                            @if ($edit_material->raw_material_id == $sub_category->id)
+                                            selected
+                                            @endif>{{ $sub_category->sub_category_name }}</option>
                                     @endforeach
 
                                 </select>
                             </div>
+
 
                             <div class="col-md-2" >
                                 <label>Select Brand</label>
@@ -151,11 +166,14 @@
                                 <label>Select Unit</label>
                                 <select class="form-control select" data-live-search="true" name="unit_type">
                                     <option value="">--Select--</option>
-                                    @foreach ($unit as $unit)
-                                        <option value="{{ $unit->id }}">{{ $unit->unit_type }}</option>
+                                    @foreach ($unit as $singleUnit)
+                                        <option value="{{ $singleUnit->id }}" @if (old('unit_type', $edit_material->unit_id) == $singleUnit->id)
+                                            selected
+                                        @endif>{{ $singleUnit->unit_type }}</option>
                                     @endforeach
                                 </select>
                             </div>
+
 
                             <div class="col-md-2" style="margin-top: 20px">
                                 <label class="control-label">Material Qty<font color="#FF0000">*</font></label>

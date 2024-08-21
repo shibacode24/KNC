@@ -85,13 +85,13 @@
                                                 </a>
 
 
-                                                    <a href="{{ route('unit-type-destroy', $unit_type->id) }}"><button
+                                                    {{-- <a href="{{ route('unit-type-destroy', $unit_type->id) }}"><button
                                                         style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                         type="button" class="btn btn-info" data-toggle="tooltip"
                                                         data-placement="top" title="Delete"
                                                         onclick="confirmDelete({{ $unit_type->id }})"><i
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
+                                                </a> --}}
                                         </td>
                                     </tr>
 

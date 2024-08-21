@@ -32,11 +32,11 @@
                             </div>
                             <div class="col-md-2">
                                 <label>Select Material</label>
-                                <select class="form-control select" data-live-search="true" name="material_id"
+                                <select class="form-control select" data-live-search="true" name="category_id"
                                     id="material">
                                     @foreach ($material as $material)
                                         <option value="{{ $material->id }}"
-                                            @if ($brand_edit->mateiral_id == $material->id) selected @endif>{{ $material->material }}
+                                            @if ($brand_edit->mateiral_id == $material->id) selected @endif>{{ $material->category }}
                                         </option>
                                     @endforeach
                                 </select>

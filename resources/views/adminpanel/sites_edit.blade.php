@@ -21,28 +21,54 @@
 
                     </div>
                 </div>
-                @if(session('success'))
+
+                @if ($errors->any())
+                <div class="alert alert-danger mt-2">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
-                @endif
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
                 <div class="col-md-12" style="margin-top:10px;">
                     <div class="tabs">
-                        <ul class="nav nav-tabs nav-justified">
+                        {{-- <ul class="nav nav-tabs nav-justified">
 
                             <li class="active"><a href="#tab9" data-toggle="tab">Personal &nbsp;<span
                                         style="color: red;">(1)</span></a></li>
                             <li><a href="#tab10" data-toggle="tab">Business &nbsp;<span
                                         style="color: red;">(1)</span></a></li>
 
+                        </ul> --}}
+
+                        <ul class="nav nav-tabs nav-justified">
+                            <li class="{{ $type == 'personal' ? 'active' : '' }}"><a href="#tab9" data-toggle="tab">Personal &nbsp;<span style="color: red;"></span></a></li>
+                            <li class="{{ $type == 'buisness' ? 'active' : '' }}"><a href="#tab10" data-toggle="tab">Business &nbsp;<span style="color: red;"></span></a></li>
                         </ul>
                         <div class="panel-body tab-content">
                             {{-- personal --}}
+                            <div class="tab-pane {{ $type == 'personal' ? 'active' : '' }}" id="tab9">
 
                             <div class="tab-pane active" id="tab9">
-                                <form action="{{ route('sitepersonalorbuisness.store') }}" method="post"
+                                <form action="{{ route('site-update') }}" method="post"
                                     enctype="multipart/form-data">
                                     @csrf
+
+                                    <input type="hidden" name="id" value="{{$siteEdit->id}}">
                                     <div class="col-md-2">
                                         <label class="control-label">Select Firm<font color="#FF0000">*</font></label>
                                         <select class="form-control select" data-live-search="true" name="firm_id">
@@ -62,17 +88,16 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label">Site Name<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="site_name" placeholder=""
+                                        <input type="text" class="form-control" name="site_name" placeholder=""  value="{{$siteEdit->site_name}}"
                                             required />
                                     </div>
-
 
                                     <input type="hidden" class="form-control" value="personal"
                                         name="site_personal_or_buisness" placeholder="" required />
 
                                     <div class="col-md-2">
                                         <label class="control-label">Mobile Number<font color="#FF0000">*</font></label>
-                                        <input type="number" class="form-control" name="mobile_number" placeholder=""
+                                        <input type="number" class="form-control" name="mobile_number" placeholder=""  value="{{$siteEdit->mobile_number}}"
                                             required />
                                     </div>
                                     <div class="col-md-2">
@@ -85,24 +110,24 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label">Address<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="city_address" placeholder=""
+                                        <input type="text" class="form-control" name="city_address" placeholder=""  value="{{$siteEdit->city_address}}"
                                             required />
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Latitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="latitude" placeholder=""
+                                        <input type="number" class="form-control" name="latitude" placeholder=""  value="{{$siteEdit->latitude}}"
                                             required />
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Longitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="longitude" placeholder=""
+                                        <input type="number" class="form-control" name="longitude" placeholder=""  value="{{$siteEdit->longitude}}"
                                             required />
                                     </div>
                                     <div class="col-md-4" style="margin-top: 5px;">
                                         <label class="control-label">Site Description<font color="#FF0000">*</font>
                                         </label>
                                         <textarea type="text" class="form-control" name="site_description" rows="2"
-                                            cols="5"></textarea>
+                                            cols="5"> {{$siteEdit->site_description}}</textarea>
 
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
@@ -119,13 +144,21 @@
 
                                     </div>
                                 </form>
+
+
+                            </div>
                             </div>
 
                             {{-- buisness --}}
+                            <div class="tab-pane {{ $type == 'buisness' ? 'active' : '' }}" id="tab10">
+
                             <div class="tab-pane" id="tab10">
-                                <form action="{{ route('sitepersonalorbuisness.store') }}" method="post"
+                                <form action="{{ route('site-update') }}" method="post"
                                     enctype="multipart/form-data">
                                     @csrf
+
+                                    <input type="hidden" name="id" value="{{$siteEdit->id}}">
+
                                     <div class="col-md-2">
                                         <label class="control-label">Select Firm<font color="#FF0000">*</font></label>
                                         <select class="form-control select" data-live-search="true" name="firm_id">
@@ -147,15 +180,15 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label">Business Name<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="buisness_name" placeholder="" />
+                                        <input type="text" class="form-control" name="business_name" placeholder="" value="{{$siteEdit->buisness_name}}" />
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label">Site Name<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="site_name" placeholder="" />
+                                        <input type="text" class="form-control" name="site_name" placeholder="" value="{{$siteEdit->site_name}}"/>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label">Mobile Number<font color="#FF0000">*</font></label>
-                                        <input type="number" class="form-control" name="mobile_number" placeholder="" />
+                                        <input type="number" class="form-control" name="mobile_number" placeholder="" value="{{$siteEdit->mobile_number}}"/>
                                     </div>
                                     <div class="col-md-2">
                                         <label>City</label>
@@ -167,21 +200,21 @@
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Address<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="city_address" placeholder="" />
+                                        <input type="text" class="form-control" name="city_address" placeholder="" value="{{$siteEdit->city_address}}"/>
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Latitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="latitude" placeholder="" />
+                                        <input type="text" class="form-control" name="latitude" placeholder="" value="{{$siteEdit->latitude}}"/>
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
                                         <label class="control-label">Longitude<font color="#FF0000">*</font></label>
-                                        <input type="text" class="form-control" name="longitude" placeholder="" />
+                                        <input type="text" class="form-control" name="longitude" placeholder="" value="{{$siteEdit->longitude}}"/>
                                     </div>
                                     <div class="col-md-4" style="margin-top: 5px;">
                                         <label class="control-label">Site Description<font color="#FF0000">*</font>
                                         </label>
                                         <textarea type="text" class="form-control" name="site_description" rows="2"
-                                            cols="5"></textarea>
+                                            cols="5">{{$siteEdit->site_description}}</textarea>
 
                                     </div>
                                     <div class="col-md-2" style="margin-top: 5px;">
@@ -198,89 +231,15 @@
 
                                     </div>
                                 </form>
+
+
                             </div>
-
+                            </div>
                         </div>
                     </div>
 
                 </div>
-                <div class="row">
 
-                    <div class="col-md-12" style="margin-top:15px;">
-                        <div class="panel panel-default">
-                            <h5 class="panel-title"
-                                style="color:#FFFFFF; background-color:#006699; width:100%; font-size:14px;margin-top: 1vh;"
-                                align="center">
-                                <i class="fa fa-bars"></i> &nbsp;Added Sites
-                            </h5>
-
-
-
-                        </div>
-                    </div>
-
-                    <div class="col-md-12" style="margin-top:15px;">
-
-                        <!-- START DEFAULT DATATABLE -->
-
-                        <!-- <h5 class="panel-title" style="color:#FFFFFF; background-color:#754d35; width:100%; font-size:14px;" align="center"> <i class="fa fa-plus"></i> Added Party</h5> -->
-                        <div class="panel-body" style="margin-top:5px; margin-bottom:15px;">
-                            <table class="table datatable">
-                                <thead>
-                                    <tr>
-                                        <th>Sr. No.</th>
-                                        <th>Date</th>
-                                        <th>Site Name</th>
-                                        <th>Address</th>
-
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($site as $site)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-
-
-                                        <td>{{ $site->created_at->format('d-m-y') ?? null}}</td>
-                                        <td>{{ $site->site_name ?? null}}</td>
-                                        <td>{{ $site->city_address ?? null}}</td>
-                                        <td>
-                                            <button data-toggle="modal" data-target="#popup1"
-                                                style="background-color:#1abc3d; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                type="button" class="btn btn-info view-site" data-toggle="tooltip"
-                                                data-placement="top" title="View" data-site-id="{{ $site->id }}">
-                                                <i class="fa fa-eye" style="margin-left:5px;"></i>
-                                            </button>
-                                            <button
-                                                style="background-color:#3399ff; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                type="button" class="btn btn-info" data-toggle="tooltip"
-                                                data-placement="top" title="Edit"><i class="fa fa-edit"
-                                                    style="margin-left:5px;"></i></button>
-
-
-                                                    <a href="{{ route('site-destroy', $site->id) }}"><button
-                                                        style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
-                                                        type="button" class="btn btn-info" data-toggle="tooltip"
-                                                        data-placement="top" title="Delete"
-                                                        onclick="confirmDelete({{ $site->id }})"><i
-                                                            class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- END DEFAULT DATATABLE -->
-
-
-                    </div>
-                    <div class="col-md-2" style="margin-top:15px;"></div>
-                </div>
             </div>
         </div>
     </div>

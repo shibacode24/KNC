@@ -30,7 +30,8 @@ class User extends Authenticatable
         'address',
         'latitude',
         'longitude',
-        'permission'
+        'permission',
+        'app_permission',
     ];
 
         public function supervisor(){
@@ -45,6 +46,23 @@ class User extends Authenticatable
         public function role_name()
         {
             return $this->hasOne(PanelRoles::class, 'id', 'panel_role');
+        }
+
+        public function app_role_name()
+        {
+            return $this->hasOne(AppRoles::class, 'id', 'app_role');
+        }
+
+        public function siteManager(){
+            return $this->hasOne(Site_Manager::class, 'user_id', 'id');
+        }
+
+        public function siteIncharge(){
+            return $this->hasOne(Site_Incharge::class, 'user_id', 'id');
+        }
+
+        public function engineer(){
+            return $this->hasOne(Engineer::class, 'user_id', 'id');
         }
     /**
      * The attributes that should be hidden for serialization.
@@ -65,6 +83,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'permission' => 'array',
+        'app_permission' => 'array',
+
 
     ];
 }

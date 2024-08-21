@@ -52,11 +52,11 @@
 
                     <div class="col-md-2">
                         <label>Select Sub Category</label>
-                        <select class="form-control select" data-live-search="true" name="raw_material" id="sub_category">
+                        <select class="form-control select" data-live-search="true" name="raw_material" id="subcategory">
                             <option value="">--Select--</option>
-                            {{-- @foreach ($material as $material)
-                            <option value="{{$material->id}}">{{$material->material}}</option>
-                            @endforeach --}}
+                            @foreach ($subCategory as $subCategory)
+                            <option value="{{$subCategory->id}}">{{$subCategory->sub_category_name}}</option>
+                            @endforeach
 
                         </select>
                     </div>
@@ -147,7 +147,7 @@
                                         <td>{{date('d-m-Y',strtotime($addMaterial->date))}}</td>
                                         <td>{{$addMaterial->warehouse_name->warehouse_name ?? ''}}</td>
                                         <td>{{$addMaterial->category_name->category ?? ''}}</td>
-                                        <td>{{$addMaterial->material_name->material ?? ''}}</td>
+                                        <td>{{$addMaterial->material_name->sub_category_name ?? ''}}</td>
                                         <td>{{$addMaterial->brand_name->brand ?? ''}}</td>
 
                                         <td>{{$addMaterial->unit_type->unit_type ?? ''}}</td>

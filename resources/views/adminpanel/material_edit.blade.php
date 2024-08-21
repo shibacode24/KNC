@@ -30,6 +30,16 @@
                             <label class="control-label">Add Material<font color="#FF0000">*</font></label>
                             <input type="text" class="form-control" name="material" placeholder="" value="{{$materialEdit->material}}" required />
                         </div>
+
+                        <div class="col-md-2">
+                            <label>Select Unit Type</label>
+                            <select class="form-control select" data-live-search="true" name="unit_type"
+                                id="unit_type">
+                                @foreach($unit_type as $unit_type)
+                                <option value="{{ $unit_type->id }}">{{ $unit_type->unit_type }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-md-2" style="margin-top:15px;" align="left">
                             <button id="on" type="submit" class="btn mjks"
                                 style="color:#FFFFFF; height:30px; width:auto;">

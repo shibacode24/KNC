@@ -15,6 +15,7 @@ use App\Models\AvailableMaterial;
 use App\Models\Warehouse;
 use App\Models\Inventory\AddMaterial;
 use App\Models\PO\MaterialRequestList;
+use Illuminate\Support\Facades\Log;
 
 
 use App\Models\Inventory\IssueMaterialByInventory;
@@ -23,6 +24,8 @@ use App\Models\NonConsumableCategory;
 use App\Models\NonConsumableCategoryMaterial;
 use App\Models\NonConsumableUnitType;
 use App\Models\Warehouse\IssueMaterialByWareHouse;
+use App\Models\Inventory\NonConsumableDirectIssueMaterial;
+
 
 class WarehouseController extends Controller
 {
@@ -103,8 +106,6 @@ public function viewgrn(Request $request)
             // You can set a default value or leave it null if no condition is met
             $grn->grn_type = 'GRN'; // Replace with appropriate default value if needed
         }
-
-
         $grn->save();
 
 
@@ -235,6 +236,57 @@ public function viewDirectGrnIn(Request $request)
     }
 
 
+    // public function addIssuedMaterialByWarehouse(Request $request)
+    // {
+    //     $remarks = $request->input('remarks', []);
+    //     $statuses = $request->input('status', []);
+    //     $redirectRoute = 'issue_material'; // Default redirect route
+
+    //     foreach ($remarks as $id => $remark) {
+    //         $status = $statuses[$id] ?? null; // Get the corresponding status for the current material ID
+
+    //         if ($status !== null) {
+    //             // Check if the record already exists
+    //             $existingRecord = IssueMaterialByWarehouse::where('issue_material_by_inventory_id', $id)->first();
+
+    //             if ($existingRecord) {
+    //                 // Update existing record
+    //                 $existingRecord->update([
+    //                     'remark' => $remark,
+    //                     'status_id' => $status,
+    //                     'app_status_id' =>6,
+    //                 ]);
+    //             } else {
+    //                 // Create new record
+    //                 IssueMaterialByWarehouse::create([
+    //                     'issue_material_by_inventory_id' => $id,
+    //                     'remark' => $remark,
+    //                     'status_id' => $status,
+    //                     'app_status_id' =>6,
+
+    //                 ]);
+    //             }
+
+    //             // Update the corresponding IssueMaterialByInventory record
+    //             $inventoryRecord = IssueMaterialByInventory::find($id);
+    //             if ($inventoryRecord) {
+    //                 $inventoryRecord->update([
+    //                     'inventory_status' => $status,
+    //                     'app_status' =>6,
+
+    //             ]);
+
+    //               // Check the issue_type and set the redirect route
+    //               if ($inventoryRecord->issue_type === 'Direct Issue') {
+    //                 $redirectRoute = 'direct-grn-out';
+    //             }
+    //             }
+    //         }
+    //     }
+
+    //     return redirect()->route($redirectRoute)->with('success', 'Materials updated successfully!');
+    // }
+
 
 public function addIssuedMaterialByWarehouse(Request $request)
 {
@@ -265,6 +317,40 @@ public function addIssuedMaterialByWarehouse(Request $request)
                     'app_status_id' =>6,
 
                 ]);
+
+                $inventoryRecord = IssueMaterialByInventory::find($id);
+                if($inventoryRecord){
+                $availableMaterial = AvailableMaterial::where('warehouse_id', $inventoryRecord->selected_warehouse_id)
+                ->where('material_id', $inventoryRecord->material_id)
+                ->where('brand_id', $inventoryRecord->brand_id)
+                ->where('raw_material_id', $inventoryRecord->raw_material_id)
+                ->where('type', 'Consumable')
+                ->first();
+
+                if ($availableMaterial) {
+                    // Update the existing available material
+                    $availableMaterial->available_quantity -= $inventoryRecord->issue_material;
+
+                    // Debugging: Check the value before saving
+                    // dd($availableMaterial->available_quantity);
+
+                    // Attempt to save and capture the result
+                    $saveResult = $availableMaterial->save();
+
+                    // Debugging: Check if the save operation was successful
+                    if ($saveResult) {
+                        Log::info('Available material quantity updated successfully.');
+                    } else {
+                        Log::error('Failed to update available material quantity.');
+                    }
+
+                    // Fetch the latest data from the database to verify
+                    // $latestAvailableMaterial = AvailableMaterial::find($availableMaterial->id);
+                    // dd($latestAvailableMaterial);
+                }
+
+        }
+
             }
 
             // Update the corresponding IssueMaterialByInventory record
@@ -564,8 +650,9 @@ return redirect()->route($redirectRoute)->with('success', 'Materials updated suc
 public function non_consumanle_directGrnOut(Request $request)
 {
    // $issueMaterial = IssueMaterialByInventory::where('issue_type', 'Direct Issue')->get();
-    $directIssueMaterial = IssueMaterialByInventory::whereNotNull('issue_type')
-    ->where('material_type', 'Non-Consumable')->get();
+    $directIssueMaterial = NonConsumableDirectIssueMaterial::whereNotNull('issue_type')
+    // ->where('material_type', 'Non-Consumable')
+    ->get();
 
     $statusID = Status::all();
     $existingMaterials = IssueMaterialByWarehouse::all()->keyBy('issue_material_by_inventory_id');

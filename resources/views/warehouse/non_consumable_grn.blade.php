@@ -40,14 +40,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($order as $order)
+                                                    @foreach ($order->sortByDesc('created_at') as $order)
                                                     <tr>
                                                         <td>{{$loop->iteration}}</td>
                                                         <td>{{date('d-m-Y',strtotime($order->date))}}</td>
                                                         <td>{{$order->order_id}}</td>
                                                         <td>{{$order->warehouse_name->warehouse_name ?? null}}</td>
                                                         <td>{{$order->non_consumable_category_name->category ?? null}}</td>
-                                                        <td>{{$order->non_consumable_material_name->material ?? null }}</td>
+                                                        <td>{{$order->non_consumable_material_name->sub_category_name ?? null }}</td>
                                                         <td>{{$order->non_consumable_brand_name->brand ?? null}}</td>
                                                         <td>{{$order->non_consumable_unit_type->unit_type ?? null }}</td>
                                                         <td>{{$order->quantity ?? null }}</td>
@@ -83,14 +83,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($completeOrder as $completeOrder)
+                                                    @foreach ($completeOrder->sortByDesc('created_at') as $completeOrder)
                                                     <tr>
                                                         <td>{{$loop->iteration}}</td>
                                                         <td>{{date('d-m-Y',strtotime($completeOrder->date))}}</td>
                                                         <td>{{$completeOrder->order_id}}</td>
                                                         <td>{{$completeOrder->warehouse_name->warehouse_name ?? null}}</td>
                                                         <td>{{$completeOrder->non_consumable_category_name->category ?? null}}</td>
-                                                        <td>{{$completeOrder->non_consumable_material_name->material ?? null }}</td>
+                                                        <td>{{$completeOrder->non_consumable_material_name->sub_category_name ?? null }}</td>
                                                         <td>{{$completeOrder->non_consumable_brand_name->brand ?? null}}</td>
                                                         <td>{{$completeOrder->non_consumable_unit_type->unit_type ?? null }}</td>
                                                         <td>{{$completeOrder->quantity ?? null }}</td>

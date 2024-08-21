@@ -260,12 +260,12 @@ class PurchaseDepartmentController extends Controller
         ->get();
         $vendor = Vendor::all();
         $material = NonConsumableCategory::all();
-        $rawmaterial = NonConsumableCategory::all();
+        $sub_category = NonConsumableCategoryMaterial::all();
         $unit = NonConsumableUnitType::all();
         $brand = NonConsumableBrand::all();
         $warehouse = Warehouse::all();
 
-        return view('non_consume_purchase_dept.non_consumable_direct_po_list', compact('reqMaterial', 'vendor', 'material', 'rawmaterial', 'unit', 'brand', 'warehouse'));
+        return view('non_consume_purchase_dept.non_consumable_direct_po_list', compact('reqMaterial', 'vendor', 'material', 'sub_category', 'unit', 'brand', 'warehouse'));
     }
 
 

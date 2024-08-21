@@ -57,14 +57,14 @@
                             <tr>
                                 <th>Sr. No.</th>
                                 <th>Requested Date</th>
-                                <th>Request ID</th>
+                                {{-- <th>Request ID</th> --}}
                                 <th>Site Name</th>
 
                                 <th>Material Name</th>
                                 <th>Brand Name</th>
                                 <th>Material Qty</th>
                                 <th>Material Unit</th>
-                                <th>Issue Material</th>
+                                {{-- <th>Issue Material</th> --}}
                                 <th>Remark</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -79,13 +79,13 @@
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$material->requested_material_date}}</td>
-                                <td>{{$material->requested_material_id}}</td>
+                                {{-- <td>{{$material->requested_material_id}}</td> --}}
                                 <td>{{$material->site_name->site_name ?? ''}}</td>
                                 <td>{{$material->material_name->material ?? ''}}</td>
                                 <td>{{$material->brand_name->brand}}</td>
                                 <td>{{$material->requested_material_quantity}}</td>
                                 <td>{{$material->unit_type->unit_type ?? ''}}</td>
-                                <td>{{$material->issue_material}}</td>
+                                {{-- <td>{{$material->issue_material}}</td> --}}
 
                                 <td>
                                     <textarea class="form-control" name="remarks[{{$material->id}}]" rows="1" cols="4">{{ $existing->remark ?? '' }}</textarea>
@@ -122,14 +122,14 @@
                         <tr>
                             <th>Sr. No.</th>
                             <th>Requested Date</th>
-                            <th>Request ID</th>
+                            {{-- <th>Request ID</th> --}}
                             <th>Site Name</th>
 
                             <th>Material Name</th>
                             <th>Brand Name</th>
                             <th>Material Qty</th>
                             <th>Material Unit</th>
-                            <th>Issue Material</th>
+                            {{-- <th>Issue Material</th> --}}
                             <th>Remark</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -144,13 +144,13 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$material->requested_material_date ?? ''}}</td>
-                            <td>{{$material->requested_material_id ?? ''}}</td>
+                            {{-- <td>{{$material->requested_material_id ?? ''}}</td> --}}
                             <td>{{$material->site_name->site_name ?? ''}}</td>
                             <td>{{$material->material_name->material ?? ''}}</td>
                             <td>{{$material->brand_name->brand ?? ''}}</td>
                             <td>{{$material->requested_material_quantity ?? ''}}</td>
                             <td>{{$material->unit_type->unit_type ?? ''}}</td>
-                            <td>{{$material->issue_material ?? ''}}</td>
+                            {{-- <td>{{$material->issue_material ?? ''}}</td> --}}
 
                             <td>
                                 <textarea class="form-control" name="remarks[{{$material->id}}]" rows="1" cols="4">{{ $existing->remark ?? '' }}</textarea>
@@ -186,14 +186,14 @@
                         <tr>
                             <th>Sr. No.</th>
                             <th>Requested Date</th>
-                            <th>Request ID</th>
+                            {{-- <th>Request ID</th> --}}
                             <th>Site Name</th>
 
                             <th>Material Name</th>
                             <th>Brand Name</th>
                             <th>Material Qty</th>
                             <th>Material Unit</th>
-                            <th>Issue Material</th>
+                            {{-- <th>Issue Material</th> --}}
                             <th>Remark</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -208,13 +208,13 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$material->requested_material_date ?? ''}}</td>
-                            <td>{{$material->requested_material_id ?? ''}}</td>
+                            {{-- <td>{{$material->requested_material_id ?? ''}}</td> --}}
                             <td>{{$material->site_name->site_name ?? ''}}</td>
                             <td>{{$material->material_name->material ?? ''}}</td>
                             <td>{{$material->brand_name->brand ?? ''}}</td>
                             <td>{{$material->requested_material_quantity ?? ''}}</td>
                             <td>{{$material->unit_type->unit_type ?? ''}}</td>
-                            <td>{{$material->issue_material ?? ''}}</td>
+                            {{-- <td>{{$material->issue_material ?? ''}}</td> --}}
 
                             <td>
                                 <textarea class="form-control" name="remarks[{{$material->id}}]" rows="1" cols="4">{{ $existing->remark ?? '' }}</textarea>
@@ -246,14 +246,14 @@
                         <tr>
                             <th>Sr. No.</th>
                             <th>Requested Date</th>
-                            <th>Request ID</th>
+                            {{-- <th>Request ID</th> --}}
                             <th>Site Name</th>
 
                             <th>Material Name</th>
                             <th>Brand Name</th>
                             <th>Material Qty</th>
                             <th>Material Unit</th>
-                            <th>Issue Material</th>
+                            {{-- <th>Issue Material</th> --}}
                             <th>Remark</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -268,13 +268,13 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$material->requested_material_date}}</td>
-                            <td>{{$material->requested_material_id}}</td>
+                            {{-- <td>{{$material->requested_material_id}}</td> --}}
                             <td>{{$material->site_name->site_name ?? ''}}</td>
                             <td>{{$material->material_name->material}}</td>
                             <td>{{$material->brand_name->brand}}</td>
                             <td>{{$material->requested_material_quantity}}</td>
                             <td>{{$material->unit_type->unit_type}}</td>
-                            <td>{{$material->issue_material}}</td>
+                            {{-- <td>{{$material->issue_material}}</td> --}}
 
                             <td>
                                 <textarea class="form-control" name="remarks[{{$material->id}}]" rows="1" cols="4">{{ $existing->remark ?? '' }}</textarea>

@@ -45,8 +45,8 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $firstMaterial->created_at->format('d/m/Y') }}</td>
-                                            <td>{{ $firstMaterial->site_name->site_name }}</td>
+                                            <td>{{ $firstMaterial->created_at->format('d/m/Y') ?? ''}}</td>
+                                            <td>{{ $firstMaterial->site_name->site_name ?? ''}}</td>
                                             <td>{{ $firstMaterial->supervisor_name->supervisor_name ?? '' }}</td>
                                             <td>
                                                 <button data-bs-toggle="modal" data-bs-target="#service-area-view"
@@ -96,6 +96,7 @@
                                             <th>Request ID </th>
                                             <th>Material Name </th>
                                             <th>Brand Name </th>
+                                            <th>Raw Material</th>
                                             <th>Material Qty </th>
                                             <th>Material Unit </th>
                                             <th>Warehouse </th>
@@ -114,20 +115,23 @@
                                         @foreach ($issueMaterial->sortByDesc('created_at') as $material)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $material->requested_material_date }}</td>
-                                                <td>{{ $material->site_name->site_name }}</td>
-                                                <td>{{ $material->requested_material_id }}</td>
-                                                <td>{{ $material->material_name->material }}</td>
-                                                <td>{{ $material->brand_name->brand }}</td>
-                                                <td>{{ $material->requested_material_quantity }}</td>
+                                                <td>{{ $material->requested_material_date ?? '' }}</td>
+                                                <td>{{ $material->site_name->site_name ?? '' }}</td>
+                                                <td>{{ $material->requested_material_id ?? '' }}</td>
+                                                <td>{{ $material->material_name->material ?? '' }}</td>
+                                                <td>{{ $material->brand_name->brand ?? '' }}</td>
+                                                <td>{{ $material->raw_material_name->raw_material_name ?? '' }}</td>
+
+
+                                                <td>{{ $material->requested_material_quantity ?? '' }}</td>
 
                                                 <td>{{ $material->unit_type->unit_type ?? ''}}</td>
                                                 <td>{{ $material->warehouse_name->warehouse_name ?? ''}}</td>
 
 
-                                                <td>{{ $material->available_material }}</td>
-                                                <td>{{ $material->issue_material }}</td>
-                                                <td>{{ $material->remaining_material }}</td>
+                                                <td>{{ $material->available_material ?? ''}}</td>
+                                                <td>{{ $material->issue_material ?? ''}}</td>
+                                                <td>{{ $material->remaining_material ?? ''}}</td>
                                                 <td>
                                                     {{ $material->remark !== null && $material->remark !== '' ? $material->remark : 'No Remark' }}
                                                 </td>
@@ -213,7 +217,7 @@
     <!-- END PAGE CONTAINER -->
     <div class="modal" id="service-area-view" tabindex="-1" role="dialog" aria-labelledby="largeModalHead"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg" style="width: 80% !important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span

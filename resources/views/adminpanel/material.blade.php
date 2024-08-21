@@ -15,7 +15,27 @@
                             <i class="fa fa-plus"></i> &nbsp;Add Material
                         </h5>
 
+                        @if ($errors->any())
+                        <div class="alert alert-danger mt-2">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
 
                     </div>
                 </div>
@@ -95,13 +115,13 @@
                                                     style="margin-left:5px;"></i></button>
                                                 </a>
 
-                                                    <a href="{{ route('material-destroy', $material->id) }}"><button
+                                                    {{-- <a href="{{ route('material-destroy', $material->id) }}"><button
                                                         style="background-color:#ff0000; border:none; max-height:25px; margin-top:-5px; margin-bottom:-5px;"
                                                         type="button" class="btn btn-info" data-toggle="tooltip"
                                                         data-placement="top" title="Delete"
                                                         onclick="confirmDelete({{ $material->id }})"><i
                                                             class="fa fa-trash-o" style="margin-left:5px;"></i></button>
-                                                </a>
+                                                </a> --}}
                                             </td>
                                     </tr>
                                     @endforeach
