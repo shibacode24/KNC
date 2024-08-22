@@ -6,7 +6,7 @@ use App\Http\Controllers\panel\DashboardController;
 use App\Http\Controllers\panel\UserRolesController;
 use App\Http\Controllers\panel\WarehouseController;
 use App\Http\Controllers\panel\InventoryManagementController;
-use App\Http\Controllers\panel\{AccountDepartmentController, TransferMaterialController, PredictionController};
+use App\Http\Controllers\panel\{AccountDepartmentController, TransferMaterialController, PredictionController, ReportsController};
 use App\Http\Controllers\panel\MapController;
 
 /*
@@ -238,6 +238,14 @@ Route::get('/viewservicearea', [InventoryManagementController::class, 'viewservi
 Route::post('/get-available-material', [InventoryManagementController::class, 'getAvailableMaterial'])->name('get-available-material');
 Route::post('/add-issued-material', [InventoryManagementController::class, 'addIssuedMaterial'])->name('add-issued-material');
 
+
+// Consumable Inventory Reports
+Route::get('/consumable-available-material', [ReportsController::class, 'consumableAvailableMaterial'])->name('consumable-available-material');
+Route::get('/consumable-consumed-material', [ReportsController::class, 'consumableConsumedMaterial'])->name('consumable-consumed-material');
+Route::get('/consumable-lost-material', [ReportsController::class, 'consumableLostMaterial'])->name('consumable-lost-material');
+Route::get('/consumable-received-material', [ReportsController::class, 'consumableReceivedMaterial'])->name('consumable-received-material');
+
+
 //non consumable
 Route::get('/site-non-consumed-material', [InventoryManagementController::class, 'site_non_consumed_material'])->name('site-non-consumed-material');
 
@@ -351,7 +359,7 @@ Route::post('/assign-site-store', [DashboardController::class, 'assignSiteStore'
 
 
 
-// User Roles
+// User Management
 Route::get('panel-user-roles', [UserRolesController::class, 'panelUserRole'])->name('panel-user-roles');
 Route::post('panel-user-role-store', [UserRolesController::class, 'panelUserRolestore'])->name('panel-user-role-store');
 Route::get('panel-user-roles-edit/{id}', [UserRolesController::class, 'panelUserRoleEdit'])->name('panel-user-roles-edit');
@@ -365,6 +373,10 @@ Route::get('app-user-roles', [UserRolesController::class, 'appUserRole'])->name(
 Route::post('app-user-role-store', [UserRolesController::class, 'appUserRolestore'])->name('app-user-role-store');
 Route::get('app-user', [UserRolesController::class, 'appUser'])->name('app-user');
 Route::post('app-user-store', [UserRolesController::class, 'appUserStore'])->name('appUser.store');
+
+Route::get('user-logs', [UserRolesController::class, 'userLogs'])->name('user-logs');
+Route::get('/filter-employees-by-role', [UserRolesController::class, 'filterEmployeesByRole'])->name('filter.employees.by.role');
+
 
 
 // Account Department
