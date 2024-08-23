@@ -13,7 +13,6 @@ class Site extends Model
         'site_personal_or_buisness',
         'firm_id',
         'city_id',
-
         'client_id',
         'site_name',
         'mobile_number',

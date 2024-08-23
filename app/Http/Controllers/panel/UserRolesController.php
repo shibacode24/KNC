@@ -18,7 +18,7 @@ class UserRolesController extends Controller
         $city = City::all();
         $role = AppRoles::all();
 
-        return view('adminpanel.app_user_roles', compact('city', 'role'));
+        return view('user_management.app_user_roles', compact('city', 'role'));
     }
 
 
@@ -60,7 +60,7 @@ public function appUser(Request $request)
     $role = AppRoles::all();
     $user = User::all();
 
-        return view('adminpanel.app_user', compact('user_data', 'siteManager', 'siteIncharge', 'engineer', 'role', 'user', 'supervisor'));
+        return view('user_management.app_user', compact('user_data', 'siteManager', 'siteIncharge', 'engineer', 'role', 'user', 'supervisor'));
     }
 
 
@@ -149,7 +149,7 @@ public function appUser(Request $request)
         $city = City::all();
         $role = PanelRoles::all();
 
-        return view('adminpanel.panel_user_role', compact('city', 'role'));
+        return view('user_management.panel_user_role', compact('city', 'role'));
     }
 
     public function panelUserRoleStore(Request $request)
@@ -170,7 +170,7 @@ public function appUser(Request $request)
 
         $roleEdit = PanelRoles::find($id);
 
-        return view('adminpanel.panel_user_role_edit', compact('roleEdit'));
+        return view('user_management.panel_user_role_edit', compact('roleEdit'));
     }
 
     public function panelUserRoleUpdate(Request $request)
@@ -203,7 +203,7 @@ public function panelUser(Request $request)
     $role = PanelRoles::all();
     $user = User::all();
 
-        return view('adminpanel.panel_user', compact('supervisor_data', 'employee', 'role', 'user', 'supervisor'));
+        return view('user_management.panel_user', compact('supervisor_data', 'employee', 'role', 'user', 'supervisor'));
     }
 
 
@@ -255,6 +255,26 @@ public function panelUserStore(Request $request)
     return redirect(route('panel-user'))->with('success', 'Successfully Updated!');
 }
 
+
+
+
+// USER LOGS
+
+
+public function userLogs(){
+$roles = PanelRoles::all();
+$emp = User::all();
+
+    return view('user_management.logs', compact('roles', 'emp'));
+}
+
+public function filterEmployeesByRole(Request $request)
+{
+    $roleId = $request->get('role_id');
+    $employees = User::where('panel_role', $roleId)->get();
+
+    return response()->json($employees);
+}
 
 
 }

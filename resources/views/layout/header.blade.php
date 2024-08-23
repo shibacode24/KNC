@@ -426,6 +426,38 @@
                                         <li><a href="direct-issue-material"><span class="fa fa-plus"></span>Direct
                                                 Issue Material</a></li>
                                     @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+
+                                    <li><a href="#" title="Reports"><span class="fa fa-bars">
+                                                </span>Reports</a>
+                                            <ul>
+                                        @if (Auth::user()->panel_role == 1 || in_array('consumable-available-material', $permission))
+                                        <li><a href="{{route('consumable-available-material')}}"><span
+                                                    class="fa fa-plus"></span>Available Material</a>
+                                        </li>
+                                    @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('consumable-consumed-material', $permission))
+                                    <li><a href="{{route('consumable-consumed-material')}}"><span
+                                                class="fa fa-plus"></span>Consumed Material</a>
+                                    </li>
+                                @endif
+
+                                @if (Auth::user()->panel_role == 1 || in_array('consumable-lost-material', $permission))
+                                <li><a href="consumable-lost-material"><span
+                                            class="fa fa-plus"></span>Lost Material</a>
+                                </li>
+                            @endif
+
+                            @if (Auth::user()->panel_role == 1 || in_array('consumable-received-material', $permission))
+                            <li><a href="consumable-received-material"><span
+                                        class="fa fa-plus"></span>Received Material</a>
+                            </li>
+                        @endif
+                                    </ul>
+                                @endif
+
                                 </ul>
                             </li>
                             @endif
@@ -460,7 +492,36 @@
                                                     class="fa fa-plus"></span>Non Consumable Direct Issue Material</a>
                                         </li>
                                     @endif
+                                    @if (Auth::user()->panel_role == 1 || in_array('', $permission))
 
+                                    <li><a href="#" title="Reports"><span class="fa fa-bars">
+                                                </span>Reports</a>
+                                            <ul>
+                                        @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                        <li><a href=""><span
+                                                    class="fa fa-plus"></span>Available Material</a>
+                                        </li>
+                                    @endif
+
+                                    @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                    <li><a href=""><span
+                                                class="fa fa-plus"></span>Consumed Material</a>
+                                    </li>
+                                @endif
+
+                                @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                                <li><a href=""><span
+                                            class="fa fa-plus"></span>Lost Material</a>
+                                </li>
+                            @endif
+
+                            @if (Auth::user()->panel_role == 1 || in_array('', $permission))
+                            <li><a href=""><span
+                                        class="fa fa-plus"></span>Received Material</a>
+                            </li>
+                        @endif
+                                    </ul>
+                                @endif
 
 
                                 </ul>
@@ -768,15 +829,23 @@
                     </li>
                 @endif
 
+                @if (Auth::user()->panel_role == 1
+                || in_array('user-logs', $permission)
+                )
+                <li style="margin-left:-20px;">
+                    <a href="{{route('user-logs')}}" title="User Logs"  style="font-size: 12px; margin-left:20px"><span class="fa fa-map-marker" style="margin-right: 10px; font-size: 12px"> </span>User Logs</a>
+                </li>
+                @endif
 
 
-                @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
+
+                {{-- @if (Auth::user()->panel_role == 1 || in_array('expense-master', $permission))
                     <li  style="margin-left:-20px;">
                         <a href="expense-master" title="Account Department"  style="font-size: 12px"><span class="fa fa-user" style="margin-right: -1px; font-size: 12px"> </span>Account
                             Department</a>
 
                     </li>
-                @endif
+                @endif --}}
 
             {{-- @if (Auth::user()->panel_role == 1 || in_array('prediction', $permission))
             <li style="margin-left:-20px; margin-right:-50px">
@@ -918,6 +987,28 @@
                     alert.remove();
                 }, 500); // Matches the fade out duration
             }, 5000); // Time in milliseconds (5 seconds)
+        });
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("searchButton").addEventListener("click", function() {
+            var fromDate = document.getElementById("fromDate").value;
+            var toDate = document.getElementById("toDate").value;
+            var tableRows = document.querySelectorAll("#example3 tbody tr");
+
+            tableRows.forEach(function(row) {
+                var dateColumn = row.querySelector("td:nth-child(2)").innerText;
+                var date = new Date(dateColumn.split("-").reverse().join("-"));
+
+                if (date >= new Date(fromDate) && date <= new Date(toDate)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
         });
     });
 </script>
